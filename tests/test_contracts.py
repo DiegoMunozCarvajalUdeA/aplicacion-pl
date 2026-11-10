@@ -5,10 +5,10 @@ from operator import add, eq, ge, gt, le, lt, mul, sub, truediv
 
 import pytest
 
+from plapp.big_m import solve_big_m
 from plapp.export_pdf import export_steps_pdf
 from plapp.io_json import load_problem
 from plapp.mvalue import MValue
-from plapp.result import Solution, Status
 from plapp.standard_form import to_standard_form
 from tests.conftest import PROBLEMS
 
@@ -80,9 +80,8 @@ def test_standard_form_mixed_min():
             assert cost.b == 1
 
 
-@pytest.mark.xfail(raises=NotImplementedError, strict=False, reason="Exportación PDF pendiente")
-def test_pdf_output(tmp_path):
-    solution = Solution("big_m", Status.OPTIMAL, "Solución óptima", objective_value=Fraction(0))
-    path = tmp_path / "pasos.pdf"
-    export_steps_pdf(solution, path)
-    assert path.read_bytes().startswith(b"%PDF-")
+def test_pdf_output(example_one):
+    """El contrato devuelve bytes para Streamlit y admite formato y precisión."""
+    solution = solve_big_m(example_one)
+    assert export_steps_pdf(example_one, solution).startswith(b"%PDF-")
+    assert export_steps_pdf(example_one, solution, "decimal", 2).startswith(b"%PDF-")

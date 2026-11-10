@@ -3,10 +3,10 @@
 Entorno de desarrollo para el proyecto de Optimización de Ingeniería de Sistemas,
 Universidad de Antioquia. El enunciado oficial está en `taller-optimi.pdf`.
 
-La aplicación resuelve problemas con Gran M simbólica y Fraction, en modo directo
-o paso a paso. P1–P5 y las correcciones de redundancia están implementados; simplex
-revisado y PDF siguen pendientes según `docs/plan.md`. SciPy se usa únicamente como
-oráculo de pruebas, nunca en la aplicación.
+La aplicación resuelve problemas con Gran M simbólica y simplex revisado, con
+Fraction, en modo directo o paso a paso. P1–P7 y las correcciones C y R están
+implementados; los entregables de P8 siguen pendientes según `docs/plan.md`.
+SciPy se usa únicamente como oráculo de pruebas, nunca en la aplicación.
 
 ## Requisitos e instalación
 
@@ -31,14 +31,26 @@ La app permite editar Max/Min, agregar o quitar variables y restricciones sin
 perder las celdas restantes, cargar los 14 ejemplos y cargar/descargar JSON.
 Admite números como `-3`, `2.5`, `2,5` y `2/5`; todas las variables cumplen x ≥ 0.
 Al pulsar Resolver, los errores indican la celda afectada. El resumen del modelo
-validado funciona; cada algoritmo pendiente muestra un aviso en su sección.
+validado presenta el problema original antes de resolverlo.
 
-Seleccione Gran M y pulse Resolver. Directo muestra variables, Z y holguras o
+Seleccione un método y pulse Resolver. Directo muestra variables, Z y holguras o
 excesos originales. Paso a paso añade normalización, forma estándar y todas las
 iteraciones: base con nombres, tablero rotulado, costos reducidos, Z, pivote
 resaltado, razones y justificaciones. Fracciones y decimales cambian únicamente
 la presentación; los cálculos permanecen exactos. Se informan infactibilidad,
 no acotación, segmentos o rayos óptimos y variables básicas nulas.
+
+El revisado muestra B⁻¹, x_B, los multiplicadores simbólicos `y`, costos reducidos
+y la columna d con la razón mínima y el pivote. «Comparar ambos» presenta una
+fila por estado con las dos bases, entrantes, salientes y Z, y resume las
+coincidencias. Ambos usan las mismas reglas simplex; mantienen representaciones
+distintas. Las seis capturas revisadas del gráfico están en `docs/capturas/r/`.
+
+«Exportar paso a paso a PDF» está disponible tras resolver, incluso en modo
+Directo. El PDF contiene el problema, forma estándar, iteraciones, justificaciones,
+resultado y sensibilidad cuando hay óptimo. Respeta el formato y los decimales
+seleccionados; usa páginas horizontales, bloques de columnas y encabezados
+repetidos. «Comparar métodos» ofrece además un PDF por método.
 
 El método gráfico resuelve de forma independiente los problemas de dos variables:
 región sombreada, rectas rotuladas, vértices con Z, isoutilidad, segmentos y
@@ -46,12 +58,13 @@ rayos óptimos. Informa regiones vacías y objetivos no acotados; la caja sirve
 solo para dibujar. La sensibilidad presenta precios sombra originales, costos
 reducidos y rangos de un dato a la vez, con interpretación y advertencias de
 degeneración o redundancia. Una fila redundante recibe un representante dual
-cero y no se ofrece un rango para su RHS.
+cero y su fila de RHS muestra «No disponible (fila redundante)».
 
 Los contratos compartidos están en `src/plapp/result.py`. Los índices internos
 empiezan en cero; la interfaz muestra filas desde uno y columnas por nombre.
 Ambos métodos comparten el contrato `Solution` en el sentido original de Z,
-aunque el revisado continúa pendiente. Los costos reducidos usan
+con x_B y multiplicadores simbólicos explícitos en las iteraciones del revisado.
+Los costos reducidos usan
 r = c − c_B B⁻¹ A. MValue opera con las partes racional y simbólica exactas.
 La guía `docs/sustentacion.md` explica los módulos y la traza del ejemplo 2.
 
@@ -67,10 +80,9 @@ make requirements
 
 `make fmt` aplica formato y correcciones automáticas de Ruff. La configuración
 usa 100 columnas y reglas E, F, I, UP, B. CI ejecuta sincronización bloqueada,
-Ruff y pytest. Las pruebas de infraestructura deben pasar; las de algoritmos
-pendientes aparecen como `xfail` mientras lancen NotImplementedError. Las marcas
-se retiran al implementar cada módulo; MValue, forma estándar y Gran M ya se
-prueban sin xfail. Una aserción fallida sigue siendo un fallo real.
+Ruff y pytest. Todos los algoritmos se prueban sin xfail. Las trazas anteriores
+al refactor se conservan en `tests/fixtures/big_m_traces.json` y no se regeneran
+para aceptar cambios del método.
 
 ## Oráculo SciPy
 
@@ -82,7 +94,7 @@ uv run pytest tests/test_oracle_scipy.py -q
 ```
 
 El script informa estado, x, Z, holguras/excesos y precios sombra. También intenta
-ambos métodos propios: informa que están pendientes o compara estado, Z y
+ambos métodos propios: compara estado, Z y
 factibilidad, sin exigir el mismo vértice si hay óptimos múltiples. Devuelve
 código distinto de cero si hay discrepancias o errores de verificación.
 
@@ -107,14 +119,29 @@ estados 2, 3 y 4 y exige confirmación si cambia el estado. Si no concluye,
 las pruebas generativas descartan ese caso y el estrés lo cuenta por separado.
 
 ```bash
-uv run python scripts/stress.py --seed 20261110 --count 3000
+uv run python scripts/stress.py --method both --seed 20261110 --count 3000
 ```
 
-La última corrida terminó con 3000 verificados, 0 errores, 0 diferencias y
-0 inconcluyentes. La suite tarda unos 18 segundos en este equipo. El informe
-`docs/desarrollo-c-p4-p5.md` conserva el conteo previo de 72 errores, la prueba
-de regresión temporal y las verificaciones por paquete. No se agregaron
-dependencias; Playwright y las capturas del manual quedan para P8.
+La corrida de R–P7 terminó con 3000 verificados por método, 0 errores,
+0 diferencias y 0 inconcluyentes. También acepta `--method big_m` o `revised`.
+`docs/desarrollo-r-p6-p7.md` registra la verificación completa de esta sesión;
+`docs/desarrollo-c-p4-p5.md` conserva la regresión temporal de C1.
+
+Playwright y pypdf son dependencias dev: capturas y descargas en navegador,
+y lectura independiente de los PDF en pruebas, respectivamente. FontTools,
+ya requerido por fpdf2, se declara también como dependencia directa para
+comprobar todos los glifos antes de escribirlos. `requirements.txt` excluye dev.
+
+Para repetir el recorrido visual con la app iniciada:
+
+```bash
+uv run playwright install chromium
+uv run python scripts/check_ui.py --downloads --output /tmp/plapp-ui
+```
+
+El script comprueba salud, captura seis gráficos y descarga 36 PDF de los
+ejemplos 2, 5 y 6 en ambos modos y formatos. Requiere el servidor de `make run`;
+guarda los archivos en la ruta indicada. Las capturas del manual siguen en P8.
 
 ## Despliegue en Streamlit Community Cloud
 
@@ -133,9 +160,10 @@ disponible para la sustentación sin conexión a un servicio de despliegue.
 ## Estructura
 
 ```text
-src/plapp/       Modelo, Gran M, álgebra exacta, contratos y módulos pendientes
+src/plapp/       Modelo, métodos propios, reglas compartidas, gráfico, sensibilidad y PDF
 app/            Interfaz Streamlit y presentación Plotly
 scripts/        Verificador externo con SciPy
+assets/fonts/   DejaVu Sans 2.37 y licencia de redistribución
 tests/          Infraestructura, contratos, AppTest y 14 fixtures JSON
 docs/           Propuesta, plan, teoría, manual y verificación del entorno
 .github/        CI de Ruff y pytest
@@ -173,6 +201,15 @@ Ver `docs/plan.md` para el orden de implementación y el reparto sugerido.
 - [Streamlit: dependencias de despliegue](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies).
 - [Plotly: gráficos de líneas](https://plotly.com/python/line-charts/).
 - [fpdf2: documentación y Unicode](https://py-pdf.github.io/fpdf2/Unicode.html).
+- [fpdf2: tablas y paginación](https://py-pdf.github.io/fpdf2/Tables.html).
+- [Streamlit: descarga de archivos](https://docs.streamlit.io/develop/api-reference/widgets/st.download_button).
+- [FontTools: lectura de glifos TTF](https://fonttools.readthedocs.io/en/latest/ttLib/ttFont.html).
+- [pypdf: extracción de texto para verificar PDF](https://pypdf.readthedocs.io/en/stable/user/extract-text.html).
+- [DejaVu Fonts 2.37](https://dejavu-fonts.github.io/Download.html): DejaVu Sans
+  regular y negrita incluidas sin modificar en `assets/fonts/`. Licencia completa
+  [Bitstream Vera y DejaVu](assets/fonts/LICENSE-DejaVu.txt). Archivo oficial
+  `dejavu-fonts-ttf-2.37.tar.bz2`, SHA-256
+  `fa9ca4d13871dd122f61258a80d01751d603b4d3ee14095d65453b4e846e17d7`.
 - [uv: sincronización y lockfile](https://docs.astral.sh/uv/concepts/projects/sync/).
 - [uv: acción oficial para GitHub](https://docs.astral.sh/uv/guides/integration/github/).
 - [SciPy: linprog y marginales](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).

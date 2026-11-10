@@ -25,6 +25,7 @@ def test_same_path_and_inverse_certificates(case, monkeypatch):
     products = []
 
     def track_product(left, right):
+        """Contar reconstrucciones completas para detectar un tablero mantenido por error."""
         products.append((left, right))
         return matmul(left, right)
 

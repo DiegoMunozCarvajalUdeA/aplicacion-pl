@@ -140,22 +140,22 @@ qué secuencias de pivotes cambian y por qué se conservan Z y factibilidad.
 
 ## P3: presentación de resultados y paso a paso
 
-`app/streamlit_app.py:116` centraliza el formato numérico elegido. El estado
+`app/streamlit_app.py:120` centraliza el formato numérico elegido. El estado
 de sesión conserva el modelo exacto y sus soluciones: cambiar a decimales no
 vuelve a resolver ni cambia Fraction por float. La función de formato está en
 `src/plapp/formatting.py:12` y usa Decimal solo para presentar.
 
-`app/streamlit_app.py:158` muestra variables, Z, y por restricción su tipo
+`app/streamlit_app.py:162` muestra variables, Z, y por restricción su tipo
 original: holgura, exceso o igualdad. Aunque R3 se normalice a ≤ en el ejemplo 2,
 en el resultado sigue siendo un exceso de la restricción original ≥.
-`app/streamlit_app.py:134` presenta una solución alterna y el segmento o rayo
+`app/streamlit_app.py:138` presenta una solución alterna y el segmento o rayo
 certificado; construye las coordenadas con el formato elegido. Las notas del
 solver identifican las variables básicas nulas.
 
-`app/streamlit_app.py:281` devuelve inmediatamente en modo Directo; Paso a paso
+`app/streamlit_app.py:348` devuelve inmediatamente en modo Directo; Paso a paso
 presenta forma estándar, costos simbólicos, transformaciones y base inicial.
-`app/streamlit_app.py:243` presenta cada estado y sus razones y justificaciones.
-`app/streamlit_app.py:187` construye el tablero rotulado por variables básicas,
+`app/streamlit_app.py:286` presenta cada estado y sus razones y justificaciones.
+`app/streamlit_app.py:207` construye el tablero rotulado por variables básicas,
 con fila cⱼ − zⱼ y Z. Pandas Styler resalta solo la celda cuya posición ya
 calculó el solver. El visor no decide entradas, salidas ni pivotes.
 
@@ -403,7 +403,10 @@ sin rango, con una sola interpretación debajo de la tabla.
 
 ## P6, paso 1: reglas compartidas de simplex
 
-`simplex_rules.py` recibe costos reducidos, base, tipos de columna, x_B y d.
+`src/plapp/simplex_rules.py:36` excluye candidatas artificiales;
+`src/plapp/simplex_rules.py:41` prueba infactibilidad y
+`src/plapp/simplex_rules.py:64` elige entrante. El módulo recibe costos
+reducidos, base, tipos de columna, x_B y d.
 No calcula esas entradas desde un almacenamiento particular. Gran M conserva
 su tablero en `big_m.py`; la razón mínima, la elección por costo o Bland y el
 certificado de infactibilidad se deciden en funciones compartidas. Solo el
@@ -456,9 +459,9 @@ Las pruebas cuentan estos productos para impedir que el revisado mantenga un
 tablero durante los pivotes normales. Las artificiales redundantes conservan
 su testigo nulo; la sensibilidad sigue reconstruyendo la base por su cuenta.
 
-`app/streamlit_app.py:206` presenta B⁻¹, x_B, y y costos reducidos.
-`app/streamlit_app.py:285` muestra d con razones, exclusiones y pivote resaltado,
-incluido el retiro sin razón mínima. `app/streamlit_app.py:554` compara cada
+`app/streamlit_app.py:207` presenta B⁻¹, x_B, y y costos reducidos.
+`app/streamlit_app.py:286` muestra d con razones, exclusiones y pivote resaltado,
+incluido el retiro sin razón mínima. `app/streamlit_app.py:555` compara cada
 base, entrante, saliente y Z; si falta un estado, muestra «No» en la coincidencia.
 El resumen distingue estados registrados de pivotes. La referencia de trabajo
 m×(n+m+1) del tablero supone filas ≤; artificiales y excesos aumentan su ancho.
@@ -484,3 +487,53 @@ Preguntas para practicar:
 
 Ejercicio: reconstruir a mano E del segundo pivote del ejemplo 2 y verificar
 que E·B⁻¹ produce x_B=(3/5,6/5,1). Luego activar Bland desde el inicio.
+
+## P7: exportación del paso a paso a PDF
+
+`src/plapp/export_pdf.py:379` recibe problema y solución existentes y devuelve
+bytes. `mode="fraction"` y `decimals=4` son valores por defecto; el exportador
+valida ambos con el mismo formateador de la UI. No importa ni llama solvers.
+`src/plapp/export_pdf.py:109` escribe el modelo original y la forma estándar;
+`src/plapp/export_pdf.py:173`, cada estado anterior al pivote con su evidencia;
+`src/plapp/export_pdf.py:278`, el resultado y los certificados especiales.
+Si hay óptimo, `src/plapp/export_pdf.py:328` llama a `sensitivity_analysis` con
+la misma solución, sin recalcular el método, e incluye tablas e interpretaciones.
+
+La clase de presentación `src/plapp/export_pdf.py:22` carga DejaVu Sans 2.37,
+regular y negrita, desde `assets/fonts/`; el wheel lleva copias y licencia en
+`plapp/assets/fonts/`. FontTools comprueba cada carácter contra la intersección
+de los mapas de glifos de ambas fuentes. ≤, ≥, −, ⁻¹, ⱼ, ∂, ∞ y Δ tienen glifo;
+un carácter del usuario ajeno a la fuente se sustituye explícitamente por su
+código `[U+XXXX]`. No se omiten caracteres silenciosamente ni se usa M numérica.
+La descarga oficial se verificó con el SHA-256 publicado; README cita origen
+y licencia. FontTools ya era transitivo de fpdf2 y ahora es dependencia directa.
+
+Las páginas son A4 horizontales. Cada tabla tiene como máximo ocho columnas
+de datos además de su primera columna, que se repite en todos los bloques.
+Los encabezados se repiten al cambiar de página, los textos numéricos largos
+se ajustan por caracteres y el pivote mantiene su fila y columna originales.
+`src/plapp/export_pdf.py:241` escribe d y las razones del revisado; un retiro
+artificial conserva su aviso de paso cero y no inventa cocientes de razón mínima.
+
+`app/streamlit_app.py:605` ofrece `st.download_button` con bytes, MIME
+`application/pdf` y el formato elegido, solo cuando existe solución. Paso a
+paso ofrece el primer método seleccionado; Comparar métodos ofrece un PDF por
+método, incluso en modo Directo. Los fallos quedan contenidos en un mensaje
+comprensible, sin traceback. Pypdf, solo dev, lee y valida los documentos reales
+en pruebas; Playwright descarga desde el navegador y espera que termine el rerun.
+
+Preguntas para practicar:
+
+1. ¿Por qué recibir también el problema? La solución conserva la forma estándar;
+   el informe debe mostrar además el modelo original y las holguras originales.
+2. ¿Exportar vuelve a ejecutar simplex? No. Recorre `Solution.iterations` y, si
+   hay óptimo, reconstruye sensibilidad desde la base ya calculada.
+3. ¿Por qué dividir columnas y repetir la primera? Así cada valor conserva su
+   básica o restricción identificada y ninguna celda queda fuera de la página.
+4. ¿Qué cambia al pedir decimales? Solo el texto; Fraction y MValue se conservan
+   en el objeto original, incluidos costos, razones y certificados.
+5. ¿Cómo detectar un PDF vacío que empieza por `%PDF-`? Leerlo con un lector
+   independiente y exigir modelo, estados, resultado y sensibilidad aplicable.
+
+Ejercicio: reducir a cuatro las columnas de datos por bloque; comprobar con el
+caso de ocho variables que no se pierde ninguna columna ni el pivote resaltado.

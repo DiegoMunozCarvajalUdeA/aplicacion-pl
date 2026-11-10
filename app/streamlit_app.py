@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from plapp.big_m import solve_big_m
+from plapp.export_pdf import export_steps_pdf
 from plapp.formatting import format_expression, format_number
 from plapp.graphical import graphical_method
 from plapp.io_json import load_problem, problem_to_dict, save_problem
@@ -601,6 +602,25 @@ def render_comparison(solutions: dict[str, Solution]) -> None:
     )
 
 
+def render_pdf_download(problem: LPProblem, solution: Solution, label: str, key: str) -> None:
+    """Ofrecer bytes de la evidencia disponible y comunicar fallos sin traceback."""
+    try:
+        mode = "fraction" if st.session_state["format"] == "Fracciones" else "decimal"
+        data = export_steps_pdf(problem, solution, mode, st.session_state["decimals"])
+        st.download_button(
+            label,
+            data=data,
+            file_name=f"pasos_{solution.method}.pdf",
+            mime="application/pdf",
+            key=key,
+            on_click="ignore",
+        )
+    except NotImplementedError:
+        st.info("Pendiente de implementar: exportación PDF")
+    except Exception:
+        st.error("No se pudo generar el PDF. Revise el módulo y vuelva a intentar.")
+
+
 def render_results(problem: LPProblem, step_mode: bool) -> None:
     """Mantener cada sección utilizable aunque otros módulos estén pendientes."""
     solutions = st.session_state["solutions"]
@@ -618,12 +638,10 @@ def render_results(problem: LPProblem, step_mode: bool) -> None:
             st.info("Pulse Resolver para ejecutar el método seleccionado.")
     with tabs[1]:
         render_steps(problem, solution, step_mode)
-        st.button(
-            "Exportar paso a paso a PDF",
-            disabled=True,
-            help="Pendiente de implementar: exportación PDF",
-        )
-        st.caption("Pendiente de implementar: exportación PDF")
+        if solution is not None:
+            render_pdf_download(problem, solution, "Exportar paso a paso a PDF", "steps_pdf")
+        else:
+            st.info("Resuelva el problema para exportar el paso a paso a PDF.")
     with tabs[2]:
         if len(problem.variable_names) != 2:
             st.info("El método gráfico no aplica: requiere exactamente dos variables.")
@@ -726,6 +744,9 @@ def render_results(problem: LPProblem, step_mode: bool) -> None:
             for label, item in solutions.items():
                 st.subheader(label)
                 render_steps(problem, item, step_mode)
+                render_pdf_download(
+                    problem, item, f"Exportar PDF: {label}", f"compare_pdf_{item.method}"
+                )
 
 
 def main() -> None:

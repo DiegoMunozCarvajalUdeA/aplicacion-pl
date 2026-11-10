@@ -20,7 +20,9 @@ click==8.5.1
     #   streamlit
     #   uvicorn
 fonttools==4.68.0
-    # via fpdf2
+    # via
+    #   fpdf2
+    #   plapp
 fpdf2==2.9.0
     # via plapp
 h11==0.16.0

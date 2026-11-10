@@ -12,8 +12,8 @@
 | P5: sensibilidad | Implementado | Precios y rangos exactos; perturbaciones de ejemplos 1–2 y 150 casos generados |
 | R: revisión menor | Implementado | Interpretaciones únicas, redundantes visibles y seis capturas Chromium revisadas |
 | P6: revisado | Implementado | Reglas compartidas; 21 trazas idénticas; B⁻¹ comprobada en cada estado; 3000 casos por método sin errores ni diferencias |
-| P7: PDF | Pendiente | Stub |
-| P8: entregables | Pendiente | Guía de sustentación de P1–P5 escrita; manual, capturas y video pendientes |
+| P7: PDF | Implementado | 56 informes de fixtures, tablas anchas y 36 descargas reales; 449 pruebas pasan sin xfail |
+| P8: entregables | Pendiente | Guía P1–P7 y capturas de R disponibles; faltan manual, guion, ensayo y cierre de entregables |
 
 P1: `make lint` y `make test` correctos. Los 13 fixtures pasan por el oráculo;
 los solvers aún informan que están pendientes. AppTest muestra las formas
@@ -40,11 +40,11 @@ Guía de P3 e informe de sesión en `docs/sustentacion.md` y
 | Criterio | Peso | Módulos | Pruebas | Responsable | Estado actual |
 |---|---:|---|---|---|---|
 | Entrada y validación | 10 % | model, io_json | test_model, test_io_json | [Integrante] | Infraestructura implementada |
-| Método propio | 15 % | mvalue, standard_form, big_m | test_contracts, test_examples, test_oracle_scipy | [Integrante] | Gran M implementada |
-| Paso a paso | 25 % | result, formatting, standard_form, big_m, revised_simplex, UI | test_contracts, test_examples, test_app | [Integrante] | Gran M completa; revisado pendiente |
+| Método propio | 15 % | mvalue, standard_form, simplex_rules, big_m, revised_simplex | test_contracts, test_examples, test_oracle_scipy, test_revised_simplex | [Integrante] | Ambos métodos implementados y contrastados |
+| Paso a paso | 25 % | result, formatting, standard_form, big_m, revised_simplex, UI | test_contracts, test_examples, test_app | [Integrante] | Tablero o B⁻¹, x_B, y, razones y justificaciones; comparación por estado |
 | Método gráfico | 20 % | graphical, presentación Plotly | test_graphical, test_app | [Integrante] | Geometría exacta y presentación implementadas |
 | Sensibilidad | 15 % | sensitivity, base final del solver | test_sensitivity, test_oracle_scipy | [Integrante] | Precios originales, rangos e interpretación implementados |
-| Interfaz y usabilidad | 15 % | streamlit_app | test_app | [Integrante] | Gran M, gráfico y sensibilidad en ambos modos y formatos |
+| Interfaz y usabilidad | 15 % | streamlit_app | test_app, check_ui | [Integrante] | Ambos métodos, comparación, gráfico, sensibilidad, JSON y PDF |
 
 Los porcentajes son de la rúbrica, no porcentajes ya obtenidos. Una base
 navegable no satisface por sí sola la resolución y visualización requeridas.
@@ -106,6 +106,16 @@ P5: rangos y precios derivados de A y la base, sin consultar el tablero.
 Se deshacen signos originales; las redundantes reciben precio dual cero sin
 rango propio y las demás filas conservan las dependencias originales.
 P6 implementado: refactor de reglas puras en commit separado y comparación real.
-Siguiente paquete de esta sesión: P7 (PDF).
+P7 implementado: PDF Unicode con evidencia y sensibilidad, en ambos formatos.
 P8 permanece para la sesión final; `docs/desarrollo-c-p4-p5.md` registra
 comandos, resultados y decisiones de C, P4 y P5.
+
+R–P7: `docs/desarrollo-r-p6-p7.md` registra trazas idénticas en 21 casos,
+3000 problemas verificados por método sin errores ni diferencias y la revisión
+visual de seis gráficos y dos PDF. La suite final tiene 449 pruebas aprobadas,
+sin xfail ni XPASS. Los bonos de comparación y PDF cuentan con implementación y
+verificación; la calificación depende del cumplimiento completo de la rúbrica.
+
+Próxima sesión: P8, exclusivamente entregables y preparación de sustentación.
+Reutilizar `scripts/check_ui.py` y las capturas de R para la revisión visual;
+crear las capturas del manual con los problemas resueltos que requiera P8.

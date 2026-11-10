@@ -10,10 +10,10 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 from app import streamlit_app
-from plapp.big_m import solve_big_m
 from plapp.formatting import format_number
 from plapp.io_json import problem_to_dict
 from plapp.model import Constraint, LPProblem
+from plapp.revised_simplex import solve_revised
 
 APP = Path(__file__).resolve().parents[1] / "app/streamlit_app.py"
 
@@ -48,7 +48,12 @@ def test_navigation_and_pending_modules(app):
     button(app, "Resolver").click().run()
     assert not app.exception and not app.error
     assert any("Z = 3380" in item.value for item in app.markdown)
-    assert button(app, "Exportar paso a paso a PDF").disabled
+    pdf = next(
+        item
+        for item in app.get("download_button")
+        if item.proto.label == "Exportar paso a paso a PDF"
+    )
+    assert not pdf.proto.disabled and pdf.proto.url
     assert app.get("plotly_chart")
     assert any("Óptimo gráfico: Z = 3380" in item.value for item in app.markdown)
 
@@ -243,21 +248,20 @@ def test_format_change_preserves_exact_solution(app):
     assert original.values == {"x1": Fraction(2, 5), "x2": Fraction(9, 5)}
 
 
-def test_revised_contract_presentation(app, monkeypatch, example_one):
-    solution = solve_big_m(example_one)
-    last = replace(solution.iterations[-1], tableau=None, b_inverse=solution.final_b_inverse)
-    monkeypatch.setattr(
-        "plapp.revised_simplex.solve_revised",
-        lambda p: replace(solution, method="revised", iterations=(last,)),
-    )
+def test_revised_contract_presentation(app, example_one):
+    solution = solve_revised(example_one)
     selectbox(app, "Método").select("Simplex revisado").run()
     app.radio[0].set_value("Paso a paso").run()
     button(app, "Resolver").click().run()
     assert not app.exception and not app.error
-    inverse_tables = [t.value for t in app.table if list(t.value.columns) == ["R1", "R2", "R3"]]
-    assert len(inverse_tables) == 1
-    assert list(inverse_tables[0].index) == ["x1", "x2", "s3"]
-    assert inverse_tables[0].iloc[0, 0] == "3/5"
+    inverse_tables = [
+        t.value
+        for t in app.table
+        if list(t.value.columns) == ["R1", "R2", "R3"] and list(t.value.index) != ["y"]
+    ]
+    assert len(inverse_tables) == len(solution.iterations)
+    assert list(inverse_tables[-1].index) == ["x1", "x2", "s3"]
+    assert inverse_tables[-1].iloc[0, 0] == "3/5"
     assert any("cⱼ − zⱼ" in t.value.index for t in app.table)
 
 
@@ -379,6 +383,9 @@ def test_comparison_and_revised_evidence(app, example, mode, number_format):
     comparison = next(t.value for t in app.table if "Base coincide" in t.value.columns)
     assert len(comparison) == len(solution.iterations)
     assert set(comparison["Base coincide"]) == {"Sí"}
+    downloads = [item.proto for item in app.get("download_button") if "PDF" in item.proto.label]
+    assert len(downloads) == 3
+    assert all(item.url and not item.disabled for item in downloads)
     text = "\n".join(item.value for item in app.markdown)
     assert (
         "Misma solución: Sí. Mismo Z: Sí." in text if example != 5 else "Mismo estado: Sí" in text
@@ -413,3 +420,23 @@ def test_comparison_reports_missing_state(app, example_one, monkeypatch):
     assert list(comparison["Base coincide"]) == ["Sí", "Sí", "No"]
     assert comparison.iloc[-1]["Base Revisado"] == "—"
     assert not app.exception and not app.error
+
+
+def test_pdf_requires_solution_and_reports_failure(app, monkeypatch):
+    """No generar sin solución y contener errores del exportador en un aviso legible."""
+    calls = []
+
+    def broken_export(problem, solution, mode, decimals):
+        """Provocar un fallo de infraestructura para comprobar su contención en la UI."""
+        calls.append((problem, solution, mode, decimals))
+        raise RuntimeError("Detalle interno del PDF")
+
+    monkeypatch.setattr("plapp.export_pdf.export_steps_pdf", broken_export)
+    app.run()
+    assert not calls
+    assert not any("PDF" in item.proto.label for item in app.get("download_button"))
+    button(app, "Resolver").click().run()
+    assert len(calls) == 1 and calls[0][2:] == ("fraction", 4)
+    assert not app.exception
+    assert any("No se pudo generar el PDF" in item.value for item in app.error)
+    assert all("Detalle interno" not in item.value for item in app.error)
