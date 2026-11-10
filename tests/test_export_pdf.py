@@ -45,6 +45,7 @@ def test_all_fixtures_export_content(fixture_problem, solver, mode, monkeypatch)
     reader, text = read_pdf(export_steps_pdf(original, solution, mode))
     assert original.name in text
     assert "Forma estándar" in text and "Resultado final" in text
+    assert text.index("Resultado final") < text.index("Notas del documento") < text.index("Fuente:")
     assert ("Gran M" if solution.method == "big_m" else "Simplex revisado") in text
     for state in solution.iterations:
         assert f"Iteración {state.number}\n" in text

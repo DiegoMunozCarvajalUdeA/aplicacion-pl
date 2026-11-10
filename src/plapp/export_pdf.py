@@ -121,7 +121,6 @@ def _problem(report: _Report, problem: LPProblem, standard: StandardForm) -> Non
         )
         report.text(f"{row.name}: {expression} {symbols[row.relation]} {report.number(row.rhs)}")
     report.text(", ".join(problem.variable_names) + " ≥ 0")
-    report.text("Fuente: DejaVu Sans 2.37. Un carácter sin glifo se representa como [U+XXXX].")
     report.text("Forma estándar", heading=True)
     for note in standard.transformations:
         for row in problem.constraints:
@@ -391,4 +390,6 @@ def export_steps_pdf(
     _result(report, problem, solution)
     if solution.status == Status.OPTIMAL:
         _sensitivity(report, problem, solution)
+    report.text("Notas del documento", heading=True)
+    report.text("Fuente: DejaVu Sans 2.37. Un carácter sin glifo se representa como [U+XXXX].")
     return bytes(report.pdf.output())
