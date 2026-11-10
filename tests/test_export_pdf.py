@@ -30,7 +30,7 @@ def read_pdf(data):
 @pytest.mark.parametrize("solver", [solve_big_m, solve_revised])
 @pytest.mark.parametrize("mode", ["fraction", "decimal"])
 def test_all_fixtures_export_content(fixture_problem, solver, mode, monkeypatch):
-    """Comprobar los 56 informes y que sensibilidad reciba la misma solución ya calculada."""
+    """Comprobar cada informe y que sensibilidad reciba la misma solución ya calculada."""
     original, _ = fixture_problem
     solution = solver(original)
     calls = []
