@@ -1,6 +1,7 @@
 """Comprobar la app real y capturar su presentación con Chromium."""
 
 import argparse
+import json
 import socket
 import subprocess
 import sys
@@ -11,10 +12,11 @@ from pathlib import Path
 from urllib.error import URLError
 from urllib.request import urlopen
 
-from playwright.sync_api import Page, expect, sync_playwright
+from playwright.sync_api import Locator, Page, expect, sync_playwright
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
+FIXTURES = ROOT / "tests/fixtures/problems"
 
 
 @contextmanager
@@ -91,25 +93,81 @@ def wait_ready(page: Page) -> None:
     )
 
 
+def load_example(page: Page, filename: str) -> None:
+    """Cargar un ejemplo y esperar su rerun antes del siguiente clic.
+
+    Si se pulsa Resolver mientras el rerun de la carga sigue en curso, el
+    navegador todavía envía el sentido anterior y la app lo aplica al nuevo
+    problema. Por eso se comprueba el resumen con el dato de entrada «sentido»
+    del archivo; nunca se lee el bloque de resultados esperados.
+    """
+    select(page, "Ejemplo", filename)
+    page.get_by_role("button", name="Cargar ejemplo", exact=True).click()
+    wait_ready(page)
+    sense = json.loads((FIXTURES / filename).read_text(encoding="utf-8"))["sentido"]
+    summary = page.locator('[data-testid="stExpander"]').first
+    expect(summary).to_contain_text(f"{sense.upper()} Z")
+
+
+def solve(page: Page) -> None:
+    """Pulsar Resolver y esperar a que la app termine de presentar el resultado."""
+    page.get_by_role("button", name="Resolver", exact=True).click()
+    wait_ready(page)
+
+
+def capture_region(page: Page, first: Locator, last: Locator, path: Path) -> None:
+    """Recortar desde un elemento hasta otro para conservar el contexto de la captura."""
+    first.scroll_into_view_if_needed()
+    viewport = page.viewport_size
+    bottom = last.bounding_box()
+    if viewport and bottom and bottom["y"] + bottom["height"] > viewport["height"]:
+        # Llevar el primer elemento cerca del borde superior, debajo de la cabecera fija.
+        first.evaluate(
+            """element => {
+                element.scrollIntoView({block: "start"});
+                let node = element.parentElement;
+                while (node && !["auto", "scroll"].includes(getComputedStyle(node).overflowY)) {
+                    node = node.parentElement;
+                }
+                if (node) node.scrollTop -= 90;
+            }"""
+        )
+        page.wait_for_timeout(200)
+    top, bottom = first.bounding_box(), last.bounding_box()
+    assert top and bottom, f"{path.name}: elementos no visibles"
+    assert viewport and bottom["y"] + bottom["height"] <= viewport["height"], (
+        f"{path.name}: la región no cabe en la ventana; aumente su altura."
+    )
+    left = min(top["x"], bottom["x"]) - 8
+    right = max(top["x"] + top["width"], bottom["x"] + bottom["width"]) + 8
+    clip = {
+        "x": max(left, 0),
+        "y": max(top["y"] - 8, 0),
+        "width": right - max(left, 0),
+        "height": bottom["y"] + bottom["height"] - top["y"] + 16,
+    }
+    page.screenshot(path=str(path), clip=clip)
+
+
+def check_no_errors(page: Page) -> None:
+    """Fallar si la app mostró un traceback o un aviso de error inesperado."""
+    assert not page.locator('[data-testid="stException"]').count()
+    assert not page.locator('[data-testid="stAlertContentError"]').count()
+
+
 def capture_graphs(page: Page, output: Path) -> None:
     """Guardar los seis casos exigidos, incluidos vacío y mejora ilimitada."""
     for name in ("ejemplo_1", "ejemplo_5", "ejemplo_6", "ejemplo_7", "extra_1", "extra_3"):
-        select(page, "Ejemplo", name + ".json")
-        page.get_by_role("button", name="Cargar ejemplo", exact=True).click()
+        load_example(page, name + ".json")
         page.get_by_role("tab", name="Método gráfico", exact=True).click()
         chart = page.locator('[data-testid="stPlotlyChart"]')
         expect(chart.locator(".js-plotly-plot")).to_be_visible()
-        page.wait_for_function(
-            "name => document.querySelector('[data-testid=stExpander]')?.innerText.includes(name)",
-            arg="MIN Z" if name == "extra_1" else "MAX Z",
-        )
         # Plotly termina el dibujo después del rerun del servidor.
         page.wait_for_timeout(400)
         page.get_by_role("tabpanel").filter(visible=True).screenshot(
             path=str(output / f"{name}.png")
         )
-        assert not page.locator('[data-testid="stException"]').count()
-        assert not page.locator('[data-testid="stAlertContentError"]').count()
+        check_no_errors(page)
         print(f"Gráfico: {name}")
 
 
@@ -135,21 +193,19 @@ def check_solutions(page: Page, output: Path, downloads: bool = False) -> None:
     """Recorrer comparación en ambos modos y formatos con casos de la rúbrica."""
     select(page, "Método", "Comparar ambos")
     for example in (2, 5, 6):
-        select(page, "Ejemplo", f"ejemplo_{example}.json")
-        page.get_by_role("button", name="Cargar ejemplo", exact=True).click()
+        load_example(page, f"ejemplo_{example}.json")
         for mode in ("Directo", "Paso a paso"):
             page.locator('[data-testid="stSidebar"]').get_by_text(mode, exact=True).click()
             wait_ready(page)
             for number_format in ("Fracciones", "Decimales"):
                 select(page, "Formato numérico", number_format)
-                page.get_by_role("button", name="Resolver", exact=True).click()
+                solve(page)
                 page.get_by_role("tab", name="Comparar métodos", exact=True).click()
                 summary = "Mismo estado: Sí" if example == 5 else "Misma solución: Sí. Mismo Z: Sí."
                 expect(page.get_by_text(summary, exact=False)).to_be_visible()
                 expect(page.get_by_text("Base coincide", exact=True)).to_be_visible()
                 wait_ready(page)
-                assert not page.locator('[data-testid="stException"]').count()
-                assert not page.locator('[data-testid="stAlertContentError"]').count()
+                check_no_errors(page)
                 if downloads:
                     stem = f"ejemplo_{example}_{mode.replace(' ', '_')}_{number_format}"
                     for label, method in (("Gran M", "big_m"), ("Simplex revisado", "revised")):
@@ -166,12 +222,25 @@ def check_solutions(page: Page, output: Path, downloads: bool = False) -> None:
 
 
 def capture_manual(page: Page, output: Path) -> None:
-    """Capturar entradas, validación y dos problemas resueltos, sin datos esperados."""
+    """Capturar entrada, validación y los ejemplos 2 y 6 resueltos por la app.
+
+    Todas las cifras visibles provienen de la interfaz en ejecución; el script
+    no consulta resultados esperados ni SciPy.
+    """
     output.mkdir(parents=True, exist_ok=True)
-    select(page, "Ejemplo", "ejemplo_2.json")
-    page.get_by_role("button", name="Cargar ejemplo", exact=True).click()
+    # Un ancho menor evita tablas casi vacías; el gráfico usa luego el ancho de R y V.
+    page.set_viewport_size({"width": 1180, "height": 1700})
+    sidebar = page.locator('[data-testid="stSidebar"]')
+    select(page, "Método", "Gran M")
+    sidebar.get_by_text("Paso a paso", exact=True).click()
     wait_ready(page)
-    page.screenshot(path=str(output / "entrada.png"))
+    load_example(page, "ejemplo_2.json")
+    capture_region(
+        page,
+        page.locator('[data-testid="stAppViewContainer"]'),
+        page.locator('[data-testid="stExpander"]').first,
+        output / "entrada.png",
+    )
     # Editar la celda real del canvas, igual que el usuario en la interfaz.
     grid = page.locator('[data-testid="stDataFrame"]').first.locator(".dvn-scroller")
     grid.dblclick(position={"x": 65, "y": 55})
@@ -180,16 +249,18 @@ def capture_manual(page: Page, output: Path) -> None:
     editor.fill("abc")
     editor.press("Enter")
     wait_ready(page)
-    page.get_by_role("button", name="Resolver", exact=True).click()
+    solve(page)
     error = page.locator('[data-testid="stAlertContentError"]')
     expect(error).to_contain_text("objetivo, x1")
-    error.screenshot(path=str(output / "validacion.png"))
-    page.get_by_role("button", name="Cargar ejemplo", exact=True).click()
-    select(page, "Método", "Gran M")
-    page.locator('[data-testid="stSidebar"]').get_by_text("Paso a paso", exact=True).click()
-    wait_ready(page)
-    page.get_by_role("button", name="Resolver", exact=True).click()
-    wait_ready(page)
+    capture_region(
+        page,
+        page.get_by_role("heading", name="Función objetivo"),
+        error,
+        output / "validacion.png",
+    )
+    load_example(page, "ejemplo_2.json")
+    solve(page)
+    check_no_errors(page)
     page.get_by_role("tab", name="Resultado", exact=True).click()
     page.get_by_role("tabpanel").filter(visible=True).screenshot(
         path=str(output / "ejemplo_2_resultado.png")
@@ -199,35 +270,47 @@ def capture_manual(page: Page, output: Path) -> None:
     panel.locator('[data-testid="stExpander"]').filter(
         has=page.get_by_text("Iteración 1", exact=True)
     ).screenshot(path=str(output / "ejemplo_2_pivote.png"))
-    for summary in panel.locator('[data-testid="stExpander"] summary').all():
-        summary.click()
-    panel.screenshot(path=str(output / "ejemplo_2_estandar.png"))
+    capture_region(
+        page,
+        panel.get_by_role("heading", name="Forma estándar"),
+        panel.locator('[data-testid="stMarkdown"]').filter(has_text="Base inicial").first,
+        output / "ejemplo_2_estandar.png",
+    )
     page.get_by_role("tab", name="Sensibilidad", exact=True).click()
     panel = page.get_by_role("tabpanel").filter(visible=True)
     panel.locator('[data-testid="stTable"]').first.screenshot(
         path=str(output / "ejemplo_2_sensibilidad.png")
     )
-    panel.locator('[data-testid="stTable"]').last.screenshot(
-        path=str(output / "ejemplo_2_rangos.png")
+    capture_region(
+        page,
+        panel.get_by_text("Rangos de lados derechos", exact=True),
+        panel.locator('[data-testid="stMarkdown"]').last,
+        output / "ejemplo_2_rangos.png",
     )
     select(page, "Método", "Comparar ambos")
-    page.get_by_role("button", name="Resolver", exact=True).click()
+    solve(page)
     page.get_by_role("tab", name="Comparar métodos", exact=True).click()
     page.get_by_role("tabpanel").filter(visible=True).locator(
         '[data-testid="stTable"]'
     ).first.screenshot(path=str(output / "comparacion.png"))
-    select(page, "Ejemplo", "ejemplo_6.json")
-    page.get_by_role("button", name="Cargar ejemplo", exact=True).click()
-    page.get_by_role("button", name="Resolver", exact=True).click()
+    select(page, "Método", "Gran M")
+    load_example(page, "ejemplo_6.json")
+    solve(page)
+    check_no_errors(page)
+    page.get_by_role("tab", name="Resultado", exact=True).click()
+    page.get_by_role("tabpanel").filter(visible=True).screenshot(
+        path=str(output / "ejemplo_6_resultado.png")
+    )
+    page.set_viewport_size({"width": 1440, "height": 1100})
     page.get_by_role("tab", name="Método gráfico", exact=True).click()
-    wait_ready(page)
-    page.wait_for_timeout(400)
+    expect(page.locator('[data-testid="stPlotlyChart"] .js-plotly-plot')).to_be_visible()
+    # Plotly vuelve a dibujar al cambiar el ancho de la ventana.
+    page.wait_for_timeout(800)
     page.get_by_role("tabpanel").filter(visible=True).screenshot(
         path=str(output / "ejemplo_6_grafico.png")
     )
-    assert not page.locator('[data-testid="stException"]').count()
-    assert not page.locator('[data-testid="stAlertContentError"]').count()
-    print("Manual: nueve capturas reales guardadas")
+    check_no_errors(page)
+    print("Manual: diez capturas reales guardadas")
 
 
 def main() -> None:
@@ -246,7 +329,11 @@ def main() -> None:
     with app_server(args.url, args.serve) as url, sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=True)
         try:
-            page = browser.new_page(viewport={"width": 1440, "height": 1100})
+            # Las capturas del manual usan doble densidad para leerse al imprimirlas reducidas.
+            page = browser.new_page(
+                viewport={"width": 1440, "height": 1100},
+                device_scale_factor=2 if args.manual else 1,
+            )
             assert page.request.get(url + "/_stcore/health").text() == "ok"
             page.goto(url)
             page.wait_for_load_state("networkidle")

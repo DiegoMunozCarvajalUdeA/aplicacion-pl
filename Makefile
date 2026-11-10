@@ -1,4 +1,4 @@
-.PHONY: setup run test lint fmt verify requirements ui-check manual-captures
+.PHONY: setup run test lint fmt verify requirements ui-check manual-captures manual
 
 OUT ?= /tmp/plapp-ui
 
@@ -31,3 +31,5 @@ ui-check:
 manual-captures:
 	uv run python scripts/check_ui.py --serve --manual
 
+manual:
+	uv run python scripts/build_manual.py

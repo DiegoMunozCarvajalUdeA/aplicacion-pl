@@ -20,6 +20,7 @@ dev = [
     "scipy>=1.15,<2",
     "playwright>=1.50,<2",
     "pypdf>=6,<8",
+    "markdown-it-py>=4,<5",
 ]
 
 [build-system]
