@@ -42,4 +42,26 @@ def test_invalid_format(mode, decimals):
 
 
 def test_expression():
-    assert format_expression((Fraction(2), Fraction(-1)), ("x1", "x2")) == "2·x1 - 1·x2"
+    assert format_expression((Fraction(2), Fraction(-1)), ("x1", "x2")) == "2·x1 - x2"
+
+
+@pytest.mark.parametrize("mode", ["fraction", "decimal"])
+@pytest.mark.parametrize(
+    ("coefficients", "expected"),
+    [
+        ((0, 1), "x2"),
+        ((1, -1), "x1 - x2"),
+        ((-1, -2), "-x1 - 2·x2"),
+        ((0, 0), "0"),
+        ((Fraction(1, 2), -1), None),
+    ],
+)
+def test_readable_expressions(coefficients, expected, mode):
+    """Omitir ceros y unos exactos sin decidir por el texto redondeado."""
+    expected = expected or ("1/2·x1 - x2" if mode == "fraction" else "0.5·x1 - x2")
+    assert format_expression(tuple(map(Fraction, coefficients)), ("x1", "x2"), mode) == expected
+
+
+def test_rounded_coefficient_is_not_exactly_one():
+    """Un redondeo a uno conserva el coeficiente explícito del valor no unitario."""
+    assert format_expression((Fraction(999, 1000),), ("x1",), "decimal", 2) == "1·x1"

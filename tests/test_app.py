@@ -93,6 +93,18 @@ def test_load_min_and_three_variables(app):
     assert not app.exception and not app.error
 
 
+@pytest.mark.parametrize("mode", ["Fracciones", "Decimales"])
+def test_readable_model_summary(app, mode):
+    """Resumen y PDF comparten expresiones legibles del problema original."""
+    selectbox(app, "Ejemplo").select("ejemplo_2.json").run()
+    button(app, "Cargar ejemplo").click().run()
+    selectbox(app, "Formato numérico").select(mode).run()
+    texts = [item.value for item in app.markdown]
+    assert "MIN Z = 4·x1 + x2" in texts
+    assert "R3: -x1 - 2·x2 ≥ -4" in texts
+    assert not app.exception and not app.error
+
+
 def test_both_methods_and_formats(app):
     selectbox(app, "Método").select("Comparar ambos").run()
     app.radio[0].set_value("Paso a paso").run()

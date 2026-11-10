@@ -131,7 +131,8 @@ def render_summary(problem: LPProblem) -> None:
     st.write(f"{problem.sense.upper()} Z = {expression}")
     for row in problem.constraints:
         expression = format_expression(row.coefficients, problem.variable_names, mode, decimals)
-        st.write(f"{row.name}: {expression} {row.relation} {number(row.rhs)}")
+        relation = {"<=": "≤", ">=": "≥", "=": "="}[row.relation]
+        st.write(f"{row.name}: {expression} {relation} {number(row.rhs)}")
     st.write(", ".join(problem.variable_names) + " ≥ 0")
 
 

@@ -146,3 +146,12 @@ def test_glyphs_unicode_fallback_and_invalid_input(example_one):
         export_steps_pdf(example_one, Solution("big_m", Status.OPTIMAL, "Sin evidencia"))
     with pytest.raises(ValueError, match="formato"):
         export_steps_pdf(example_one, solve_big_m(example_one), "otro")
+
+
+@pytest.mark.parametrize("mode", ["fraction", "decimal"])
+def test_readable_original_model(mode):
+    """El enunciado simplifica coeficientes; las tablas conservan sus ceros y unos."""
+    original = load_problem(PROBLEMS / "ejemplo_2.json")
+    _, text = read_pdf(export_steps_pdf(original, solve_big_m(original), mode))
+    assert "MIN Z = 4·x1 + x2" in text
+    assert "R3: -x1 - 2·x2 ≥ -4" in text

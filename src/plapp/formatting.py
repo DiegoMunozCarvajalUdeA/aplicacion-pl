@@ -45,8 +45,13 @@ def format_expression(
     mode: NumberFormat = "fraction",
     decimals: int = 4,
 ) -> str:
-    """Rotular una expresión preservando todos sus coeficientes."""
-    return " + ".join(
-        f"{format_number(value, mode, decimals)}·{name}"
-        for value, name in zip(coefficients, names, strict=True)
-    ).replace("+ -", "- ")
+    """Omitir ceros y coeficientes unitarios exactos para facilitar la lectura."""
+    terms = []
+    for value, name in zip(coefficients, names, strict=True):
+        if value == 0:
+            continue
+        magnitude = abs(value)
+        term = name if magnitude == 1 else f"{format_number(magnitude, mode, decimals)}·{name}"
+        sign = ("-" if value < 0 else "") if not terms else (" - " if value < 0 else " + ")
+        terms.append(sign + term)
+    return "".join(terms) or "0"
