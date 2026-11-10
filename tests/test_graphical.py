@@ -27,6 +27,7 @@ def test_example_one_vertices(example_one):
     assert result.optimal_points == ((Fraction(42), Fraction(16)),)
     assert result.objective_line is not None
     assert len(result.lines) == 3
+    assert result.drawing_bounds == (Fraction(108), Fraction(120))
     # R3: x2 <= 40 no corta la región ni agrega vértices.
     assert all(vertex.point[1] < 40 for vertex in result.vertices)
 
@@ -65,6 +66,7 @@ def test_unbounded_objective():
     assert result.status == Status.UNBOUNDED and result.objective_value is None
     assert not result.optimal_points and result.objective_line is None
     assert result.improving_direction == tuple(own.unbounded_direction.values()) == (1, 1)
+    assert result.drawing_bounds == (Fraction(6), Fraction(36, 5))
     assert len(result.improvement_segment) == 2
     assert any(result.improvement_segment[-1][i] == result.drawing_bounds[i] for i in (0, 1))
 

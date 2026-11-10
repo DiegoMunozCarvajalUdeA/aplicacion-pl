@@ -1,5 +1,6 @@
 """Interfaz base; solo los métodos del equipo podrán producir soluciones."""
 
+from fractions import Fraction
 from itertools import zip_longest
 from pathlib import Path
 
@@ -417,9 +418,30 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
                 fill="toself" if len(polygon) > 2 else None,
                 mode="lines+markers" if len(polygon) < 3 else "lines",
                 name="Región factible",
-                line={"width": 5 if len(polygon) < 3 else 2},
+                line={"width": 0 if result.bounded is False else 5 if len(polygon) < 3 else 2},
+                fillcolor="rgba(99,110,250,0.2)",
             )
         )
+        if result.bounded is False:
+            for first, last in zip(closed, closed[1:], strict=False):
+                on_box = any(
+                    first[i] == last[i] and first[i] in (0, result.drawing_bounds[i])
+                    for i in (0, 1)
+                )
+                figure.add_trace(
+                    go.Scatter(
+                        x=[float(first[0]), float(last[0])],
+                        y=[float(first[1]), float(last[1])],
+                        mode="lines",
+                        name="Borde del recorte" if on_box else "Frontera factible",
+                        line={
+                            "color": "gray" if on_box else "#636efa",
+                            "dash": "dot" if on_box else "solid",
+                            "width": 2,
+                        },
+                        showlegend=False,
+                    )
+                )
     lines = result.lines + ((result.objective_line,) if result.objective_line else ())
     label_positions = []
     for index, line in enumerate(lines):
@@ -546,11 +568,21 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
         margin={"l": 60, "r": 40, "t": 35, "b": 130},
         legend={"orientation": "h", "y": -0.25, "x": 0},
     )
-    figure.update_xaxes(range=[0, float(result.drawing_bounds[0])])
-    figure.update_yaxes(range=[0, float(result.drawing_bounds[1])])
+    figure.update_xaxes(range=[0, float(result.drawing_bounds[0])], constrain="domain")
+    figure.update_yaxes(range=[0, float(result.drawing_bounds[1])], constrain="domain")
+    ratio = result.drawing_bounds[0] / result.drawing_bounds[1]
+    if Fraction(1, 4) <= ratio <= 4:
+        figure.update_yaxes(scaleanchor="x", scaleratio=1)
+    else:
+        st.info("Los ejes tienen escalas distintas: direcciones y pendientes se ven deformadas")
     st.plotly_chart(figure, width="stretch")
     if result.bounded is False:
-        st.info("Región no acotada; se muestra un recorte para visualizarla.")
+        for direction in result.recession_directions:
+            st.info(
+                "La región factible continúa sin límite en la dirección "
+                f"({number(direction[0])}, {number(direction[1])}); "
+                "el recuadro solo limita el dibujo"
+            )
 
 
 def render_comparison(solutions: dict[str, Solution]) -> None:

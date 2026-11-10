@@ -315,7 +315,8 @@ def test_graph_presentation(app, example):
     chart = json.loads(app.get("plotly_chart")[0].proto.spec)
     traces = chart["data"]
     layout = chart["layout"]
-    assert "scaleanchor" not in layout["yaxis"]
+    assert layout["yaxis"]["scaleanchor"] == "x"
+    assert layout["yaxis"]["scaleratio"] == 1
     assert layout["xaxis"]["range"][0] == layout["yaxis"]["range"][0] == 0
     assert all(any(a["text"].startswith(f"R{i}:") for a in layout["annotations"]) for i in (1, 2))
     if example == 4:
@@ -331,6 +332,39 @@ def test_graph_presentation(app, example):
         if example == 6:
             optimum = next(t for t in traces if t["name"] == "Óptimo")
             assert optimum["mode"] == "lines+markers" and len(optimum["x"]) == 2
+
+
+@pytest.mark.parametrize("filename", ["ejemplo_1.json", "ejemplo_5.json", "extra_1.json"])
+def test_unbounded_graph_notice(app, filename):
+    """Cada dirección se informa y los bordes del recorte se distinguen por trazos."""
+    selectbox(app, "Ejemplo").select(filename).run()
+    button(app, "Cargar ejemplo").click().run()
+    notices = [item.value for item in app.info if "el recuadro solo limita el dibujo" in item.value]
+    assert bool(notices) == (filename != "ejemplo_1.json")
+    if notices:
+        chart = json.loads(app.get("plotly_chart")[0].proto.spec)
+        assert any(
+            t.get("line", {}).get("color") == "gray" and t["line"].get("dash") == "dot"
+            for t in chart["data"]
+        )
+    assert not app.exception and not app.error
+
+
+def test_asymmetric_graph_notice(app):
+    """Una caja muy alargada mantiene ejes independientes con aviso explícito."""
+    original = LPProblem(
+        (Fraction(1), Fraction(1)),
+        (
+            Constraint((Fraction(1), Fraction(0)), "<=", Fraction(10000)),
+            Constraint((Fraction(0), Fraction(1)), "<=", Fraction(1)),
+        ),
+    )
+    app.session_state["raw"] = problem_to_dict(original)
+    app.session_state["revision"] += 1
+    app.run()
+    chart = json.loads(app.get("plotly_chart")[0].proto.spec)
+    assert "scaleanchor" not in chart["layout"]["yaxis"]
+    assert any("Los ejes tienen escalas distintas" in item.value for item in app.info)
 
 
 @pytest.mark.parametrize("number_format", ["Fracciones", "Decimales"])

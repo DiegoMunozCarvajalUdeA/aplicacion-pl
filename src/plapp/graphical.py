@@ -117,6 +117,13 @@ def graphical_method(problem: LPProblem) -> GraphicalResult:
     reference = set(vertices) | {
         p for p in intersections if min(p) >= 0 and (p[0] == 0 or p[1] == 0)
     }
+    directions = _recession(problem.constraints) if vertices else ()
+    if directions:
+        # Extender cada vértice en los rayos exactos hace visible la continuación.
+        scale = max(Fraction(1), *(coordinate for point in reference for coordinate in point))
+        reference.update(
+            (v[0] + 2 * scale * d[0], v[1] + 2 * scale * d[1]) for v in vertices for d in directions
+        )
     bounds = tuple(max([Fraction(1), *(p[i] for p in reference)]) * Fraction(6, 5) for i in (0, 1))
     symbols = {"<=": "≤", ">=": "≥", "=": "="}
     lines = tuple(
@@ -145,7 +152,6 @@ def graphical_method(problem: LPProblem) -> GraphicalResult:
         and _satisfies(point, problem.constraints)
         and all(point[i] <= bounds[i] for i in (0, 1))
     }
-    directions = _recession(problem.constraints)
     evaluated = tuple(GraphVertex(p, _dot(problem.objective, p)) for p in vertices)
     sign = 1 if problem.sense == "max" else -1
     improving = next((d for d in directions if sign * _dot(problem.objective, d) > 0), None)
