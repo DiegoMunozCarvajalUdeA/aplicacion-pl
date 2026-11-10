@@ -16,9 +16,6 @@ from plapp.revised_simplex import solve_revised
         pytest.param(
             solve_revised,
             id="revisado",
-            marks=pytest.mark.xfail(
-                raises=NotImplementedError, strict=False, reason="Simplex revisado pendiente"
-            ),
         ),
     ],
 )

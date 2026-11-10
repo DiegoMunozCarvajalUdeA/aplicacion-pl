@@ -93,8 +93,10 @@ def test_both_methods_and_formats(app):
     app.radio[0].set_value("Paso a paso").run()
     selectbox(app, "Formato numérico").select("Decimales").run()
     button(app, "Resolver").click().run()
-    assert len(app.session_state["notices"]) == 1
-    assert any("Simplex revisado" in item.value for item in app.info)
+    assert not app.session_state["notices"]
+    assert len(app.session_state["solutions"]) == 2
+    comparison = next(t.value for t in app.table if "Base coincide" in t.value.columns)
+    assert list(comparison["Base coincide"]) == ["Sí"] * 3
     assert not app.exception and not app.error
 
 
@@ -359,3 +361,55 @@ def test_sensitivity_redundant_warning_and_unavailable_range(app):
     text = "\n".join(item.value for item in app.markdown)
     assert text.count("Cada unidad adicional de R1 ") == 1
     assert text.count("R2: precio sombra no único: fila redundante.") == 1
+
+
+@pytest.mark.parametrize("example", [2, 5, 6])
+@pytest.mark.parametrize("mode", ["Directo", "Paso a paso"])
+@pytest.mark.parametrize("number_format", ["Fracciones", "Decimales"])
+def test_comparison_and_revised_evidence(app, example, mode, number_format):
+    """Recorrer ambos métodos y comprobar la evidencia propia del revisado."""
+    selectbox(app, "Ejemplo").select(f"ejemplo_{example}.json").run()
+    button(app, "Cargar ejemplo").click().run()
+    selectbox(app, "Método").select("Comparar ambos").run()
+    app.radio[0].set_value(mode).run()
+    selectbox(app, "Formato numérico").select(number_format).run()
+    button(app, "Resolver").click().run()
+    assert not app.exception and not app.error and not app.session_state["notices"]
+    solution = app.session_state["solutions"]["Simplex revisado"]
+    comparison = next(t.value for t in app.table if "Base coincide" in t.value.columns)
+    assert len(comparison) == len(solution.iterations)
+    assert set(comparison["Base coincide"]) == {"Sí"}
+    text = "\n".join(item.value for item in app.markdown)
+    assert (
+        "Misma solución: Sí. Mismo Z: Sí." in text if example != 5 else "Mismo estado: Sí" in text
+    )
+    if mode == "Paso a paso":
+        basic_tables = [t.value for t in app.table if list(t.value.columns) == ["x_B"]]
+        assert len(basic_tables) == len(solution.iterations)
+        multiplier_tables = [t.value for t in app.table if list(t.value.index) == ["y"]]
+        assert len(multiplier_tables) == len(solution.iterations)
+        ratios = [t for t in app.table if "d = B⁻¹aⱼ" in t.value.columns]
+        assert ratios
+        for table, state in zip(ratios, (i for i in solution.iterations if i.ratios), strict=True):
+            assert list(table.value["Básica"]) == [r.basic_variable for r in state.ratios]
+            if state.pivot:
+                styles = table.proto.arrow_data.styler.styles
+                assert f"_row{state.pivot.row}_col3" in styles
+                assert "background-color: #fef08a" in styles
+
+
+def test_comparison_reports_missing_state(app, example_one, monkeypatch):
+    """Una secuencia desigual debe quedar visible aunque coincidan los resultados."""
+    from plapp.revised_simplex import solve_revised
+
+    solution = solve_revised(example_one)
+    monkeypatch.setattr(
+        "plapp.revised_simplex.solve_revised",
+        lambda p: replace(solution, iterations=solution.iterations[:-1]),
+    )
+    selectbox(app, "Método").select("Comparar ambos").run()
+    button(app, "Resolver").click().run()
+    comparison = next(t.value for t in app.table if "Base coincide" in t.value.columns)
+    assert list(comparison["Base coincide"]) == ["Sí", "Sí", "No"]
+    assert comparison.iloc[-1]["Base Revisado"] == "—"
+    assert not app.exception and not app.error

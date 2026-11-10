@@ -78,6 +78,8 @@ class Iteration:
     pivot: Pivot | None = None
     objective_value: Fraction | MValue | None = None
     notes: tuple[str, ...] = ()
+    basic_values: tuple[Fraction, ...] = ()
+    multipliers: tuple[MValue, ...] = ()
 
 
 @dataclass(frozen=True)

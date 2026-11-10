@@ -169,9 +169,6 @@ def test_generated_models_are_valid(problem):
         solve_big_m,
         pytest.param(
             solve_revised,
-            marks=pytest.mark.xfail(
-                raises=NotImplementedError, strict=False, reason="Simplex revisado pendiente"
-            ),
         ),
     ],
 )
@@ -189,9 +186,6 @@ def test_own_solver_against_scipy(solver, problem):
         solve_big_m,
         pytest.param(
             solve_revised,
-            marks=pytest.mark.xfail(
-                raises=NotImplementedError, strict=False, reason="Simplex revisado pendiente"
-            ),
         ),
     ],
 )

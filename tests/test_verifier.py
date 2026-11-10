@@ -71,7 +71,7 @@ def test_cli_report(monkeypatch, capsys):
         "x2 = 16",
         "Z = 3380",
         "Precio sombra R1 = 14",
-        "pendiente de implementar",
+        "Simplex revisado: coincide con SciPy",
     ):
         assert text in output
 

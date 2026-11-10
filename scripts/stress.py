@@ -8,6 +8,8 @@ from fractions import Fraction
 
 from plapp.big_m import solve_big_m
 from plapp.model import Constraint, LPProblem
+from plapp.result import Method
+from plapp.revised_simplex import solve_revised
 
 if __package__:
     from scripts.verify import OracleInconclusiveError, compare_solution, verify_with_scipy
@@ -52,9 +54,10 @@ def random_problem(rng: random.Random) -> LPProblem:
     )
 
 
-def run_stress(seed: int, count: int) -> dict[str, int]:
+def run_stress(seed: int, count: int, method: Method = "big_m") -> dict[str, int]:
     """Contar por separado errores propios, diferencias y oráculos excluidos."""
     rng = random.Random(seed)
+    solver = {"big_m": solve_big_m, "revised": solve_revised}[method]
     totals = dict(seed=seed, count=count, checked=0, errors=0, differences=0, inconclusive=0)
     for _ in range(count):
         problem = random_problem(rng)
@@ -65,7 +68,7 @@ def run_stress(seed: int, count: int) -> dict[str, int]:
             continue
         totals["checked"] += 1
         try:
-            own = solve_big_m(problem)
+            own = solver(problem)
         except (ValueError, ArithmeticError):
             totals["errors"] += 1
             continue
@@ -79,12 +82,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--seed", type=int, default=20261110)
     parser.add_argument("--count", type=int, default=3000)
+    parser.add_argument("--method", choices=("big_m", "revised", "both"), default="both")
     args = parser.parse_args()
     if args.count < 1:
         parser.error("--count debe ser positivo")
-    totals = run_stress(args.seed, args.count)
-    print(json.dumps(totals, ensure_ascii=False))
-    return int(bool(totals["errors"] or totals["differences"]))
+    methods = ("big_m", "revised") if args.method == "both" else (args.method,)
+    reports = {method: run_stress(args.seed, args.count, method) for method in methods}
+    print(json.dumps(reports, ensure_ascii=False))
+    return int(any(report["errors"] or report["differences"] for report in reports.values()))
 
 
 if __name__ == "__main__":

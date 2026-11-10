@@ -59,11 +59,11 @@ holgura; después cambiar una restricción ≥ con b negativo y explicar su base
 
 ## P2: método de la Gran M
 
-`src/plapp/big_m.py:17` canoniza cⱼ − zⱼ con los costos de la base actual;
-`src/plapp/big_m.py:28` guarda el estado anterior al pivote y Z = c_B·b.
-`src/plapp/big_m.py:44` hace el pivote con Fraction,
-`src/plapp/big_m.py:64` calcula las razones y explica exclusiones, y
-`src/plapp/big_m.py:89` decide
+`src/plapp/simplex_rules.py:124` canoniza cⱼ − zⱼ con los costos de la base actual;
+`src/plapp/big_m.py:14` guarda el estado anterior al pivote y Z = c_B·b.
+`src/plapp/simplex_rules.py:135` hace el pivote con Fraction,
+`src/plapp/simplex_rules.py:155` calcula las razones y explica exclusiones, y
+`src/plapp/simplex_rules.py:182` decide
 la salida. La entrada usa el mayor costo positivo en Max o el menor negativo
 en Min, con desempate por índice. El ciclo principal guarda bases visitadas:
 al repetir una, cambia permanentemente a Bland, incluida la entrada.
@@ -97,7 +97,7 @@ cada estado 0, 2400 y 3380. El ejemplo 7 termina con x1 básica en cero.
 
 ### Casos especiales y contratos
 
-`src/plapp/big_m.py:111` busca un punto óptimo distinto, recorriendo bases
+`src/plapp/simplex_rules.py:215` busca un punto óptimo distinto, recorriendo bases
 adyacentes de paso cero si el primer pivote es degenerado. Sin coeficientes
 positivos, un costo reducido cero certifica un rayo óptimo. Se guarda un
 segundo punto en `alternative_solutions` y, para rayos, la dirección en
@@ -161,8 +161,8 @@ calculó el solver. El visor no decide entradas, salidas ni pivotes.
 
 Para simplex revisado, el mismo visor recibe B⁻¹, rotula sus filas por básicas
 y columnas por restricciones originales, y muestra costos reducidos y Z.
-La prueba simula ese contrato con una base calculada por Gran M; no implementa
-ni reemplaza el solver revisado en la aplicación.
+Las pruebas verifican también x_B, y y la columna d del método revisado real,
+en ambos modos y formatos, con los ejemplos 2, 5 y 6.
 
 Al cargar el ejemplo 2, escoger Paso a paso y Resolver, comprobar las cuatro
 bases de la tabla de P2. En el estado 1, la fila x1 tiene lado derecho 1 y la
@@ -428,3 +428,59 @@ Preguntas para practicar:
 
 Ejercicio: usar Bland desde el inicio en `choose_entering`; identificar qué
 trazas congeladas fallan y explicar por qué la prueba detecta un cambio real.
+
+## P6, pasos 2–3: revisado y comparación
+
+`src/plapp/revised_simplex.py:38` calcula x_B=B⁻¹b, y=c_B B⁻¹ con MValue y
+r=c−yA. Para la entrante se calcula solo d=B⁻¹a_j. Cada `Iteration` guarda
+`b_inverse`, `basic_values` y `multipliers`, con `tableau=None`. Los dos campos
+nuevos tienen tupla vacía por defecto para conservar el contrato de Gran M.
+`src/plapp/revised_simplex.py:65` coordina las mismas reglas compartidas.
+
+### Actualización elemental
+
+`src/plapp/revised_simplex.py:16` aplica E·B⁻¹. Si sale la básica de posición p,
+E es identidad excepto en su columna p: E_pp=1/d_p y E_ip=−d_i/d_p para i≠p.
+Así E·d=e_p, y E·(B⁻¹B_nueva)=I. El producto se aplica normalizando la fila p
+de la inversa y restando d_i veces esa fila a las demás, en O(m²), sin calcular
+una nueva inversión. También funciona con d_p<0 en un retiro artificial de
+paso cero. Las pruebas construyen E explícita y comparan el producto; además
+invierten B con Gauss-Jordan en cada estado de los 21 casos.
+
+En el ejemplo 2, el primer d=(3,4,1) y p=0. E tiene filas (1/3,0,0),
+(−4/3,1,0) y (−1/3,0,1). Como B⁻¹ inicial es I, esa E es la nueva inversa;
+x_B=(1,2,3), Z=4+2M. Las bases y Z siguen exactamente la tabla de P2.
+
+Solo al retirar artificiales o certificar alternativas se calcula B⁻¹A completo.
+Las pruebas cuentan estos productos para impedir que el revisado mantenga un
+tablero durante los pivotes normales. Las artificiales redundantes conservan
+su testigo nulo; la sensibilidad sigue reconstruyendo la base por su cuenta.
+
+`app/streamlit_app.py:206` presenta B⁻¹, x_B, y y costos reducidos.
+`app/streamlit_app.py:285` muestra d con razones, exclusiones y pivote resaltado,
+incluido el retiro sin razón mínima. `app/streamlit_app.py:554` compara cada
+base, entrante, saliente y Z; si falta un estado, muestra «No» en la coincidencia.
+El resumen distingue estados registrados de pivotes. La referencia de trabajo
+m×(n+m+1) del tablero supone filas ≤; artificiales y excesos aumentan su ancho.
+El revisado mantiene m×m pero aún calcula yA y busca alternativas al terminar.
+
+Los 14 fixtures y las regresiones C1 y Beale tienen secuencias idénticas,
+sensibilidad idéntica en óptimos y el mismo resultado exacto. El estrés con
+semilla 20261110 y `--method both --count 3000` verificó 3000 por método,
+con 0 errores, 0 diferencias y 0 oráculos inconcluyentes en ambos.
+
+Preguntas para practicar:
+
+1. ¿Por qué y contiene M? Mientras haya artificiales básicas, c_B contiene
+   penalizaciones simbólicas y debe conservarse su efecto dominante.
+2. ¿Por qué E no depende de b? E convierte la columna d en e_p; b solo aporta
+   x_B para la razón mínima y la factibilidad.
+3. ¿Por qué no invertir B en cada pivote? La actualización elemental preserva
+   la inversa con operaciones de filas O(m²); Gauss-Jordan queda como verificación.
+4. ¿Se compara solo el resultado? También cada estado; una misma Z final no
+   demuestra que ambos métodos apliquen las mismas decisiones.
+5. ¿Por qué no mostrar el gráfico para n>2? Ambos métodos aceptan n variables;
+   la geometría dibujada es exclusivamente bidimensional.
+
+Ejercicio: reconstruir a mano E del segundo pivote del ejemplo 2 y verificar
+que E·B⁻¹ produce x_B=(3/5,6/5,1). Luego activar Bland desde el inicio.

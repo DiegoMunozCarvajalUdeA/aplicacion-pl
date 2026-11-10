@@ -1,5 +1,6 @@
 """Interfaz base; solo los métodos del equipo podrán producir soluciones."""
 
+from itertools import zip_longest
 from pathlib import Path
 
 import pandas as pd
@@ -10,6 +11,8 @@ from plapp.big_m import solve_big_m
 from plapp.formatting import format_expression, format_number
 from plapp.graphical import graphical_method
 from plapp.io_json import load_problem, problem_to_dict, save_problem
+from plapp.linalg import column as matrix_column
+from plapp.linalg import matvec
 from plapp.model import LPProblem, validate
 from plapp.result import GraphicalResult, Iteration, Solution, StandardForm, Status
 from plapp.revised_simplex import solve_revised
@@ -243,6 +246,22 @@ def render_iteration_tables(
                 columns=[row.name for row in problem.constraints],
             )
         )
+        if iteration.basic_values:
+            st.write("Valores básicos x_B = B⁻¹b")
+            st.table(
+                pd.DataFrame(
+                    {"x_B": [number(value) for value in iteration.basic_values]}, index=basic_names
+                )
+            )
+        if iteration.multipliers:
+            st.write("Multiplicadores y = c_B B⁻¹ (filas normalizadas)")
+            st.table(
+                pd.DataFrame(
+                    [[number(value) for value in iteration.multipliers]],
+                    index=["y"],
+                    columns=[row.name for row in problem.constraints],
+                )
+            )
     if iteration.reduced_costs and iteration.tableau is None:
         st.write("Costos reducidos")
         st.table(
@@ -254,6 +273,13 @@ def render_iteration_tables(
         )
     if iteration.objective_value is not None:
         st.write(f"Z = {number(iteration.objective_value)}")
+
+
+def highlight_pivot(data: pd.DataFrame, row: int, column: int) -> pd.DataFrame:
+    """Resaltar el coeficiente d ya certificado por el método revisado."""
+    styles = pd.DataFrame("", index=data.index, columns=data.columns)
+    styles.iloc[row, column] = "background-color: #fef08a; color: #111827; font-weight: bold"
+    return styles
 
 
 def render_iteration(problem: LPProblem, standard: StandardForm, iteration: Iteration) -> None:
@@ -269,18 +295,42 @@ def render_iteration(problem: LPProblem, standard: StandardForm, iteration: Iter
             st.write(f"Entrante: {iteration.entering_variable}. {iteration.entering_reason}")
         if iteration.ratios:
             st.write("Prueba de la razón mínima")
-            st.table(
+            coefficient_label = "d = B⁻¹aⱼ" if iteration.tableau is None else "Coeficiente"
+            ratios = pd.DataFrame(
                 [
                     {
                         "Fila": row.row + 1,
                         "Básica": row.basic_variable,
                         "Lado derecho": number(row.rhs),
-                        "Coeficiente": number(row.coefficient),
+                        coefficient_label: number(row.coefficient),
                         "Razón": number(row.ratio) if row.ratio is not None else "—",
                         "Exclusión": row.exclusion_reason,
                     }
                     for row in iteration.ratios
                 ]
+            )
+            if iteration.tableau is None and iteration.pivot:
+                st.table(
+                    ratios.style.apply(
+                        highlight_pivot,
+                        axis=None,
+                        row=iteration.pivot.row,
+                        column=ratios.columns.get_loc(coefficient_label),
+                    )
+                )
+            else:
+                st.table(ratios)
+        elif iteration.b_inverse and iteration.pivot:
+            st.write("Columna d para el retiro de artificial en 0; no requiere razón mínima.")
+            direction = matvec(
+                iteration.b_inverse, matrix_column(standard.a, iteration.pivot.column)
+            )
+            frame = pd.DataFrame(
+                {"d = B⁻¹aⱼ": [number(v) for v in direction]},
+                index=[standard.column_names[j] for j in iteration.basis],
+            )
+            st.table(
+                frame.style.apply(highlight_pivot, axis=None, row=iteration.pivot.row, column=0)
             )
         if iteration.leaving_variable is not None:
             st.write(f"Saliente: {iteration.leaving_variable}. {iteration.leaving_reason}")
@@ -501,6 +551,56 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
         st.info("Región no acotada; se muestra un recorte para visualizarla.")
 
 
+def render_comparison(solutions: dict[str, Solution]) -> None:
+    """Comparar estados por posición, conservando diferencias y secuencias desiguales."""
+    big_m, revised = solutions["Gran M"], solutions["Simplex revisado"]
+    rows = []
+    for index, (left, right) in enumerate(zip_longest(big_m.iterations, revised.iterations)):
+        row = {"Iteración": index}
+        for label, solution, state in (("Gran M", big_m, left), ("Revisado", revised, right)):
+            row.update(
+                {
+                    f"Base {label}": ", ".join(
+                        solution.standard_form.column_names[j] for j in state.basis
+                    )
+                    if state
+                    else "—",
+                    f"Entrante {label}": state.entering_variable or "—" if state else "—",
+                    f"Saliente {label}": state.leaving_variable or "—" if state else "—",
+                    f"Z {label}": number(state.objective_value)
+                    if state and state.objective_value is not None
+                    else "—",
+                }
+            )
+        row["Base coincide"] = "Sí" if left and right and left.basis == right.basis else "No"
+        rows.append(row)
+    st.table(rows)
+    st.write(
+        f"Estados registrados: Gran M {len(big_m.iterations)}; revisado {len(revised.iterations)}. "
+        f"Pivotes: Gran M {sum(i.pivot is not None for i in big_m.iterations)}; "
+        f"revisado {sum(i.pivot is not None for i in revised.iterations)}."
+    )
+    if big_m.status == revised.status == Status.OPTIMAL:
+        st.write(
+            "Misma solución: "
+            + ("Sí" if big_m.values == revised.values else "No")
+            + ". Mismo Z: "
+            + ("Sí" if big_m.objective_value == revised.objective_value else "No")
+            + "."
+        )
+    else:
+        st.write(
+            "Mismo estado: "
+            + ("Sí" if big_m.status == revised.status else "No")
+            + ". Sin solución óptima ni Z finito para comparar."
+        )
+    st.caption(
+        "Por iteración, el tablero actualiza m × (n + m + 1) números como referencia "
+        "para filas ≤; con excesos y artificiales puede tener más columnas. "
+        "El revisado mantiene B⁻¹ de m × m y calcula x_B, y, r y la columna d necesaria."
+    )
+
+
 def render_results(problem: LPProblem, step_mode: bool) -> None:
     """Mantener cada sección utilizable aunque otros módulos estén pendientes."""
     solutions = st.session_state["solutions"]
@@ -607,8 +707,9 @@ def render_results(problem: LPProblem, step_mode: bool) -> None:
                 )
     with tabs[4]:
         if len(solutions) < 2:
-            st.info("Pendiente de implementar: comparación de ambos métodos")
+            st.info("Seleccione Comparar ambos y pulse Resolver para comparar las iteraciones.")
         else:
+            render_comparison(solutions)
             st.table(
                 [
                     {

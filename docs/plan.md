@@ -11,7 +11,7 @@
 | P4: gráfico | Implementado | 285 pruebas pasan, 19 xfail; 250 casos exactos contra Gran M |
 | P5: sensibilidad | Implementado | Precios y rangos exactos; perturbaciones de ejemplos 1–2 y 150 casos generados |
 | R: revisión menor | Implementado | Interpretaciones únicas, redundantes visibles y seis capturas Chromium revisadas |
-| P6: revisado | Pendiente | Stub |
+| P6: revisado | Implementado | Reglas compartidas; 21 trazas idénticas; B⁻¹ comprobada en cada estado; 3000 casos por método sin errores ni diferencias |
 | P7: PDF | Pendiente | Stub |
 | P8: entregables | Pendiente | Guía de sustentación de P1–P5 escrita; manual, capturas y video pendientes |
 
@@ -105,6 +105,7 @@ sin llamar a Gran M. La guía P4 está en `docs/sustentacion.md`.
 P5: rangos y precios derivados de A y la base, sin consultar el tablero.
 Se deshacen signos originales; las redundantes reciben precio dual cero sin
 rango propio y las demás filas conservan las dependencias originales.
-Próxima sesión: P6, con refactor de reglas puras en commit separado, y P7.
+P6 implementado: refactor de reglas puras en commit separado y comparación real.
+Siguiente paquete de esta sesión: P7 (PDF).
 P8 permanece para la sesión final; `docs/desarrollo-c-p4-p5.md` registra
 comandos, resultados y decisiones de C, P4 y P5.

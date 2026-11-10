@@ -33,11 +33,35 @@ def capture_graphs(page: Page, output: Path) -> None:
         print(f"Gráfico: {name}")
 
 
+def check_solutions(page: Page, output: Path) -> None:
+    """Recorrer comparación en ambos modos y formatos con casos de la rúbrica."""
+    select(page, "Método", "Comparar ambos")
+    for example in (2, 5, 6):
+        select(page, "Ejemplo", f"ejemplo_{example}.json")
+        page.get_by_role("button", name="Cargar ejemplo", exact=True).click()
+        for mode in ("Directo", "Paso a paso"):
+            page.locator('[data-testid="stSidebar"]').get_by_text(mode, exact=True).click()
+            for number_format in ("Fracciones", "Decimales"):
+                select(page, "Formato numérico", number_format)
+                page.get_by_role("button", name="Resolver", exact=True).click()
+                page.get_by_role("tab", name="Comparar métodos", exact=True).click()
+                summary = "Mismo estado: Sí" if example == 5 else "Misma solución: Sí. Mismo Z: Sí."
+                expect(page.get_by_text(summary, exact=False)).to_be_visible()
+                expect(page.get_by_text("Base coincide", exact=True)).to_be_visible()
+                assert not page.locator('[data-testid="stException"]').count()
+                assert not page.locator('[data-testid="stAlertContentError"]').count()
+                print(f"Solución: ejemplo {example}, {mode}, {number_format}")
+    page.locator('[data-testid="stTable"]').filter(
+        has=page.get_by_text("Base coincide", exact=True)
+    ).screenshot(path=str(output / "comparacion.png"))
+
+
 def main() -> None:
     """Comprobar salud, tomar capturas y cerrar Chromium incluso ante fallos."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--url", default="http://127.0.0.1:8501")
     parser.add_argument("--output", type=Path, default=Path("/tmp/plapp-ui"))
+    parser.add_argument("--solutions", action="store_true")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     with sync_playwright() as playwright:
@@ -49,6 +73,8 @@ def main() -> None:
             page.wait_for_load_state("networkidle")
             page.get_by_role("tab", name="Método gráfico", exact=True).wait_for()
             capture_graphs(page, args.output)
+            if args.solutions:
+                check_solutions(page, args.output)
         finally:
             browser.close()
 
