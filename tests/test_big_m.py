@@ -11,6 +11,7 @@ from plapp.linalg import identity, matmul, matvec
 from plapp.model import Constraint, LPProblem
 from plapp.mvalue import MValue
 from plapp.result import Status
+from scripts.verify import compare_solution, verify_with_scipy
 from tests.conftest import PROBLEMS
 
 
@@ -59,7 +60,9 @@ def test_tableau_certificates(fixture_problem):
     original, _ = fixture_problem
     solution = solve_big_m(original)
     standard = solution.standard_form
-    assert solution.iterations[-1].entering_variable is None
+    assert (solution.iterations[-1].entering_variable is None) == (
+        solution.status != Status.UNBOUNDED
+    )
     assert solution.iterations[-1].entering_reason
     for iteration in solution.iterations:
         rows = iteration.tableau
@@ -91,7 +94,55 @@ def test_unbounded_message_and_termination():
     assert solution.status == Status.UNBOUNDED
     assert "solución no acotada" in solution.message and "x2" in solution.message
     assert not solution.values and solution.objective_value is None
-    assert all(row.ratio is None and row.exclusion_reason for row in solution.iterations[-2].ratios)
+    assert len(solution.iterations) == 2
+    last = solution.iterations[-1]
+    assert all(row.ratio is None and row.exclusion_reason for row in last.ratios)
+    assert "solución no acotada" in last.leaving_reason
+    assert solution.unbounded_origin == {"x1": 1, "x2": 0}
+    assert solution.unbounded_direction == {"x1": 1, "x2": 1}
+    assert "(x1, x2) = (1, 0) + t·(1, 1)" in solution.message
+    assert all(
+        a.tableau != b.tableau
+        for a, b in zip(solution.iterations, solution.iterations[1:], strict=False)
+    )
+
+
+@pytest.mark.parametrize(
+    ("objective", "rows"),
+    [
+        ((1, 0), [((-4, 5), "=", 0), ((-1, 1), "=", 0), ((4, -5), "=", 0)]),
+        ((2, 4), [((-3, -2), ">=", 0), ((4, 2), "=", 0), ((-5, -3), "=", 0)]),
+        (
+            (3, 3, -2),
+            [
+                ((-1, 4, 1), "=", 0),
+                ((-1, 4, 1), "=", 0),
+                ((5, 4, 1), "=", 0),
+                ((5, 1, -2), "=", 0),
+                ((4, 4, 5), "=", 0),
+            ],
+        ),
+    ],
+)
+def test_redundant_zero_rows_never_reenter_artificials(objective, rows):
+    original = problem(objective, rows, sense="min")
+    solution = solve_big_m(original)
+    assert solution.status == Status.OPTIMAL and solution.objective_value == 0
+    assert not any(solution.values.values())
+    assert not compare_solution(original, solution, verify_with_scipy(original))
+    assert any("nunca vuelve a entrar" in note for note in solution.iterations[0].notes)
+    assert all(
+        not i.entering_variable or not i.entering_variable.startswith("a")
+        for i in solution.iterations
+    )
+
+
+def test_identical_equalities_positive_rhs():
+    original = problem((1, 2), [((1, 1), "=", 4), ((1, 1), "=", 4)])
+    solution = solve_big_m(original)
+    assert solution.values == {"x1": 0, "x2": 4} and solution.objective_value == 8
+    assert any("redundante" in note for note in solution.notes)
+    assert not compare_solution(original, solution, verify_with_scipy(original))
 
 
 def test_multiple_segment_and_degenerate_variable():
@@ -143,6 +194,16 @@ def test_alternative_after_degenerate_pivot(bounded):
 def test_zero_costs_do_not_prove_multiple_points():
     solution = solve_big_m(problem((0, 0), [((1, 0), "<=", 0), ((0, 1), "<=", 0)]))
     assert not solution.multiple_optima and solution.degenerate
+
+
+def test_alternative_search_counts_bases_without_row_permutations():
+    original = problem(
+        (0, 0),
+        [((0, 1), "<=", 0), ((0, -1), "<=", 0)] + [((0, 1), "<=", 0)] * 3 + [((1, 1), "<=", 0)],
+    )
+    solution = solve_big_m(original)
+    assert solution.status == Status.OPTIMAL and solution.degenerate
+    assert not solution.multiple_optima and solution.values == {"x1": 0, "x2": 0}
 
 
 def test_beale_switches_to_bland():

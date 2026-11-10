@@ -108,6 +108,15 @@ def _values(problem: LPProblem, tableau: Matrix, basis: tuple[int, ...]) -> dict
     return {name: basic_values.get(j, Fraction(0)) for j, name in enumerate(problem.variable_names)}
 
 
+def _direction(
+    problem: LPProblem, tableau: Matrix, basis: tuple[int, ...], entering: int
+) -> dict[str, Fraction]:
+    """Proyectar d_entrante = 1, d_B = −columna a las variables originales."""
+    direction = {j: -row[entering] for j, row in zip(basis, tableau, strict=True)}
+    direction[entering] = Fraction(1)
+    return {name: direction.get(j, Fraction(0)) for j, name in enumerate(problem.variable_names)}
+
+
 def _alternatives(
     problem: LPProblem, standard: StandardForm, tableau: Matrix, basis: tuple[int, ...]
 ) -> tuple[tuple[dict[str, Fraction], ...], tuple[dict[str, Fraction], ...]]:
@@ -120,7 +129,9 @@ def _alternatives(
     """
     initial = _values(problem, tableau, basis)
     pending = deque([(tableau, basis)])
-    seen = {basis}
+    # El orden de filas no crea otra base: contar conjuntos evita explorar
+    # permutaciones del mismo sistema en vértices muy degenerados.
+    seen = {frozenset(basis)}
     while pending:
         rows, current_basis = pending.popleft()
         reduced = _reduced_costs(rows, current_basis, standard.c)
@@ -130,12 +141,7 @@ def _alternatives(
             ratios = _ratios(rows, current_basis, j, standard.column_names)
             eligible = [row for row in ratios if row.ratio is not None]
             if not eligible:
-                direction = {index: -row[j] for index, row in zip(current_basis, rows, strict=True)}
-                direction[j] = Fraction(1)
-                ray = {
-                    name: direction.get(k, Fraction(0))
-                    for k, name in enumerate(problem.variable_names)
-                }
+                ray = _direction(problem, rows, current_basis, j)
                 if any(ray.values()):
                     point = {name: initial[name] + ray[name] for name in initial}
                     return (point,), (ray,)
@@ -148,13 +154,14 @@ def _alternatives(
                 point = _values(problem, new_rows, new_basis)
                 if point != initial:
                     return (point,), ()
-                if new_basis not in seen:
+                basis_key = frozenset(new_basis)
+                if basis_key not in seen:
                     if len(seen) >= MAX_ALTERNATIVE_BASES:
                         raise ValueError(
                             "Se alcanzó el límite de bases al buscar óptimos alternos; "
                             "no se pudo concluir la multiplicidad."
                         )
-                    seen.add(new_basis)
+                    seen.add(basis_key)
                     pending.append((new_rows, new_basis))
     return (), ()
 
@@ -305,6 +312,10 @@ def solve_big_m(problem: LPProblem) -> Solution:
                 "artificial básica a la fila de costos reducidos cⱼ − zⱼ. "
                 "Las básicas tienen costo reducido cero; Z incluye su penalización."
             )
+            state_notes.append(
+                "Una artificial que sale de la base nunca vuelve a entrar: se descarta "
+                "como candidata, igual que al retirar su columna al finalizar la fase I."
+            )
         if basis in seen and not bland:
             bland = True
             note = (
@@ -316,7 +327,11 @@ def solve_big_m(problem: LPProblem) -> Solution:
         seen.add(basis)
         state = replace(state, notes=tuple(state_notes))
         reduced = state.reduced_costs
-        nonbasic = [j for j in range(len(reduced)) if j not in basis]
+        nonbasic = [
+            j
+            for j in range(len(reduced))
+            if j not in basis and standard.column_types[j] != "artificial"
+        ]
         m_improvement = any(sign * reduced[j].b > 0 for j in nonbasic)
         positive_artificials = [
             standard.column_names[j]
@@ -374,19 +389,21 @@ def solve_big_m(problem: LPProblem) -> Solution:
             leaving_reason=leaving_reason,
         )
         if leaving is None:
+            origin = _values(problem, tableau, basis)
+            direction = _direction(problem, tableau, basis, entering)
+            coordinates = ", ".join(problem.variable_names)
+            point = ", ".join(map(str, origin.values()))
+            ray = ", ".join(map(str, direction.values()))
+            change = "crece" if sign == 1 else "decrece"
             message = (
                 "El problema tiene solución no acotada: "
                 + standard.column_names[entering]
                 + " puede crecer sin límite y mejorar Z; "
-                "su columna no tiene coeficientes positivos."
+                "su columna no tiene coeficientes positivos. "
+                f"Z {change} sin límite a lo largo de "
+                f"({coordinates}) = ({point}) + t·({ray}), t ≥ 0."
             )
-            iterations.append(state)
-            iterations.append(
-                replace(
-                    _snapshot(tableau, basis, standard.c, len(iterations)),
-                    entering_reason=message,
-                )
-            )
+            iterations.append(replace(state, leaving_reason=message))
             return Solution(
                 "big_m",
                 Status.UNBOUNDED,
@@ -394,6 +411,8 @@ def solve_big_m(problem: LPProblem) -> Solution:
                 standard_form=standard,
                 iterations=tuple(iterations),
                 notes=tuple(dict.fromkeys(notes)),
+                unbounded_origin=origin,
+                unbounded_direction=direction,
             )
         iterations.append(
             replace(

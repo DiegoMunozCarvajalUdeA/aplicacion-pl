@@ -99,6 +99,8 @@ class Solution:
     alternative_solutions: tuple[dict[str, Fraction], ...] = ()
     notes: tuple[str, ...] = ()
     alternative_rays: tuple[dict[str, Fraction], ...] = ()
+    unbounded_origin: dict[str, Fraction] = field(default_factory=dict)
+    unbounded_direction: dict[str, Fraction] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

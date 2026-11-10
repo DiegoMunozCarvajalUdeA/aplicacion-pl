@@ -5,7 +5,7 @@ from fractions import Fraction
 
 import numpy as np
 import pytest
-from hypothesis import given, settings
+from hypothesis import assume, given, settings
 from hypothesis import strategies as st
 from scipy.optimize import linprog
 
@@ -14,7 +14,20 @@ from plapp.io_json import problem_to_dict
 from plapp.model import Constraint, LPProblem, validate
 from plapp.revised_simplex import solve_revised
 from plapp.sensitivity import sensitivity_analysis
-from scripts.verify import compare_solution, scipy_inputs, verify_with_scipy
+from scripts.verify import (
+    OracleInconclusiveError,
+    compare_solution,
+    scipy_inputs,
+    verify_with_scipy,
+)
+
+
+def conclusive_oracle(problem):
+    """Descartar únicamente el ejemplo cuyo oráculo numérico no pudo concluir."""
+    try:
+        return verify_with_scipy(problem)
+    except OracleInconclusiveError:
+        assume(False)
 
 
 def test_fixtures_match_scipy(fixture_problem):
@@ -77,20 +90,35 @@ def test_shadow_price_signs(sense, relation, coefficient, rhs, price):
 
 
 @st.composite
-def small_problems(draw):
-    """PL con dimensiones y signos variados; impedir filas totalmente nulas."""
-    n = draw(st.integers(2, 4))
-    m = draw(st.integers(1, 4))
+def small_problems(draw, n=None):
+    """PL con redundancia deliberada y ceros frecuentes, sin filas nulas."""
+    n = draw(st.integers(2, 4)) if n is None else n
+    m = draw(st.integers(1, 6))
     coefficients = st.lists(st.integers(-9, 9), min_size=n, max_size=n)
     objective = tuple(map(Fraction, draw(coefficients)))
     constraints = []
     for _ in range(m):
+        if constraints and draw(st.integers(0, 2)) == 0:
+            previous = draw(st.sampled_from(constraints))
+            scale = draw(st.sampled_from((1, 2, -1)))
+            relation = previous.relation
+            if scale < 0:
+                relation = {"<=": ">=", ">=": "<=", "=": "="}[relation]
+            constraints.append(
+                replace(
+                    previous,
+                    coefficients=tuple(scale * a for a in previous.coefficients),
+                    rhs=scale * previous.rhs,
+                    relation=relation,
+                )
+            )
+            continue
         row = draw(coefficients.filter(lambda values: any(values)))
         constraints.append(
             Constraint(
                 tuple(map(Fraction, row)),
                 draw(st.sampled_from(["<=", ">=", "="])),
-                Fraction(draw(st.integers(-9, 9))),
+                Fraction(draw(st.one_of(st.just(0), st.integers(-9, 9)))),
             )
         )
     return LPProblem(objective, tuple(constraints), sense=draw(st.sampled_from(["max", "min"])))
@@ -131,7 +159,7 @@ def unique_nondegenerate(problem, oracle):
 def test_generated_models_are_valid(problem):
     validated, issues = validate(problem_to_dict(problem))
     assert not issues and validated == problem
-    assert verify_with_scipy(problem).status in ("optimo", "infactible", "no_acotado")
+    assert conclusive_oracle(problem).status in ("optimo", "infactible", "no_acotado")
 
 
 @pytest.mark.parametrize(
@@ -146,10 +174,10 @@ def test_generated_models_are_valid(problem):
         ),
     ],
 )
-@settings(max_examples=40, deadline=None)
+@settings(max_examples=200, deadline=None, derandomize=True)
 @given(problem=small_problems())
 def test_own_solver_against_scipy(solver, problem):
-    oracle = verify_with_scipy(problem)
+    oracle = conclusive_oracle(problem)
     own = solver(problem)
     assert not compare_solution(problem, own, oracle)
 
@@ -161,8 +189,16 @@ def test_own_solver_against_scipy(solver, problem):
 @settings(max_examples=30, deadline=None)
 @given(problem=small_problems())
 def test_shadow_prices_against_scipy(solver, problem):
-    oracle = verify_with_scipy(problem)
+    oracle = conclusive_oracle(problem)
     own = solver(problem)
+    if solver is solve_big_m:
+        # Garantizar que la aceptación de sensibilidad se ejerza incluso si
+        # este lote aleatorio no contiene óptimos únicos no degenerados.
+        from plapp.io_json import load_problem
+        from tests.conftest import PROBLEMS
+
+        reference = load_problem(PROBLEMS / "ejemplo_1.json")
+        sensitivity_analysis(reference, solver(reference))
     if unique_nondegenerate(problem, oracle):
         report = sensitivity_analysis(problem, own)
         assert {key: float(value) for key, value in report.shadow_prices.items()} == pytest.approx(
