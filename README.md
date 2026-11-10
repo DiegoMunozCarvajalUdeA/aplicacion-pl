@@ -241,7 +241,9 @@ Ver `docs/plan.md` para el estado por paquete y la rúbrica.
   y [su guía rápida](https://docs.streamlit.io/develop/concepts/app-testing/cheat-sheet).
 - Streamlit Community Cloud: [dependencias](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies),
   [despliegue](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy)
-  y [versión de Python](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/upgrade-python).
+  [versión de Python](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/upgrade-python),
+  [cuenta de GitHub](https://docs.streamlit.io/deploy/streamlit-community-cloud/get-started/connect-your-github-account)
+  y [administración y suspensión](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app).
 - [pandas: Styler.apply](https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.apply.html).
 - Plotly: [líneas](https://plotly.com/python/line-charts/),
   [rellenos y formas](https://plotly.com/python/shapes/),
