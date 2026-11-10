@@ -76,6 +76,8 @@ class Iteration:
     leaving_variable: str | None = None
     leaving_reason: str = ""
     pivot: Pivot | None = None
+    objective_value: Fraction | MValue | None = None
+    notes: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -95,6 +97,8 @@ class Solution:
     multiple_optima: bool = False
     degenerate: bool = False
     alternative_solutions: tuple[dict[str, Fraction], ...] = ()
+    notes: tuple[str, ...] = ()
+    alternative_rays: tuple[dict[str, Fraction], ...] = ()
 
 
 @dataclass(frozen=True)

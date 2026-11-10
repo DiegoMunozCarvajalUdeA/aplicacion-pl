@@ -40,7 +40,7 @@ def test_navigation_and_stubs(app):
     assert any(item.label == "Resumen del problema validado" for item in app.expander)
     button(app, "Resolver").click().run()
     assert not app.exception and not app.error
-    assert any("Pendiente de implementar: Gran M" in item.value for item in app.info)
+    assert any("Z = 3380" in item.value for item in app.markdown)
     assert button(app, "Exportar paso a paso a PDF").disabled
 
 
@@ -84,7 +84,7 @@ def test_both_methods_and_formats(app):
     app.radio[0].set_value("Paso a paso").run()
     selectbox(app, "Formato numérico").select("Decimales").run()
     button(app, "Resolver").click().run()
-    assert len(app.session_state["notices"]) == 2
+    assert len(app.session_state["notices"]) == 1
     assert any("Simplex revisado" in item.value for item in app.info)
     assert not app.exception and not app.error
 

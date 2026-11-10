@@ -5,13 +5,13 @@
 | Paquete | Estado | Evidencia |
 |---|---|---|
 | P1: núcleo exacto | Implementado | MValue, linalg y forma estándar; 165 pruebas pasan, 36 xfail pendientes, sin XPASS |
-| P2: Gran M | Pendiente | Stub y contratos existentes |
+| P2: Gran M | Implementado | 204 pruebas pasan, 22 xfail pendientes, sin XPASS; 13 fixtures coinciden con SciPy |
 | P3: paso a paso | Pendiente | Presentación base |
 | P4: gráfico | Pendiente | Stub |
 | P5: sensibilidad | Pendiente | Stub |
 | P6: revisado | Pendiente | Stub |
 | P7: PDF | Pendiente | Stub |
-| P8: entregables | Pendiente | Guía de sustentación de P1 escrita |
+| P8: entregables | Pendiente | Guía de sustentación de P1 y P2 escrita |
 
 P1: `make lint` y `make test` correctos. Los 13 fixtures pasan por el oráculo;
 los solvers aún informan que están pendientes. AppTest muestra las formas
@@ -19,6 +19,11 @@ estándar de los ejemplos 1 y 2 sin excepciones, contrastadas con la traza manua
 de `docs/sustentacion.md`.
 El arranque real mediante `make run` en modo headless respondió `ok` en
 `/_stcore/health`; el servidor se detuvo después de la comprobación.
+
+P2: lint y pruebas correctos, incluidos certificados exactos del tablero,
+traza manual del ejemplo 1, 40 problemas generados contra SciPy, redundancia,
+rayos óptimos y Beale (14 estados, activa Bland al repetir base). Se repitió
+el arranque y parada real; AppTest resolvió el ejemplo 2 con Z = 17/5.
 
 ## Rúbrica de la aplicación
 

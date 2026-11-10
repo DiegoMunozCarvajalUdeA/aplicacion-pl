@@ -9,8 +9,19 @@ from plapp.result import Status
 from plapp.revised_simplex import solve_revised
 
 
-@pytest.mark.parametrize("solver", [solve_big_m, solve_revised], ids=["gran_m", "revisado"])
-@pytest.mark.xfail(raises=NotImplementedError, strict=False, reason="Métodos pendientes del equipo")
+@pytest.mark.parametrize(
+    "solver",
+    [
+        pytest.param(solve_big_m, id="gran_m"),
+        pytest.param(
+            solve_revised,
+            id="revisado",
+            marks=pytest.mark.xfail(
+                raises=NotImplementedError, strict=False, reason="Simplex revisado pendiente"
+            ),
+        ),
+    ],
+)
 def test_examples(fixture_problem, solver):
     problem, expected = fixture_problem
     solution = solver(problem)

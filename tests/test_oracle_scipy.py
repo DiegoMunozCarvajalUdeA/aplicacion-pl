@@ -134,8 +134,18 @@ def test_generated_models_are_valid(problem):
     assert verify_with_scipy(problem).status in ("optimo", "infactible", "no_acotado")
 
 
-@pytest.mark.parametrize("solver", [solve_big_m, solve_revised])
-@pytest.mark.xfail(raises=NotImplementedError, strict=False, reason="Métodos pendientes del equipo")
+@pytest.mark.parametrize(
+    "solver",
+    [
+        solve_big_m,
+        pytest.param(
+            solve_revised,
+            marks=pytest.mark.xfail(
+                raises=NotImplementedError, strict=False, reason="Simplex revisado pendiente"
+            ),
+        ),
+    ],
+)
 @settings(max_examples=40, deadline=None)
 @given(problem=small_problems())
 def test_own_solver_against_scipy(solver, problem):
