@@ -1,12 +1,32 @@
 # Aplicación de Programación Lineal
 
-Entorno de desarrollo para el proyecto de Optimización de Ingeniería de Sistemas,
-Universidad de Antioquia. El enunciado oficial está en `taller-optimi.pdf`.
+Proyecto de Optimización de Ingeniería de Sistemas, Universidad de Antioquia.
+El enunciado oficial está en `taller-optimi.pdf`.
 
 La aplicación resuelve problemas con Gran M simbólica y simplex revisado, con
-Fraction, en modo directo o paso a paso. P1–P7 y las correcciones C y R están
-implementados; los entregables de P8 siguen pendientes según `docs/plan.md`.
-SciPy se usa únicamente como oráculo de pruebas, nunca en la aplicación.
+Fraction, en modo directo o paso a paso, y agrega método gráfico, sensibilidad,
+comparación de métodos, JSON y PDF. SciPy se usa únicamente como oráculo de
+pruebas, nunca en la aplicación.
+
+**Estado.** Implementados y verificados: P1–P7 (núcleo, Gran M, presentación,
+gráfico, sensibilidad, simplex revisado y PDF), las correcciones C, R y V, y los
+entregables de P8 (manual, guion del video, ensayo, guía y guía de entrega).
+Falta lo que solo puede hacer el equipo: nombres, remoto, despliegue, video y
+commits propios; la lista ordenada está en `docs/entrega.md` y el detalle por
+paquete en `docs/plan.md`.
+
+## Documentación
+
+| Documento | Contenido |
+|---|---|
+| [Manual de usuario (PDF)](docs/manual/manual.pdf) | 5 páginas con capturas reales; fuente en [`docs/manual/README.md`](docs/manual/README.md). |
+| [Guion del video](docs/video.md) | Tramos de 4:45 con pantalla, texto y responsable. Video: **[URL por completar]**. |
+| [Guía de sustentación](docs/sustentacion.md) | Índice por módulo, preguntas y ejercicios de modificación. |
+| [Ensayo de sustentación](docs/ensayo-sustentacion.md) | Cinco problemas nuevos, simulacro de 15 minutos y banco de modificaciones probadas. |
+| [Entrega](docs/entrega.md) | Remoto, despliegue, video, plan B y lista de comprobación final. |
+| [Plan y rúbrica](docs/plan.md) | Estado por paquete, rúbrica, bonificaciones y pendientes. |
+| [Teoría](docs/teoria.md) | Resumen de Gran M, sensibilidad y método gráfico. |
+| [Capturas V](docs/capturas/v/) | Gráficos revisados de los seis casos de referencia. |
 
 ## Requisitos e instalación
 
@@ -28,7 +48,8 @@ Abrir `http://localhost:8501`. Detener con Ctrl-C. También están disponibles
 ## Uso
 
 La app permite editar Max/Min, agregar o quitar variables y restricciones sin
-perder las celdas restantes, cargar los 14 ejemplos y cargar/descargar JSON.
+perder las celdas restantes, cargar los 19 problemas incluidos y cargar o
+descargar JSON.
 Admite números como `-3`, `2.5`, `2,5` y `2/5`; todas las variables cumplen x ≥ 0.
 Al pulsar Resolver, los errores indican la celda afectada. El resumen del modelo
 validado presenta el problema original antes de resolverlo.
@@ -44,7 +65,8 @@ El revisado muestra B⁻¹, x_B, los multiplicadores simbólicos `y`, costos red
 y la columna d con la razón mínima y el pivote. «Comparar ambos» presenta una
 fila por estado con las dos bases, entrantes, salientes y Z, y resume las
 coincidencias. Ambos usan las mismas reglas simplex; mantienen representaciones
-distintas. Las seis capturas revisadas del gráfico están en `docs/capturas/r/`.
+distintas. Las capturas revisadas del gráfico están en `docs/capturas/v/`
+(las de la revisión anterior siguen en `docs/capturas/r/`).
 
 «Exportar paso a paso a PDF» está disponible tras resolver, incluso en modo
 Directo. El PDF contiene el problema, forma estándar, iteraciones, justificaciones,
@@ -106,7 +128,10 @@ para ≥. Una igualdad conserva su signo. SciPy calcula en coma flotante; las
 fracciones del informe son reconstrucciones legibles, no aritmética exacta.
 Los precios pueden no ser únicos con degeneración o soluciones múltiples.
 
-Los siete ejemplos conservan los resultados del enunciado. Los primeros seis extras
+Los siete ejemplos conservan los resultados del enunciado. Los cinco ensayos
+(`ensayo_1` a `ensayo_5`) tienen `fuente: "scipy"`: infactible, no acotado,
+óptimos múltiples, degenerado y cuatro variables con =, ≥ y lado derecho
+negativo. Los primeros seis extras
 tienen `fuente: "scipy"` y cubren región no acotada con óptimo finito,
 igualdades, región vacía, cuatro variables, RHS negativo y empate degenerado.
 El oráculo contrasta todos los fixtures sin xfail. Hypothesis genera problemas
@@ -122,38 +147,51 @@ las pruebas generativas descartan ese caso y el estrés lo cuenta por separado.
 uv run python scripts/stress.py --method both --seed 20261110 --count 3000
 ```
 
-La corrida de R–P7 terminó con 3000 verificados por método, 0 errores,
-0 diferencias y 0 inconcluyentes. También acepta `--method big_m` o `revised`.
-`docs/desarrollo-r-p6-p7.md` registra la verificación completa de esta sesión;
-`docs/desarrollo-c-p4-p5.md` conserva la regresión temporal de C1.
+La corrida de V–P8 (2026-11-10) verificó 3000 problemas por método con
+0 errores, 0 diferencias y 0 inconcluyentes. También acepta `--method big_m`
+o `revised`. `docs/desarrollo-v-p8.md` registra la verificación completa de la
+última sesión; los informes anteriores `docs/desarrollo-*.md` conservan las suyas.
 
-Playwright y pypdf son dependencias dev: capturas y descargas en navegador,
-y lectura independiente de los PDF en pruebas, respectivamente. FontTools,
+Playwright, pypdf y markdown-it-py son dependencias dev: capturas, descargas
+e impresión del manual en Chromium; lectura independiente de los PDF; y
+conversión del manual de Markdown a HTML, respectivamente. FontTools,
 ya requerido por fpdf2, se declara también como dependencia directa para
 comprobar todos los glifos antes de escribirlos. `requirements.txt` excluye dev.
 
-Para repetir la verificación visual (la primera vez, instalar Chromium):
+Para repetir la verificación visual y el manual (la primera vez, instalar Chromium):
 
 ```bash
 uv run playwright install chromium
 make ui-check
 make manual-captures
+make manual
 ```
 
-El script comprueba salud, captura seis gráficos y descarga 36 PDF de los
-ejemplos 2, 5 y 6 en ambos modos y formatos. Inicia y detiene su propio servidor. `OUT=/tmp/plapp-ui` cambia el directorio de
-resultados; `make manual-captures` escribe en `docs/manual/capturas/`.
+`make ui-check` comprueba salud, captura nueve gráficos (los seis casos de
+referencia y los tres ensayos de dos variables) y descarga 36 PDF de los
+ejemplos 2, 5 y 6 en ambos modos y formatos. Inicia y detiene su propio
+servidor; `OUT=/tmp/plapp-ui` cambia el directorio de resultados.
+`make manual-captures` reemplaza las diez capturas de `docs/manual/capturas/` y
+`make manual` genera `docs/manual/manual.pdf` desde `docs/manual/README.md`;
+falla si el PDF supera cinco páginas.
 
 ## Despliegue en Streamlit Community Cloud
 
-1. Completar los algoritmos y comprobar `make lint`, `make test` y los ejemplos.
-2. Ejecutar `make requirements` para exportar el lockfile sin herramientas dev.
-   La exportación incluye `.` para instalar el paquete local `src/plapp`.
-3. Cuando el equipo decida publicar, subir el repositorio a su cuenta y crear
-   la app en Streamlit Community Cloud con `app/streamlit_app.py` como entrada.
-4. Seleccionar Python **3.12** en la configuración avanzada. Community Cloud
-   también puede detectar `uv.lock`; mantenerlo coherente con `requirements.txt`.
-5. Verificar carga de JSON, ejemplos y reejecución; registrar la URL real abajo.
+Los pasos completos, con el ensayo local hecho desde un clon limpio, están en
+`docs/entrega.md`. En resumen:
+
+1. Comprobar `make lint` y `make test`, y ejecutar `make requirements` si cambió
+   una dependencia de ejecución. `requirements.txt` excluye dev e incluye `.`
+   para instalar el paquete local `src/plapp`.
+2. Subir el repositorio a la cuenta del equipo y crear la app con
+   `app/streamlit_app.py` como archivo de entrada.
+3. Elegir Python **3.12** en «Advanced settings»; después del despliegue no se
+   puede cambiar sin borrar y volver a desplegar la app.
+4. Community Cloud usa el primer archivo de dependencias que encuentra y
+   `uv.lock` va antes que `requirements.txt`: aquí instalará con uv desde
+   `uv.lock`. Revisar en el registro de construcción qué comando ejecuta.
+5. Abrir la URL en una ventana privada, resolver los ejemplos 2 y 6 y
+   registrar la URL abajo.
 
 Esta preparación no crea remotos ni publica la app. La ejecución local sigue
 disponible para la sustentación sin conexión a un servicio de despliegue.
@@ -163,15 +201,15 @@ disponible para la sustentación sin conexión a un servicio de despliegue.
 ```text
 src/plapp/       Modelo, métodos propios, reglas compartidas, gráfico, sensibilidad y PDF
 app/            Interfaz Streamlit y presentación Plotly
-scripts/        Verificador externo con SciPy
 assets/fonts/   DejaVu Sans 2.37 y licencia de redistribución
-tests/          Infraestructura, contratos, AppTest y 14 fixtures JSON
-docs/           Propuesta, plan, teoría, manual y verificación del entorno
+scripts/        Oráculo SciPy, estrés, verificación en Chromium y manual en PDF
+tests/          Pruebas, AppTest, trazas congeladas y 19 fixtures JSON
+docs/           Plan, guías, manual, video, ensayo, entrega, capturas e informes
 .github/        CI de Ruff y pytest
 .streamlit/     Configuración local y manejo de errores
 ```
 
-Ver `docs/plan.md` para el orden de implementación y el reparto sugerido.
+Ver `docs/plan.md` para el estado por paquete y la rúbrica.
 
 ## Equipo y entregables
 
@@ -184,8 +222,8 @@ Ver `docs/plan.md` para el orden de implementación y el reparto sugerido.
 
 - Repositorio remoto: **[URL por completar]**.
 - Despliegue: **[URL por completar]**.
-- Manual: máximo 5 páginas; esqueleto en `docs/manual/README.md`.
-- Video: máximo 5 minutos; **[URL por completar]**.
+- Manual: [`docs/manual/manual.pdf`](docs/manual/manual.pdf), 5 páginas.
+- Video: máximo 5 minutos; **[URL por completar]**. Guion en `docs/video.md`.
 - Sustentación: 15 minutos; todos deben explicar y modificar cualquier módulo.
 - Registrar commits propios de cada integrante; los commits de preparación no
   reemplazan las contribuciones del equipo.
@@ -195,29 +233,46 @@ Ver `docs/plan.md` para el orden de implementación y el reparto sugerido.
 - Universidad de Antioquia. *Proyecto: Aplicación de Programación Lineal*,
   noviembre de 2026. Documento local `taller-optimi.pdf`; fuente de requisitos y
   de los siete primeros problemas.
-- [Streamlit: tablas editables y estado](https://docs.streamlit.io/develop/concepts/design/dataframes).
-- [Streamlit: AppTest](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest).
-- [Streamlit: tablas y Styler](https://docs.streamlit.io/develop/api-reference/data/st.table).
+- Streamlit: [tablas editables y estado](https://docs.streamlit.io/develop/concepts/design/dataframes),
+  [st.table](https://docs.streamlit.io/develop/api-reference/data/st.table),
+  [st.plotly_chart](https://docs.streamlit.io/develop/api-reference/charts/st.plotly_chart),
+  [st.download_button](https://docs.streamlit.io/develop/api-reference/widgets/st.download_button),
+  [AppTest](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest)
+  y [su guía rápida](https://docs.streamlit.io/develop/concepts/app-testing/cheat-sheet).
+- Streamlit Community Cloud: [dependencias](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies),
+  [despliegue](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy)
+  y [versión de Python](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/upgrade-python).
 - [pandas: Styler.apply](https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.apply.html).
-- [Streamlit: dependencias de despliegue](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies).
-- [Plotly: gráficos de líneas](https://plotly.com/python/line-charts/).
-- [fpdf2: documentación y Unicode](https://py-pdf.github.io/fpdf2/Unicode.html).
-- [fpdf2: tablas y paginación](https://py-pdf.github.io/fpdf2/Tables.html).
-- [Streamlit: descarga de archivos](https://docs.streamlit.io/develop/api-reference/widgets/st.download_button).
-- [FontTools: lectura de glifos TTF](https://fonttools.readthedocs.io/en/latest/ttLib/ttFont.html).
-- [pypdf: extracción de texto para verificar PDF](https://pypdf.readthedocs.io/en/stable/user/extract-text.html).
+- Plotly: [líneas](https://plotly.com/python/line-charts/),
+  [rellenos y formas](https://plotly.com/python/shapes/),
+  [anotaciones](https://plotly.com/python/text-and-annotations/) y
+  [ejes con `scaleanchor`](https://plotly.com/python/axes/).
+- fpdf2: [Unicode](https://py-pdf.github.io/fpdf2/Unicode.html) y
+  [tablas](https://py-pdf.github.io/fpdf2/Tables.html);
+  [FontTools: TTFont](https://fonttools.readthedocs.io/en/latest/ttLib/ttFont.html).
 - [DejaVu Fonts 2.37](https://dejavu-fonts.github.io/Download.html): DejaVu Sans
   regular y negrita incluidas sin modificar en `assets/fonts/`. Licencia completa
   [Bitstream Vera y DejaVu](assets/fonts/LICENSE-DejaVu.txt). Archivo oficial
   `dejavu-fonts-ttf-2.37.tar.bz2`, SHA-256
   `fa9ca4d13871dd122f61258a80d01751d603b4d3ee14095d65453b4e846e17d7`.
-- [uv: sincronización y lockfile](https://docs.astral.sh/uv/concepts/projects/sync/).
-- [uv: acción oficial para GitHub](https://docs.astral.sh/uv/guides/integration/github/).
-- [SciPy: linprog y marginales](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).
+- Oráculo de pruebas: [SciPy linprog y marginales](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html),
+  que usa [HiGHS](https://highs.dev/).
+- Herramientas de prueba: [Hypothesis](https://hypothesis.readthedocs.io/en/latest/),
+  [Playwright para Python](https://playwright.dev/python/docs/intro)
+  (incluido [`page.pdf`](https://playwright.dev/python/docs/api/class-page)),
+  [pypdf: extracción de texto](https://pypdf.readthedocs.io/en/stable/user/extract-text.html)
+  y [markdown-it-py](https://markdown-it-py.readthedocs.io/en/latest/) para el manual.
+- uv: [sincronización y lockfile](https://docs.astral.sh/uv/concepts/projects/sync/),
+  [grupos de dependencias](https://docs.astral.sh/uv/concepts/projects/dependencies/)
+  y [acción oficial para GitHub](https://docs.astral.sh/uv/guides/integration/github/).
 - [Python 3.12: Fraction](https://docs.python.org/3.12/library/fractions.html).
 
-La preparación se realizó con apoyo de Codex y consulta de documentación oficial.
-No se incorporó un solver ajeno. El equipo debe registrar cualquier fuente
-adicional y comprender cada cambio que presente.
+## Uso de herramientas de IA
 
+El taller permite herramientas de IA como apoyo y exige que cada integrante
+explique y modifique cualquier parte del código. Las sesiones de desarrollo con
+asistentes de IA están registradas en `docs/desarrollo-*.md`; los métodos no
+usan un solver ajeno y SciPy solo verifica en las pruebas.
 
+**[Por completar por el equipo]:** qué herramientas usó cada integrante, para
+qué tareas y cómo revisó, probó y comprendió cada cambio que presenta como propio.
