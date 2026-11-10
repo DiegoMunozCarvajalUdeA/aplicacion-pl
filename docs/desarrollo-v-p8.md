@@ -258,3 +258,24 @@ P8:
 - `80067ba` — `docs: add delivery guide`.
 - `b5bc696` — `docs: correct Mod. 1 trace count`.
 - Este informe — `docs: record V P8 verification`.
+
+## Revisión posterior (2026-11-10)
+
+Una revisión independiente del gráfico encontró cuatro detalles de presentación,
+corregidos sin cambiar cálculos (vértices, óptimos y certificados siguen iguales):
+
+1. Los lados del polígono sobre los ejes x1 = 0 o x2 = 0 se dibujaban grises y
+   punteados como borde del recorte, aunque son fronteras reales (x ≥ 0). Ahora
+   solo los lados sobre x = ancho o y = alto de la caja son punteados.
+2. La ampliación v + 2s·d hacía demasiado grande la caja cuando la región sigue
+   los ejes (extra 1: 18 × 78/5). Ahora se usa v + s·d: el ejemplo 5 queda en
+   (18/5, 24/5) y el extra 1 en (12, 48/5).
+3. En el ensayo 3, el rótulo de la isoutilidad no encontraba hueco y quedaba
+   tapado por el del vértice (0, 6). `space_graph_labels` ahora prueba subidas de
+   20 en 20 px hasta el borde; su docstring y la guía explican la heurística.
+4. Los ternarios encadenados del rótulo de las rectas pasaron a `if`/`elif`, y
+   se agregó una coma faltante en las referencias del README.
+
+Se regeneraron `docs/capturas/v/ejemplo_5.png` y `extra_1.png`; las otras cuatro
+capturas son idénticas píxel a píxel. El manual no cambia porque usa el
+ejemplo 6, que es acotado.

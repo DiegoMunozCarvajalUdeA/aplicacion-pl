@@ -575,12 +575,22 @@ caso de ocho variables que no se pierde ninguna columna ni el pivote resaltado.
 ## V: presentación verificable
 
 `format_expression` omite coeficientes cero y el módulo de los unitarios exactos;
-las tablas siguen completas. El gráfico amplía la referencia con v + 2s·d para
-cada vértice y dirección normalizada, antes de aplicar el margen 6/5. Solo cambia
-el recorte: no cambia ningún vértice ni certificado de los métodos. El ejemplo 5
-usa (6, 36/5). Los bordes de caja son grises punteados; el aviso enumera los rayos.
+las tablas siguen completas. El gráfico amplía la referencia con v + s·d para
+cada vértice y dirección normalizada, donde s es la mayor coordenada de la
+referencia, antes de aplicar el margen 6/5. Solo cambia el recorte: no cambia
+ningún vértice ni certificado de los métodos. El ejemplo 5 usa (18/5, 24/5) y el
+extra 1, (12, 48/5). Solo los lados del polígono sobre x = ancho o y = alto de la
+caja son grises punteados; los lados sobre los ejes son fronteras reales (x ≥ 0)
+y conservan el trazo de la región. El aviso enumera los rayos.
 Se anclan los ejes con razón 1 cuando el cociente de lados está entre 1/4 y 4;
-fuera se informa la deformación. Los rótulos desplazados conservan una guía.
+fuera se informa la deformación.
+
+`space_graph_labels` (`app/streamlit_app.py:401`) evita que los rótulos se
+tapen, porque Plotly no lo hace. Estima en píxeles un rectángulo por rótulo
+(6,5 px por carácter, 18 px de alto, área de 870 × 395), coloca primero las
+coordenadas de los vértices y, si un rótulo choca, lo sube de 20 en 20 px hasta
+el borde (o lo baja hasta 68 px) y le deja una guía gris. Es una heurística de presentación: puede fallar en
+casos muy cargados, pero nunca cambia un valor.
 
 Sensibilidad usa los nombres de las columnas de `final_basis` para distinguir
 básicas y no básicas. Un costo reducido cero solo anuncia otro óptimo cuando
@@ -593,7 +603,9 @@ si falla Chromium. `make manual-captures` toma capturas de interacciones reales.
 Sin `--serve`, el verificador reutiliza `--url` y no administra el servidor ajeno.
 
 Preguntas: ¿por qué el recorte no modifica el modelo?, ¿por qué comparar Fraction
-antes de omitir el uno?, ¿por qué costo cero no siempre implica otro punto?
+antes de omitir el uno?, ¿por qué costo cero no siempre implica otro punto?,
+¿por qué el lado sobre x1 = 0 no se dibuja punteado?, ¿qué pasa si
+`space_graph_labels` calcula mal el ancho de un texto?
 
 Ejercicio: quitar temporalmente `scaleanchor` y observar la flecha (1, 1), luego
 reponerlo y ejecutar las pruebas de presentación del gráfico.
