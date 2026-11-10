@@ -537,3 +537,29 @@ Preguntas para practicar:
 
 Ejercicio: reducir a cuatro las columnas de datos por bloque; comprobar con el
 caso de ocho variables que no se pierde ninguna columna ni el pivote resaltado.
+
+## V: presentación verificable
+
+`format_expression` omite coeficientes cero y el módulo de los unitarios exactos;
+las tablas siguen completas. El gráfico amplía la referencia con v + 2s·d para
+cada vértice y dirección normalizada, antes de aplicar el margen 6/5. Solo cambia
+el recorte: no cambia ningún vértice ni certificado de los métodos. El ejemplo 5
+usa (6, 36/5). Los bordes de caja son grises punteados; el aviso enumera los rayos.
+Se anclan los ejes con razón 1 cuando el cociente de lados está entre 1/4 y 4;
+fuera se informa la deformación. Los rótulos desplazados conservan una guía.
+
+Sensibilidad usa los nombres de las columnas de `final_basis` para distinguir
+básicas y no básicas. Un costo reducido cero solo anuncia otro óptimo cuando
+el solver ya lo certificó; un punto aislado degenerado puede tener costos cero.
+La nota de fuente está en «Notas del documento», al final del PDF.
+
+`make ui-check` inicia un servidor en puerto libre, espera salud `ok`, recorre
+modos y formatos y descarga PDF; el `finally` detiene el proceso propio, incluso
+si falla Chromium. `make manual-captures` toma capturas de interacciones reales.
+Sin `--serve`, el verificador reutiliza `--url` y no administra el servidor ajeno.
+
+Preguntas: ¿por qué el recorte no modifica el modelo?, ¿por qué comparar Fraction
+antes de omitir el uno?, ¿por qué costo cero no siempre implica otro punto?
+
+Ejercicio: quitar temporalmente `scaleanchor` y observar la flecha (1, 1), luego
+reponerlo y ejecutar las pruebas de presentación del gráfico.

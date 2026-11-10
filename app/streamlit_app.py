@@ -398,6 +398,59 @@ def render_steps(problem: LPProblem, solution: Solution | None, step_mode: bool)
         st.error("No se pudieron mostrar las iteraciones. Revise el módulo y vuelva a intentar.")
 
 
+def space_graph_labels(figure: go.Figure, result: GraphicalResult) -> None:
+    """Separar rótulos en píxeles aproximados sin mover puntos ni cambiar la escala."""
+    bounds = tuple(map(float, result.drawing_bounds))
+    width, height = 870, 395
+    ratio = bounds[0] / bounds[1]
+    if 0.25 <= ratio <= 4:
+        unit = min(width / bounds[0], height / bounds[1])
+        width, height = bounds[0] * unit, bounds[1] * unit
+    occupied = []
+    # Las coordenadas tienen prioridad; después se acomodan las rectas e isoutilidad.
+    annotations = sorted(figure.layout.annotations, key=lambda a: not a.text.startswith("("))
+    for label in annotations:
+        if label.showarrow:
+            continue
+        x = float(label.x) / bounds[0] * width + (label.xshift or 0)
+        y = float(label.y) / bounds[1] * height
+        text_width = len(label.text) * 6.5
+        left = (
+            x
+            if label.xanchor == "left"
+            else x - text_width
+            if label.xanchor == "right"
+            else x - text_width / 2
+        )
+        for shift in (label.yshift or 0, 28, 48, 68, 88, -28, -48, -68):
+            bottom = y + shift - (0 if label.yanchor == "bottom" else 9)
+            box = (left, bottom, left + text_width, bottom + 18)
+            collision = any(
+                box[0] < other[2] + 4
+                and box[2] > other[0] - 4
+                and box[1] < other[3] + 4
+                and box[3] > other[1] - 4
+                for other in occupied
+            )
+            if not collision and 0 <= bottom <= height - 18:
+                if shift != (label.yshift or 0):
+                    # Un rótulo desplazado conserva una guía hacia su punto o recta.
+                    label.update(
+                        showarrow=True,
+                        arrowhead=0,
+                        arrowwidth=1,
+                        arrowcolor="gray",
+                        ax=label.xshift or 0,
+                        ay=-shift,
+                        xshift=0,
+                        yshift=0,
+                    )
+                else:
+                    label.yshift = shift
+                occupied.append(box)
+                break
+
+
 def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
     """Dibujar el recorte calculado, conservando rectas incluso con región vacía."""
     if not result.applicable:
@@ -488,6 +541,7 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
                 y=position[1],
                 text=label,
                 showarrow=False,
+                yanchor="middle",
                 yshift=-18 if objective or position[1] > bounds[1] * 5 / 6 else 14,
                 xanchor="left"
                 if position[0] < bounds[0] / 6
@@ -561,6 +615,7 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
             bgcolor="rgba(255,255,255,0.9)",
             text=f"Mejora ilimitada: ({number(direction[0])}, {number(direction[1])})",
         )
+    space_graph_labels(figure, result)
     figure.update_layout(
         xaxis_title=names[0],
         yaxis_title=names[1],

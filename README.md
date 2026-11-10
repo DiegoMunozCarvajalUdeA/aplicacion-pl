@@ -132,16 +132,17 @@ y lectura independiente de los PDF en pruebas, respectivamente. FontTools,
 ya requerido por fpdf2, se declara también como dependencia directa para
 comprobar todos los glifos antes de escribirlos. `requirements.txt` excluye dev.
 
-Para repetir el recorrido visual con la app iniciada:
+Para repetir la verificación visual (la primera vez, instalar Chromium):
 
 ```bash
 uv run playwright install chromium
-uv run python scripts/check_ui.py --downloads --output /tmp/plapp-ui
+make ui-check
+make manual-captures
 ```
 
 El script comprueba salud, captura seis gráficos y descarga 36 PDF de los
-ejemplos 2, 5 y 6 en ambos modos y formatos. Requiere el servidor de `make run`;
-guarda los archivos en la ruta indicada. Las capturas del manual siguen en P8.
+ejemplos 2, 5 y 6 en ambos modos y formatos. Inicia y detiene su propio servidor. `OUT=/tmp/plapp-ui` cambia el directorio de
+resultados; `make manual-captures` escribe en `docs/manual/capturas/`.
 
 ## Despliegue en Streamlit Community Cloud
 
