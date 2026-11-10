@@ -22,11 +22,15 @@ def test_manual_images_are_real_captures():
 
 
 def test_manual_only_team_placeholders_remain():
-    """Solo quedan marcadores [por completar] para datos que aporta el equipo."""
+    """Solo pueden quedar marcadores [por completar] para datos que aporta el equipo.
+
+    Cuando el equipo complete nombres y URL, la lista queda vacía y la prueba
+    sigue pasando.
+    """
     text = (MANUAL / "README.md").read_text(encoding="utf-8")
     # Corchetes que no forman un enlace ni una imagen de Markdown.
     markers = re.findall(r"(?<!!)\[([^\]]*)\](?!\()", text)
-    assert markers and set(markers) == {"por completar"}
+    assert set(markers) <= {"por completar"}
 
 
 def test_manual_pdf_matches_markdown_sections():
