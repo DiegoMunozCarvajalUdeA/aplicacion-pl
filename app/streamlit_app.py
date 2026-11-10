@@ -369,6 +369,7 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
             )
         )
     lines = result.lines + ((result.objective_line,) if result.objective_line else ())
+    label_positions = []
     for index, line in enumerate(lines):
         objective = line is result.objective_line
         label = line.label
@@ -393,12 +394,33 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
         )
         if line.points:
             first, last = line.points[0], line.points[-1]
+            # Escoger un tramo alejado de vértices y rótulos ya colocados.
+            candidates = [
+                tuple(float(a + (b - a) * t / 5) for a, b in zip(first, last, strict=True))
+                for t in (1, 2, 3, 4)
+            ]
+            occupied = [tuple(map(float, v.point)) for v in result.vertices] + label_positions
+            bounds = tuple(map(float, result.drawing_bounds))
+            position = max(
+                candidates,
+                key=lambda p: min(
+                    (sum(((p[i] - q[i]) / bounds[i]) ** 2 for i in (0, 1)) for q in occupied),
+                    default=1,
+                ),
+            )
+            label_positions.append(position)
             figure.add_annotation(
-                x=float((first[0] + last[0]) / 2),
-                y=float((first[1] + last[1]) / 2),
+                x=position[0],
+                y=position[1],
                 text=label,
                 showarrow=False,
-                yshift=12,
+                yshift=-18 if objective or position[1] > bounds[1] * 5 / 6 else 14,
+                xanchor="left"
+                if position[0] < bounds[0] / 6
+                else "right"
+                if position[0] > bounds[0] * 5 / 6
+                else "center",
+                font={"color": "#172554", "size": 12},
                 bgcolor="rgba(255,255,255,0.8)",
             )
     if result.vertices:
@@ -406,15 +428,24 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
             go.Scatter(
                 x=[float(v.point[0]) for v in result.vertices],
                 y=[float(v.point[1]) for v in result.vertices],
-                mode="markers+text",
-                text=[
-                    f"({number(v.point[0])}, {number(v.point[1])}), Z={number(v.objective_value)}"
-                    for v in result.vertices
-                ],
-                textposition="top center",
+                mode="markers",
                 name="Vértices",
             )
         )
+        for vertex in result.vertices:
+            figure.add_annotation(
+                x=float(vertex.point[0]),
+                y=float(vertex.point[1]),
+                text=f"({number(vertex.point[0])}, {number(vertex.point[1])}), "
+                f"Z={number(vertex.objective_value)}",
+                showarrow=False,
+                xanchor="left" if vertex.point[0] == 0 else "center",
+                yanchor="bottom",
+                xshift=5 if vertex.point[0] == 0 else 0,
+                yshift=8,
+                font={"color": "#111827", "size": 12},
+                bgcolor="rgba(255,255,255,0.85)",
+            )
     if result.optimal_points:
         figure.add_trace(
             go.Scatter(
@@ -440,19 +471,29 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
         first, last = result.improvement_segment
         direction = result.improving_direction
         figure.add_annotation(
-            x=float(last[0]),
-            y=float(last[1]),
-            ax=float(first[0]),
-            ay=float(first[1]),
+            x=float(first[0] + (last[0] - first[0]) * 9 / 10),
+            y=float(first[1] + (last[1] - first[1]) * 9 / 10),
+            ax=float(first[0] + (last[0] - first[0]) / 3),
+            ay=float(first[1] + (last[1] - first[1]) / 3),
             xref="x",
             yref="y",
             axref="x",
             ayref="y",
             showarrow=True,
             arrowhead=2,
+            arrowwidth=3,
+            arrowcolor="#9f1239",
+            font={"color": "#9f1239", "size": 13},
+            bgcolor="rgba(255,255,255,0.9)",
             text=f"Mejora ilimitada: ({number(direction[0])}, {number(direction[1])})",
         )
-    figure.update_layout(xaxis_title=names[0], yaxis_title=names[1])
+    figure.update_layout(
+        xaxis_title=names[0],
+        yaxis_title=names[1],
+        height=560,
+        margin={"l": 60, "r": 40, "t": 35, "b": 130},
+        legend={"orientation": "h", "y": -0.25, "x": 0},
+    )
     figure.update_xaxes(range=[0, float(result.drawing_bounds[0])])
     figure.update_yaxes(range=[0, float(result.drawing_bounds[1])])
     st.plotly_chart(figure, width="stretch")
@@ -526,24 +567,37 @@ def render_results(problem: LPProblem, step_mode: bool) -> None:
                             for name, value in values.items()
                         ]
                     )
-                    for name in values:
-                        st.write(interpretations[f"{prefix}:{name}"])
+                    if prefix == "r":
+                        for name in values:
+                            st.write(interpretations[f"{prefix}:{name}"])
                 for label, key_label, ranges, prefix in (
                     ("Rangos de coeficientes", "Variable", report.objective_ranges, "c"),
                     ("Rangos de lados derechos", "Restricción", report.rhs_ranges, "b"),
                 ):
                     st.write(label)
+                    names = (
+                        [row.name for row in problem.constraints] if prefix == "b" else list(ranges)
+                    )
+                    unavailable = "No disponible (fila redundante)"
                     st.table(
                         [
                             {
                                 key_label: name,
-                                "Inferior": number(low) if low is not None else "−∞",
-                                "Superior": number(high) if high is not None else "+∞",
+                                "Inferior": unavailable
+                                if name not in ranges
+                                else number(ranges[name][0])
+                                if ranges[name][0] is not None
+                                else "−∞",
+                                "Superior": unavailable
+                                if name not in ranges
+                                else number(ranges[name][1])
+                                if ranges[name][1] is not None
+                                else "+∞",
                             }
-                            for name, (low, high) in ranges.items()
+                            for name in names
                         ]
                     )
-                    for name in ranges:
+                    for name in names:
                         st.write(interpretations[f"{prefix}:{name}"])
             except NotImplementedError:
                 st.info("Pendiente de implementar: sensibilidad")

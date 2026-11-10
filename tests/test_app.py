@@ -327,11 +327,13 @@ def test_sensitivity_presentation(app, number_format):
     assert list(prices["Precio sombra ∂Z*/∂b"]) == expected
     text = "\n".join(item.value for item in app.markdown)
     assert f"Cada unidad adicional de R3 aumenta Z en {expected[2]}" in text
+    for row in ("R1", "R2", "R3"):
+        assert text.count(f"Cada unidad adicional de {row} ") == 1
     assert "El coeficiente de x1 puede variar entre 3 y +∞" in text
     assert any("cⱼ − zⱼ" in t.value.columns for t in app.table)
 
 
-def test_sensitivity_redundant_warning_and_omitted_range(app):
+def test_sensitivity_redundant_warning_and_unavailable_range(app):
     original = LPProblem(
         (Fraction(1), Fraction(2)),
         (Constraint((Fraction(1), Fraction(1)), "=", Fraction(4)),) * 2,
@@ -348,5 +350,12 @@ def test_sensitivity_redundant_warning_and_omitted_range(app):
         for t in app.table
         if "Restricción" in t.value.columns and "Inferior" in t.value.columns
     )
-    assert list(ranges["Restricción"]) == ["R1"]
-    assert list(ranges["Inferior"]) == list(ranges["Superior"]) == ["4"]
+    assert list(ranges["Restricción"]) == ["R1", "R2"]
+    assert (
+        list(ranges["Inferior"])
+        == list(ranges["Superior"])
+        == ["4", "No disponible (fila redundante)"]
+    )
+    text = "\n".join(item.value for item in app.markdown)
+    assert text.count("Cada unidad adicional de R1 ") == 1
+    assert text.count("R2: precio sombra no único: fila redundante.") == 1

@@ -10,6 +10,7 @@
 | P3: paso a paso | Implementado | 237 pruebas pasan, 22 xfail pendientes, sin XPASS; 42 pruebas de interfaz |
 | P4: gráfico | Implementado | 285 pruebas pasan, 19 xfail; 250 casos exactos contra Gran M |
 | P5: sensibilidad | Implementado | Precios y rangos exactos; perturbaciones de ejemplos 1–2 y 150 casos generados |
+| R: revisión menor | Implementado | Interpretaciones únicas, redundantes visibles y seis capturas Chromium revisadas |
 | P6: revisado | Pendiente | Stub |
 | P7: PDF | Pendiente | Stub |
 | P8: entregables | Pendiente | Guía de sustentación de P1–P5 escrita; manual, capturas y video pendientes |

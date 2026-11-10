@@ -2,7 +2,7 @@
 
 Esta guía acompaña los paquetes implementados. El equipo debe recorrer las
 pruebas y practicar las modificaciones; comprender esta guía no reemplaza leer
-el código. Los módulos de gráfico, sensibilidad, revisado y PDF siguen pendientes.
+el código. El estado de los paquetes está en `docs/plan.md`.
 
 ## P1: núcleo exacto
 
@@ -374,3 +374,29 @@ Preguntas para practicar:
 Ejercicio: quitar `final_b_inverse` y las iteraciones de una solución óptima;
 la sensibilidad debe permanecer idéntica. Después perturbar b3 del ejemplo 2
 hasta −3: e2 llega a cero y se alcanza un extremo degenerado del rango.
+
+## R: lectura de sensibilidad y revisión visual
+
+La interpretación de cada lado derecho se muestra una sola vez, debajo de los
+rangos. La tabla enumera todas las restricciones originales; una redundante
+indica «No disponible (fila redundante)» en ambos límites, sin inventar un rango.
+Las advertencias siguen explicando el representante dual y la degeneración.
+
+Los rótulos del gráfico se ubican en tramos alejados de vértices y rótulos
+anteriores. Se anclan hacia dentro cerca de los bordes; las coordenadas tienen
+fondo claro y contraste explícito. La flecha de mejora termina dentro del
+recorte para que su cabeza sea visible. No cambian la geometría ni las escalas.
+`scripts/check_ui.py` reproduce las seis capturas de `docs/capturas/r/` con
+Chromium y comprueba la salud del servidor. Playwright solo pertenece a dev.
+
+Preguntas para practicar:
+
+1. ¿Por qué no usar infinito en el rango de una redundante? Su perturbación
+   aislada puede romper una igualdad dependiente; no hay rango informado.
+2. ¿La flecha termina donde acaba la región? No: termina dentro de la caja
+   de dibujo; la dirección exacta certifica la mejora ilimitada.
+3. ¿Qué demuestra AppTest y qué exige una captura? AppTest verifica datos y
+   textos; el navegador permite observar superposiciones y recortes.
+
+Ejercicio: duplicar R1 como igualdad y comprobar que aparece la segunda fila
+sin rango, con una sola interpretación debajo de la tabla.
