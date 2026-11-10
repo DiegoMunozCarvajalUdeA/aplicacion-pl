@@ -27,8 +27,11 @@ def test_fraction_format(value, text):
 
 def test_decimal_format():
     assert format_number(Fraction(2, 3), "decimal", 3) == "0.667"
-    assert format_number(Fraction(-1, 10000), "decimal", 2) == "0.00"
-    assert format_number(MValue(Fraction(1, 3), Fraction(-2)), "decimal", 2) == "0.33 - 2.00M"
+    assert format_number(Fraction(-1, 10000), "decimal", 2) == "0"
+    assert format_number(MValue(Fraction(1, 3), Fraction(-2)), "decimal", 2) == "0.33 - 2M"
+    assert format_number(Fraction(4), "decimal", 4) == "4"
+    assert format_number(Fraction(-3, 2), "decimal", 4) == "-1.5"
+    assert format_number(Fraction(10), "decimal", 0) == "10"
     assert format_number(Fraction(10**100, 3), "decimal", 2).endswith(".33")
 
 

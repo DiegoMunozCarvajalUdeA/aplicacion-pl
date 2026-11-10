@@ -34,7 +34,9 @@ def format_number(
         )
         decimal = Decimal(value.numerator) / Decimal(value.denominator)
         rendered = f"{decimal:.{decimals}f}"
-    return rendered.lstrip("-") if Decimal(rendered) == 0 else rendered
+    if Decimal(rendered) == 0:
+        return "0"
+    return rendered.rstrip("0").rstrip(".") if "." in rendered else rendered
 
 
 def format_expression(

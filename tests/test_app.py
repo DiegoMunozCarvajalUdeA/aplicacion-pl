@@ -196,17 +196,13 @@ def test_solved_examples_in_both_modes_and_formats(app, example, mode, number_fo
     else:
         assert "solución no acotada" in text
     if example == 6:
-        endpoints = (
-            "(0, 5/2) y (3, 1)"
-            if numeric_mode == "fraction"
-            else "(0.0000, 2.5000) y (3.0000, 1.0000)"
-        )
+        endpoints = "(0, 5/2) y (3, 1)" if numeric_mode == "fraction" else "(0, 2.5) y (3, 1)"
         assert "segmento entre " + endpoints in text
         assert "Solución alterna 1" in text
     if example == 7:
         assert "degeneración" in text and "variables básicas en 0: x1" in text
     iterations = [e for e in app.expander if e.label.startswith("Iteración ")]
-    tableaus = [table for table in app.table if "cⱼ − zⱼ" in table.value.index]
+    tableaus = [table for table in app.table if "cⱼ − zⱼ (Z en lado derecho)" in table.value.index]
     standard_tables = [table.value for table in app.table if "Columna" in table.value.columns]
     if mode == "Directo":
         assert not iterations and not tableaus and not standard_tables
@@ -219,7 +215,7 @@ def test_solved_examples_in_both_modes_and_formats(app, example, mode, number_fo
         assert list(table.columns) == [*solution.standard_form.column_names, "Lado derecho"]
         assert list(table.index) == [
             *(solution.standard_form.column_names[j] for j in iteration.basis),
-            "cⱼ − zⱼ",
+            "cⱼ − zⱼ (Z en lado derecho)",
         ]
         assert table.iloc[-1, -1] == format_number(iteration.objective_value, numeric_mode)
         if iteration.pivot is not None:
@@ -238,7 +234,7 @@ def test_format_change_preserves_exact_solution(app):
     button(app, "Resolver").click().run()
     original = app.session_state["solutions"]["Gran M"]
     selectbox(app, "Formato numérico").select("Decimales").run()
-    assert any("Z = 3.4000" in item.value for item in app.markdown)
+    assert any("Z = 3.4" in item.value for item in app.markdown)
     assert app.session_state["solutions"]["Gran M"] == original
     assert original.values == {"x1": Fraction(2, 5), "x2": Fraction(9, 5)}
 
@@ -287,5 +283,5 @@ def test_decimal_transformation_and_fractional_result(app):
     button(app, "Resolver").click().run()
     assert not app.exception and not app.error
     text = "\n".join(item.value for item in app.markdown)
-    assert "lado derecho negativo (-0.5000)" in text
+    assert "lado derecho negativo (-0.5)" in text
     assert "Z = 0.1667" in text and "(-1/2)" not in text

@@ -158,7 +158,23 @@ def render_alternatives(solution: Solution) -> None:
 def render_solution(problem: LPProblem, solution: Solution) -> None:
     """Presentar resultados originales, alternativas y notas del método propio."""
     # El mensaje de multiplicidad se reconstruye con datos exactos para respetar decimales.
-    st.write("Se encontró una solución óptima." if solution.multiple_optima else solution.message)
+    if solution.status == Status.UNBOUNDED and solution.unbounded_direction:
+        point = ", ".join(
+            number(solution.unbounded_origin[name]) for name in problem.variable_names
+        )
+        ray = ", ".join(
+            number(solution.unbounded_direction[name]) for name in problem.variable_names
+        )
+        change = "crece" if problem.sense == "max" else "decrece"
+        st.write(
+            "El problema tiene solución no acotada. "
+            f"Z {change} sin límite a lo largo de ({', '.join(problem.variable_names)}) "
+            f"= ({point}) + t·({ray}), t ≥ 0."
+        )
+    else:
+        st.write(
+            "Se encontró una solución óptima." if solution.multiple_optima else solution.message
+        )
     if solution.status == Status.OPTIMAL:
         st.table(
             [{"Variable": name, "Valor": number(value)} for name, value in solution.values.items()]
@@ -201,7 +217,7 @@ def render_iteration_tables(
                     else "—"
                 ]
             )
-            labels.append("cⱼ − zⱼ")
+            labels.append("cⱼ − zⱼ (Z en lado derecho)")
         frame = pd.DataFrame(rows, index=labels, columns=[*standard.column_names, "Lado derecho"])
         frame.index.name = "Variable básica"
         st.write("Tablero")

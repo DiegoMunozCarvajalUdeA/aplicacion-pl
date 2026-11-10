@@ -114,8 +114,9 @@ tratar esa redundancia antes de interpretar su precio sombra.
 `Iteration.objective_value` contiene Z simbólica y `Iteration.notes` explica
 canonización, Bland y limpieza. `Solution.notes` informa degeneración y
 redundancia; todos son campos opcionales con valor por defecto. La última
-iteración tiene `entering_variable=None` y explica por qué terminó. En no
-acotación, el estado previo conserva la columna candidata y sus exclusiones.
+iteración óptima o infactible tiene `entering_variable=None` y explica la
+terminación. En no acotación, el último estado conserva la columna candidata,
+sus exclusiones y el mensaje, sin duplicar el tablero.
 
 La protección limita a 1000 los estados del solver y a 1000 las bases de
 búsqueda de alternativas. Alcanzar el límite produce un error comprensible;
@@ -167,7 +168,7 @@ Al cargar el ejemplo 2, escoger Paso a paso y Resolver, comprobar las cuatro
 bases de la tabla de P2. En el estado 1, la fila x1 tiene lado derecho 1 y la
 fila a2, 2; la celda de entrada x2/salida a2 vale 5/3 y está resaltada. En el
 estado final se muestran x1 = 2/5, x2 = 9/5, exceso de R2 = 1 y Z = 17/5.
-Con cuatro decimales deben verse 0.4000, 1.8000, 1.0000 y 3.4000.
+Con un máximo de cuatro decimales deben verse 0.4, 1.8, 1 y 3.4.
 
 Preguntas para practicar:
 
@@ -190,3 +191,47 @@ Documentación de presentación consultada para esta implementación:
 [Streamlit, st.table](https://docs.streamlit.io/develop/api-reference/data/st.table),
 [Streamlit, AppTest](https://docs.streamlit.io/develop/concepts/app-testing/cheat-sheet),
 [pandas, Styler.apply](https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.apply.html).
+
+## C: correcciones de redundancia y terminación
+
+Una artificial que sale de la base nunca vuelve a entrar. Las candidatas
+no básicas excluyen siempre las columnas artificiales, tanto para la mejora
+en M como para la mejora real. Equivale a descartar su columna en fase I.
+La limpieza de una artificial nula puede usar un pivote negativo con paso cero;
+sin esta exclusión, su antiguo costo reducido favorable permite reentrar y
+repetir limpieza indefinidamente. Bland no corrige ese ciclo porque la limpieza
+no es un pivote simplex elegido por costo. La primera iteración explica la regla.
+
+En no acotación se conserva un solo estado con entrante y razones excluidas.
+La dirección completa es d_entrante = 1, d_B = −columna_entrante y cero en las
+demás no básicas; luego se proyecta sobre las variables originales. El origen
+factible y la dirección exacta quedan en `Solution.unbounded_origin` y
+`Solution.unbounded_direction`. En el ejemplo 5 se obtiene (1, 0) + t·(1, 1),
+t ≥ 0; Z aumenta 2t. La columna entrante puede ser una holgura: la proyección
+sigue dando una dirección verificable para las variables del usuario.
+
+El tablero rotula «cⱼ − zⱼ (Z en lado derecho)»: esa celda contiene Z, no −Z.
+El formato decimal elimina ceros finales y normaliza −0 a 0; la precisión
+seleccionada es un máximo, no un número obligatorio de cifras.
+
+El oráculo repite sin presolve los estados 2, 3 y 4. Si cambia el estado,
+exige que una segunda corrida sin presolve lo confirme; si estas dos corridas
+no concuerdan o no alcanzan un estado verificable, lanza
+`OracleInconclusiveError` («Oráculo no concluyente»). Se acepta así el cambio
+2 a 3 del extra 7 sin escoger arbitrariamente entre estados persistentes.
+Solo las pruebas y scripts usan SciPy; jamás decide un estado de la aplicación.
+
+Para repetir el estrés: `uv run python -m scripts.stress --seed 20261110 --count 3000`.
+La generación incluye filas duplicadas o escaladas por 1, 2 y −1 y lados
+derechos frecuentemente nulos. El signo de la desigualdad se invierte al negar
+una fila. Se cuentan por separado errores, diferencias y oráculos excluidos.
+
+Preguntas: ¿por qué una artificial no reentra?, ¿por qué Bland no evitaba la
+limpieza cíclica?, ¿cómo verificar a·d y c·d en un rayo?, ¿por qué la caja del
+gráfico no puede certificar no acotación?, ¿cuándo descartar un oráculo numérico?
+
+El estrés también descubrió que las permutaciones de filas de una misma base
+agotaban las 1000 bases de búsqueda de alternativas. Se deduplican por conjunto
+de columnas básicas: representan el mismo punto y los mismos vecinos, con
+independencia del orden del tablero. Se mantiene el límite de 1000 bases
+realmente distintas y una regresión con seis filas activas redundantes.
