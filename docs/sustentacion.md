@@ -2,7 +2,37 @@
 
 Esta guía acompaña los paquetes implementados. El equipo debe recorrer las
 pruebas y practicar las modificaciones; comprender esta guía no reemplaza leer
-el código. El estado de los paquetes está en `docs/plan.md`.
+el código. El estado de los paquetes está en `docs/plan.md`; los problemas de
+ensayo, el simulacro y el banco de modificaciones probadas están en
+`docs/ensayo-sustentacion.md`.
+
+## Índice por módulo
+
+Cada integrante debe poder explicar cualquier fila en dos minutos y hacer su
+ejercicio en vivo. «Mod. n» remite al banco de `docs/ensayo-sustentacion.md`,
+donde cada cambio se probó en una copia temporal y se anotaron las pruebas que fallan.
+
+| Archivo | Qué explicar en dos minutos | Sección | Preguntas probables | Ejercicio |
+|---|---|---|---|---|
+| `src/plapp/__init__.py` | Solo marca el paquete `plapp` del layout `src/`; no importa ni ejecuta nada. | Índice | ¿Por qué `uv run` encuentra el paquete? | Importar `plapp.model` desde `uv run python`. |
+| `src/plapp/mvalue.py` | a + bM con dos Fraction; el orden compara primero b. | P1: M simbólica | ¿Por qué no M = 10⁶? ¿Por qué no se permite M·M? | Comprobar que −M + 10¹⁰⁰ < 0. |
+| `src/plapp/linalg.py` | Identidad, productos e inversa por Gauss-Jordan con intercambio de filas. | P1: Álgebra lineal | ¿Cuándo se declara B singular? | Invertir una B cuyo primer pivote es cero. |
+| `src/plapp/model.py` | `parse_number` acepta 2, −3, 2,5, 2.5 y 2/5; `validate` acumula errores por celda. | Modelo y JSON | ¿Por qué Fraction y no float? ¿Por qué acumular errores? | Rechazar `1e3` (hoy se acepta). |
+| `src/plapp/io_json.py` | Números como texto exacto; carga y guardado con errores en español. | Modelo y JSON | ¿Por qué `"2/5"` entre comillas? ¿La app lee `esperado`? | Guardar, editar y volver a cargar un JSON. |
+| `src/plapp/result.py` | Contratos inmutables que comparten métodos, UI, PDF y sensibilidad. | Contratos | ¿Por qué el estado anterior al pivote? ¿Por qué multiplicidad no es un estado? | Agregar un campo con valor por defecto. |
+| `src/plapp/standard_form.py` | b ≥ 0, holguras, excesos y artificiales; `row_signs` recuerda filas negadas. | P1: Forma estándar | ¿Por qué ≥ pasa a ≤ al negar? | Variable llamada s1 y nombre s1_1. |
+| `src/plapp/simplex_rules.py` | Entrada, razón mínima, salida, Bland, infactibilidad, no acotación y alternativas. | P2; P6, paso 1 | ¿Por qué Bland también al entrar? ¿Cómo se prueba la infactibilidad? | Mod. 1 (Bland siempre) y Mod. 2 (desempate). |
+| `src/plapp/big_m.py` | Tablero completo con costos simbólicos; ciclo con límite de 1000 estados. | P2 | ¿Por qué canonizar la fila Z? | Seguir a mano el ejemplo 2. |
+| `src/plapp/revised_simplex.py` | B⁻¹ actualizada con E; solo calcula d = B⁻¹aⱼ de la entrante. | P6, pasos 2–3 | ¿Por qué no invertir B en cada pivote? | Reconstruir E del segundo pivote del ejemplo 2. |
+| `src/plapp/sensitivity.py` | Reconstruye B desde `final_basis`; precios, costos reducidos, rangos y textos. | P5; R | ¿Por qué un dato a la vez? ¿Por qué SciPy da otros precios en degeneración? | Mod. 6 (columna «Valor actual»). |
+| `src/plapp/graphical.py` | Vértices exactos, conos de recesión y caja solo de dibujo. | P4; V | ¿Región no acotada implica Z no acotada? | Mod. 4 (margen de la caja). |
+| `src/plapp/formatting.py` | Fracciones, decimales y a + bM; expresiones sin ceros ni unos. | Formato | ¿Cambiar el formato recalcula? | Escribir siempre `1·x1`. |
+| `src/plapp/export_pdf.py` | PDF A4 horizontal desde la solución ya calculada, con DejaVu Sans. | P7 | ¿Exportar vuelve a resolver? | Cuatro columnas de datos por bloque. |
+| `app/streamlit_app.py` | Estado de sesión, edición, pestañas y errores contenidos en mensajes. | P3; P6; V | ¿Qué pasa al editar un dato? ¿Por qué nunca hay traceback? | Mod. 3, Mod. 5 y Mod. 7. |
+| `scripts/verify.py` | Oráculo SciPy/HiGHS fuera de la app; compara estado, Z y factibilidad. | Oráculo y estrés | ¿Por qué repetir sin presolve? | `make verify` con un ensayo modificado. |
+| `scripts/stress.py` | Miles de problemas aleatorios con filas repetidas y lados derechos nulos. | Oráculo y estrés | ¿Qué cuenta como diferencia? | Cambiar la probabilidad de lado derecho 0. |
+| `scripts/check_ui.py` | Chromium real: salud, gráficos, modos, formatos, PDF y capturas del manual. | R; V | ¿Qué agrega frente a AppTest? | Agregar un ejemplo a la lista de gráficos. |
+| `scripts/build_manual.py` | Markdown del manual a PDF A4 con Chromium; falla con más de 5 páginas. | Oráculo y estrés | ¿Por qué no se edita el PDF a mano? | Cambiar el ancho de una captura. |
 
 ## P1: núcleo exacto
 
@@ -135,27 +165,28 @@ Preguntas para practicar:
 5. ¿Cómo se comprueba la inversa final? Las pruebas verifican B·B⁻¹ = I,
    B⁻¹b igual al lado derecho final y B⁻¹A igual al tablero final.
 
-Ejercicio: cambiar la selección de entrada para usar Bland siempre. Explicar
-qué secuencias de pivotes cambian y por qué se conservan Z y factibilidad.
+Ejercicio: cambiar la selección de entrada para usar Bland siempre (Mod. 1 del
+ensayo). Explicar qué secuencias de pivotes cambian y por qué se conservan Z y
+factibilidad.
 
 ## P3: presentación de resultados y paso a paso
 
-`app/streamlit_app.py:120` centraliza el formato numérico elegido. El estado
+`app/streamlit_app.py:121` centraliza el formato numérico elegido. El estado
 de sesión conserva el modelo exacto y sus soluciones: cambiar a decimales no
 vuelve a resolver ni cambia Fraction por float. La función de formato está en
 `src/plapp/formatting.py:12` y usa Decimal solo para presentar.
 
-`app/streamlit_app.py:162` muestra variables, Z, y por restricción su tipo
+`app/streamlit_app.py:164` muestra variables, Z, y por restricción su tipo
 original: holgura, exceso o igualdad. Aunque R3 se normalice a ≤ en el ejemplo 2,
 en el resultado sigue siendo un exceso de la restricción original ≥.
-`app/streamlit_app.py:138` presenta una solución alterna y el segmento o rayo
+`app/streamlit_app.py:140` presenta una solución alterna y el segmento o rayo
 certificado; construye las coordenadas con el formato elegido. Las notas del
 solver identifican las variables básicas nulas.
 
-`app/streamlit_app.py:348` devuelve inmediatamente en modo Directo; Paso a paso
+`app/streamlit_app.py:350` devuelve inmediatamente en modo Directo; Paso a paso
 presenta forma estándar, costos simbólicos, transformaciones y base inicial.
-`app/streamlit_app.py:286` presenta cada estado y sus razones y justificaciones.
-`app/streamlit_app.py:207` construye el tablero rotulado por variables básicas,
+`app/streamlit_app.py:288` presenta cada estado y sus razones y justificaciones.
+`app/streamlit_app.py:209` construye el tablero rotulado por variables básicas,
 con fila cⱼ − zⱼ y Z. Pandas Styler resalta solo la celda cuya posición ya
 calculó el solver. El visor no decide entradas, salidas ni pivotes.
 
@@ -254,7 +285,8 @@ no acotado. De lo contrario se evalúa Z en los vértices; dos empates certifica
 un segmento y una dirección con c·d = 0 certifica un rayo óptimo.
 
 La caja tiene límites separados por eje: máximo entre 1, coordenadas de
-vértices e interceptos no negativos, con 20 % de margen. Se interseca la región
+vértices e interceptos no negativos, con 20 % de margen; desde V, una región no
+acotada amplía esa referencia con sus rayos (sección V). Se interseca la región
 con esa caja solo para sombrear; sus esquinas nunca se agregan a los vértices
 reales. También se recortan rectas verticales, isoutilidad y rayos. Los ejes
 participan en la geometría; `lines` contiene las restricciones rotuladas.
@@ -271,7 +303,8 @@ El extra 1 tiene región no acotada y mínimo finito Z = 4 en (2, 1).
 óptimas y de mejora, límites de dibujo y segmentos de rayos ya recortados.
 Todos tienen valores por defecto. La UI solo dibuja esos datos: rótulos sobre
 rectas, coordenadas y Z, segmento óptimo, isoutilidad punteada y flecha de
-mejora; los ejes no fuerzan escala 1:1. `render_graph` recibe el problema para
+mejora; desde V los ejes usan la misma escala cuando la razón entre los lados
+de la caja está entre 1/4 y 4. `render_graph` recibe el problema para
 rotular nombres, sentidos y números con el formato escogido sin analizar texto.
 
 Preguntas para practicar:
@@ -386,8 +419,9 @@ Los rótulos del gráfico se ubican en tramos alejados de vértices y rótulos
 anteriores. Se anclan hacia dentro cerca de los bordes; las coordenadas tienen
 fondo claro y contraste explícito. La flecha de mejora termina dentro del
 recorte para que su cabeza sea visible. No cambian la geometría ni las escalas.
-`scripts/check_ui.py` reproduce las seis capturas de `docs/capturas/r/` con
-Chromium y comprueba la salud del servidor. Playwright solo pertenece a dev.
+`scripts/check_ui.py` reproduce con Chromium las seis capturas de
+`docs/capturas/r/` (rehechas en `docs/capturas/v/`) y las de los tres ensayos de
+dos variables, y comprueba la salud del servidor. Playwright solo pertenece a dev.
 
 Preguntas para practicar:
 
@@ -459,9 +493,9 @@ Las pruebas cuentan estos productos para impedir que el revisado mantenga un
 tablero durante los pivotes normales. Las artificiales redundantes conservan
 su testigo nulo; la sensibilidad sigue reconstruyendo la base por su cuenta.
 
-`app/streamlit_app.py:207` presenta B⁻¹, x_B, y y costos reducidos.
-`app/streamlit_app.py:286` muestra d con razones, exclusiones y pivote resaltado,
-incluido el retiro sin razón mínima. `app/streamlit_app.py:555` compara cada
+`app/streamlit_app.py:209` presenta B⁻¹, x_B, y y costos reducidos.
+`app/streamlit_app.py:288` muestra d con razones, exclusiones y pivote resaltado,
+incluido el retiro sin razón mínima. `app/streamlit_app.py:647` compara cada
 base, entrante, saliente y Z; si falta un estado, muestra «No» en la coincidencia.
 El resumen distingue estados registrados de pivotes. La referencia de trabajo
 m×(n+m+1) del tablero supone filas ≤; artificiales y excesos aumentan su ancho.
@@ -490,13 +524,13 @@ que E·B⁻¹ produce x_B=(3/5,6/5,1). Luego activar Bland desde el inicio.
 
 ## P7: exportación del paso a paso a PDF
 
-`src/plapp/export_pdf.py:379` recibe problema y solución existentes y devuelve
+`src/plapp/export_pdf.py:378` recibe problema y solución existentes y devuelve
 bytes. `mode="fraction"` y `decimals=4` son valores por defecto; el exportador
 valida ambos con el mismo formateador de la UI. No importa ni llama solvers.
 `src/plapp/export_pdf.py:109` escribe el modelo original y la forma estándar;
-`src/plapp/export_pdf.py:173`, cada estado anterior al pivote con su evidencia;
-`src/plapp/export_pdf.py:278`, el resultado y los certificados especiales.
-Si hay óptimo, `src/plapp/export_pdf.py:328` llama a `sensitivity_analysis` con
+`src/plapp/export_pdf.py:172`, cada estado anterior al pivote con su evidencia;
+`src/plapp/export_pdf.py:277`, el resultado y los certificados especiales.
+Si hay óptimo, `src/plapp/export_pdf.py:327` llama a `sensitivity_analysis` con
 la misma solución, sin recalcular el método, e incluye tablas e interpretaciones.
 
 La clase de presentación `src/plapp/export_pdf.py:22` carga DejaVu Sans 2.37,
@@ -512,10 +546,10 @@ Las páginas son A4 horizontales. Cada tabla tiene como máximo ocho columnas
 de datos además de su primera columna, que se repite en todos los bloques.
 Los encabezados se repiten al cambiar de página, los textos numéricos largos
 se ajustan por caracteres y el pivote mantiene su fila y columna originales.
-`src/plapp/export_pdf.py:241` escribe d y las razones del revisado; un retiro
+`src/plapp/export_pdf.py:240` escribe d y las razones del revisado; un retiro
 artificial conserva su aviso de paso cero y no inventa cocientes de razón mínima.
 
-`app/streamlit_app.py:605` ofrece `st.download_button` con bytes, MIME
+`app/streamlit_app.py:697` ofrece `st.download_button` con bytes, MIME
 `application/pdf` y el formato elegido, solo cuando existe solución. Paso a
 paso ofrece el primer método seleccionado; Comparar métodos ofrece un PDF por
 método, incluso en modo Directo. Los fallos quedan contenidos en un mensaje
@@ -563,3 +597,157 @@ antes de omitir el uno?, ¿por qué costo cero no siempre implica otro punto?
 
 Ejercicio: quitar temporalmente `scaleanchor` y observar la flecha (1, 1), luego
 reponerlo y ejecutar las pruebas de presentación del gráfico.
+
+## Modelo y JSON: `model.py` e `io_json.py`
+
+`src/plapp/model.py:52` lee cada celda: quita espacios, cambia la coma decimal
+por punto y construye `Fraction(texto)`. Así `2`, `-3`, `2.5`, `2,5` y `2/5`
+quedan exactos; `0.1` es 1/10, no un binario aproximado. Una celda vacía produce
+«El campo está vacío; ingrese un número.»; `abc` o `1/0`, «Número inválido;
+use 2, -3, 2,5 o 2/5, con denominador no nulo.». `Fraction` también acepta
+`1e3` y `1_000`; la interfaz no los anuncia, pero los lee como 1000.
+
+`src/plapp/model.py:83` valida el esquema JSON en español: `nombre`, `sentido`
+(`max` o `min`), `variables`, `objetivo` y `restricciones`, cada una con
+`nombre`, `coeficientes`, `signo` (`<=`, `>=`, `=`) y `rhs`; `n` y `m` son
+opcionales y deben coincidir con los datos. No se detiene en el primer error:
+`src/plapp/model.py:72` acumula un `ValidationIssue` (`src/plapp/model.py:13`)
+por celda con su ubicación, por ejemplo «objetivo, x1», «restricción 2, x1»,
+«restricción 2, signo» o «lado derecho de R2». También rechaza filas con todos
+los coeficientes en cero, nombres vacíos o repetidos y dimensiones distintas.
+Solo con cero errores crea `LPProblem` (`src/plapp/model.py:31`), que asigna
+x1, x2… y R1, R2… cuando faltan nombres. Todas las variables son no negativas.
+
+`src/plapp/io_json.py:9` escribe cada número con `str(Fraction)`, por ejemplo
+`"2/5"`, y nunca escribe `esperado`. `src/plapp/io_json.py:28` acepta una ruta,
+texto o bytes; un archivo roto produce «No se pudo leer el archivo: use un JSON
+válido con codificación UTF-8.» y los errores de validación se unen con «; ».
+`src/plapp/io_json.py:44` devuelve el texto que descarga «Guardar JSON». La
+validación no lee `esperado`: ese campo de los fixtures solo lo usan las pruebas.
+
+Preguntas para practicar:
+
+1. ¿Por qué los números van entre comillas en el JSON? Un número JSON se lee
+   como float; el texto `"2/5"` o `"0.1"` se convierte en una fracción exacta.
+2. ¿Por qué acumular errores en lugar de detenerse en el primero? El usuario
+   corrige todas las celdas de una vez y cada mensaje dice dónde está el dato.
+3. ¿La aplicación usa los resultados esperados de los fixtures? No: `validate`
+   ignora `esperado` y `problem_to_dict` no lo escribe.
+
+Ejercicio: rechazar la notación científica. En `src/plapp/model.py:52`, si el
+texto contiene `e` o `E`, lanzar el mismo `ValueError`; agregar en
+`tests/test_model.py` un caso con `1e3` y comprobar que el resto sigue pasando.
+
+## Contratos: `result.py`
+
+`src/plapp/result.py:1` fija las convenciones: índices de base y pivote desde
+cero y costos reducidos r = c − c_B B⁻¹A en el sentido original de Z. Todas las
+clases son `dataclass(frozen=True)`: un resultado no se modifica después de
+calcularse y cambiar el formato no lo toca.
+
+- `Status` (`src/plapp/result.py:21`): solo estados terminales, óptimo,
+  infactible y no acotado. Multiplicidad y degeneración son banderas aparte.
+- `StandardForm` (`src/plapp/result.py:30`): nombres y tipos de columna, A, b,
+  costos `MValue`, base inicial, transformaciones y `row_signs`.
+- `RatioRow` (`src/plapp/result.py:44`): una razón `None` exige `exclusion_reason`.
+- `Iteration` (`src/plapp/result.py:65`): el estado **antes** del pivote, con
+  tablero (Gran M) o B⁻¹, x_B y multiplicadores (revisado). La última iteración
+  no tiene entrante y explica la terminación.
+- `Solution` (`src/plapp/result.py:86`): estado, mensaje, valores y holguras en
+  el modelo original, iteraciones, base final, alternativas, rayos y notas.
+- `SensitivityReport` (`src/plapp/result.py:109`) y `GraphicalResult`
+  (`src/plapp/result.py:139`): `None` en un límite significa infinito.
+
+Los dos métodos devuelven el mismo `Solution`; por eso la UI, el PDF, la
+sensibilidad y la comparación no dependen de cuál lo produjo. Los campos que se
+agregaron en paquetes posteriores tienen valor por defecto y no rompen a quien
+construía el contrato antes.
+
+Preguntas para practicar:
+
+1. ¿Por qué `Iteration` guarda el estado anterior al pivote? Para mostrar cada
+   decisión con los datos con que se tomó; el estado siguiente es otra iteración.
+2. ¿Por qué multiplicidad y degeneración no son estados? Un óptimo puede ser
+   múltiple y degenerado a la vez; `Status` solo dice cómo terminó el método.
+3. ¿Qué pasa si un campo nuevo no tiene valor por defecto? Fallan todos los
+   constructores existentes, incluidos los de las pruebas.
+
+Ejercicio: agregar `pivot_count: int = 0` a `Solution`, llenarlo en
+`src/plapp/big_m.py:30` y `src/plapp/revised_simplex.py:65`, y comprobar en
+`tests/test_examples.py` que ambos métodos cuentan lo mismo en los 19 fixtures.
+
+## Formato: `formatting.py`
+
+`src/plapp/formatting.py:12` convierte un valor exacto en texto. En fracciones
+usa `str(Fraction)`. En decimales divide con `Decimal` y precisión suficiente,
+redondea al máximo de cifras pedido (0 a 12), quita ceros finales y escribe
+`0` en lugar de `-0`. Un `MValue` se muestra como `a + bM`, con `M` sin
+coeficiente cuando |b| = 1 y solo `a` cuando b = 0. La UI, el PDF, el gráfico y
+las interpretaciones de sensibilidad usan esta misma función.
+
+`src/plapp/formatting.py:42` (V1) arma expresiones lineales legibles: omite los
+coeficientes cero, no escribe el módulo de los unitarios, pega el signo al
+primer término y une los demás con ` + ` o ` - `. Si todos son cero devuelve
+`0`. El ejemplo 2 se lee `MIN Z = 4·x1 + x2` y `R3: -x1 - 2·x2 ≥ -4`. La
+comparación con 1 en `src/plapp/formatting.py:54` se hace sobre la Fraction:
+con dos decimales 9999/10000 se ve «1», pero se escribe `1·x1` porque no es uno.
+Las tablas siguen mostrando todos los coeficientes, incluidos ceros y unos.
+
+Preguntas para practicar:
+
+1. ¿Cambiar a decimales vuelve a resolver? No: se formatean las mismas
+   Fraction guardadas en la sesión.
+2. ¿Por qué comparar la fracción y no el texto con 1? El texto redondeado puede
+   ocultar un coeficiente distinto de uno.
+3. ¿Por qué la cantidad de decimales es un máximo? Se quitan los ceros finales:
+   1/2 se ve 0.5 aunque se pidan cuatro decimales.
+
+Ejercicio: escribir siempre el coeficiente (`1·x1`) quitando el caso
+`magnitude == 1` de `src/plapp/formatting.py:54`; identificar qué pruebas de
+`tests/test_formatting.py` y `tests/test_app.py` esperan la forma simplificada.
+
+## Oráculo y estrés: `scripts/verify.py` y `scripts/stress.py`
+
+`scripts/verify.py:39` traduce el modelo a `linprog`: en Max niega c, una fila
+≥ se multiplica por −1 y una igualdad va a `A_eq`. `scripts/verify.py:61`
+resuelve con HiGHS. Si el estado es 2, 3 o 4 (infactible, no acotado o
+problema numérico), repite sin presolve: el presolve puede clasificar mal una
+no acotación, como en el extra 7. Si el estado cambia, una segunda corrida sin
+presolve debe confirmarlo; si no coinciden o el estado no es verificable, lanza
+`OracleInconclusiveError` y el caso se cuenta como excluido. Los precios sombra
+se pasan al modelo original con signo_objetivo · signo_fila · marginal.
+
+`scripts/verify.py:110` compara: mismo estado; en un óptimo, Z con tolerancia
+1e-7, punto propio factible con Fraction exacta y c·x igual a Z. No exige el
+mismo punto porque con óptimos múltiples HiGHS puede elegir otro vértice.
+`scripts/verify.py:146` es `make verify FILE=…`: imprime el resultado de SciPy
+y si cada método propio coincide.
+
+`scripts/stress.py:20` genera problemas de 2 a 4 variables y 1 a 6 filas. El
+35 % de las filas copia una anterior escalada por 1, 2 o −1 (al negar invierte
+el signo) y `scripts/stress.py:47` deja el lado derecho en 0 con probabilidad
+0,6. Así aparecen muchas filas redundantes y bases degeneradas.
+`scripts/stress.py:57` cuenta por separado verificados, errores propios,
+diferencias y oráculos excluidos, y `scripts/stress.py:80` falla si hay errores
+o diferencias. Los conteos de la última corrida (semilla 20261110, 3000 por
+método) están en `docs/desarrollo-v-p8.md`.
+
+`scripts/check_ui.py:23` inicia un servidor propio con `--serve`;
+`scripts/check_ui.py:158` captura los gráficos y `scripts/check_ui.py:236`, las
+del manual. `scripts/build_manual.py:52` convierte el Markdown del manual a HTML
+con capturas incrustadas y `scripts/build_manual.py:80` lo imprime en A4 y
+falla si pasa de cinco páginas.
+
+Preguntas para practicar:
+
+1. ¿Por qué SciPy no está en la aplicación? El taller exige métodos propios; el
+   oráculo usa otro algoritmo y otra aritmética, así que un error no se repite
+   igual. Una prueba con AST impide importarlo en `src/` y `app/`.
+2. ¿Por qué repetir sin presolve? Para distinguir infactible de no acotado
+   cuando el presolve no concluye o clasifica distinto.
+3. ¿Qué cuenta como diferencia? Otro estado, otro Z, un punto propio infactible
+   o un Z que no es c·x. Un caso excluido no cuenta como acierto ni como fallo.
+
+Ejercicio: cambiar 0.6 por 0.1 en `scripts/stress.py:47`, ejecutar
+`uv run python scripts/stress.py --count 300` y comparar los conteos con los
+de 0.6; explicar por qué los lados derechos nulos generan bases degeneradas.
