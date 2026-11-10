@@ -233,7 +233,7 @@ actual. Entre paréntesis, el número de pruebas que fallan sobre 546.
 - **Dónde:** `src/plapp/simplex_rules.py:75`.
 - **Cambio:** `if bland:` por `if True:` para que la entrante sea siempre el
   menor índice con costo reducido favorable.
-- **Resultado real (30 fallan):** las 21 trazas congeladas de
+- **Resultado real (30 fallan):** 19 de las 21 trazas congeladas de
   `tests/test_simplex_traces.py`, tres pruebas de `tests/test_big_m.py`
   (traza del ejemplo 1, segmento y básica nula de los ejemplos 6 y 7, y Beale)
   y ocho de AppTest de
