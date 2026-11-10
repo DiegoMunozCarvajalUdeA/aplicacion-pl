@@ -1,0 +1,8049 @@
+[
+  {
+    "case": "ejemplo_1",
+    "problem": {
+      "nombre": "Ejemplo 1",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "50",
+        "80"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "2",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "100"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "1",
+            "3"
+          ],
+          "signo": "<=",
+          "rhs": "90"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "0",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "40"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          2,
+          3,
+          4
+        ],
+        "tableau": [
+          [
+            "2",
+            "1",
+            "1",
+            "0",
+            "0",
+            "100"
+          ],
+          [
+            "1",
+            "3",
+            "0",
+            "1",
+            "0",
+            "90"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "0",
+            "1",
+            "40"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "50",
+            "b": "0"
+          },
+          {
+            "a": "80",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "100",
+            "coefficient": "1",
+            "ratio": "100",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "90",
+            "coefficient": "3",
+            "ratio": "30",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "40",
+            "coefficient": "1",
+            "ratio": "40",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 1,
+          "value": "3"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          2,
+          1,
+          4
+        ],
+        "tableau": [
+          [
+            "5/3",
+            "0",
+            "1",
+            "-1/3",
+            "0",
+            "70"
+          ],
+          [
+            "1/3",
+            "1",
+            "0",
+            "1/3",
+            "0",
+            "30"
+          ],
+          [
+            "-1/3",
+            "0",
+            "0",
+            "-1/3",
+            "1",
+            "10"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "70/3",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-80/3",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "70",
+            "coefficient": "5/3",
+            "ratio": "42",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "x2",
+            "rhs": "30",
+            "coefficient": "1/3",
+            "ratio": "90",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "10",
+            "coefficient": "-1/3",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "5/3"
+        },
+        "objective_value": {
+          "a": "2400",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          0,
+          1,
+          4
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "3/5",
+            "-1/5",
+            "0",
+            "42"
+          ],
+          [
+            "0",
+            "1",
+            "-1/5",
+            "2/5",
+            "0",
+            "16"
+          ],
+          [
+            "0",
+            "0",
+            "1/5",
+            "-2/5",
+            "1",
+            "24"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-14",
+            "b": "0"
+          },
+          {
+            "a": "-22",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≤ 0 en Max: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "3380",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": []
+  },
+  {
+    "case": "ejemplo_2",
+    "problem": {
+      "nombre": "Ejemplo 2",
+      "sentido": "min",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "4",
+        "1"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "3",
+            "1"
+          ],
+          "signo": "=",
+          "rhs": "3"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "4",
+            "3"
+          ],
+          "signo": ">=",
+          "rhs": "6"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "-1",
+            "-2"
+          ],
+          "signo": ">=",
+          "rhs": "-4"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          4,
+          5,
+          3
+        ],
+        "tableau": [
+          [
+            "3",
+            "1",
+            "0",
+            "0",
+            "1",
+            "0",
+            "3"
+          ],
+          [
+            "4",
+            "3",
+            "-1",
+            "0",
+            "0",
+            "1",
+            "6"
+          ],
+          [
+            "1",
+            "2",
+            "0",
+            "1",
+            "0",
+            "0",
+            "4"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "4",
+            "b": "-7"
+          },
+          {
+            "a": "1",
+            "b": "-4"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "a1",
+            "rhs": "3",
+            "coefficient": "3",
+            "ratio": "1",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "6",
+            "coefficient": "4",
+            "ratio": "3/2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "4",
+            "coefficient": "1",
+            "ratio": "4",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "a1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "3"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "9"
+        },
+        "notes": [
+          "Canonización de la fila Z: se restó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          0,
+          5,
+          3
+        ],
+        "tableau": [
+          [
+            "1",
+            "1/3",
+            "0",
+            "0",
+            "1/3",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "5/3",
+            "-1",
+            "0",
+            "-4/3",
+            "1",
+            "2"
+          ],
+          [
+            "0",
+            "5/3",
+            "0",
+            "1",
+            "-1/3",
+            "0",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-1/3",
+            "b": "-5/3"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-4/3",
+            "b": "7/3"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "1",
+            "coefficient": "1/3",
+            "ratio": "3",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "2",
+            "coefficient": "5/3",
+            "ratio": "6/5",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "3",
+            "coefficient": "5/3",
+            "ratio": "9/5",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "a2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 1,
+          "value": "5/3"
+        },
+        "objective_value": {
+          "a": "4",
+          "b": "2"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          0,
+          1,
+          3
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "1/5",
+            "0",
+            "3/5",
+            "-1/5",
+            "3/5"
+          ],
+          [
+            "0",
+            "1",
+            "-3/5",
+            "0",
+            "-4/5",
+            "3/5",
+            "6/5"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "1",
+            "1",
+            "-1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-1/5",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-8/5",
+            "b": "1"
+          },
+          {
+            "a": "1/5",
+            "b": "1"
+          }
+        ],
+        "entering_variable": "e2",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "3/5",
+            "coefficient": "1/5",
+            "ratio": "3",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "x2",
+            "rhs": "6/5",
+            "coefficient": "-3/5",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "1",
+            "ratio": "1",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s3",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 2,
+          "column": 2,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "18/5",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 3,
+        "basis": [
+          0,
+          1,
+          2
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "0",
+            "-1/5",
+            "2/5",
+            "0",
+            "2/5"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "3/5",
+            "-1/5",
+            "0",
+            "9/5"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "1",
+            "1",
+            "-1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "1/5",
+            "b": "0"
+          },
+          {
+            "a": "-7/5",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≥ 0 en Min: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "17/5",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": []
+  },
+  {
+    "case": "ejemplo_3",
+    "problem": {
+      "nombre": "Ejemplo 3",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2",
+        "x3"
+      ],
+      "objetivo": [
+        "3",
+        "2",
+        "5"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1",
+            "2",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "430"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "3",
+            "0",
+            "2"
+          ],
+          "signo": "<=",
+          "rhs": "460"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "1",
+            "4",
+            "0"
+          ],
+          "signo": "<=",
+          "rhs": "420"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          3,
+          4,
+          5
+        ],
+        "tableau": [
+          [
+            "1",
+            "2",
+            "1",
+            "1",
+            "0",
+            "0",
+            "430"
+          ],
+          [
+            "3",
+            "0",
+            "2",
+            "0",
+            "1",
+            "0",
+            "460"
+          ],
+          [
+            "1",
+            "4",
+            "0",
+            "0",
+            "0",
+            "1",
+            "420"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "3",
+            "b": "0"
+          },
+          {
+            "a": "2",
+            "b": "0"
+          },
+          {
+            "a": "5",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x3",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "430",
+            "coefficient": "1",
+            "ratio": "430",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "460",
+            "coefficient": "2",
+            "ratio": "230",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "420",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": "s2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 2,
+          "value": "2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          3,
+          2,
+          5
+        ],
+        "tableau": [
+          [
+            "-1/2",
+            "2",
+            "0",
+            "1",
+            "-1/2",
+            "0",
+            "200"
+          ],
+          [
+            "3/2",
+            "0",
+            "1",
+            "0",
+            "1/2",
+            "0",
+            "230"
+          ],
+          [
+            "1",
+            "4",
+            "0",
+            "0",
+            "0",
+            "1",
+            "420"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "-9/2",
+            "b": "0"
+          },
+          {
+            "a": "2",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-5/2",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "200",
+            "coefficient": "2",
+            "ratio": "100",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "x3",
+            "rhs": "230",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "420",
+            "coefficient": "4",
+            "ratio": "105",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 1,
+          "value": "2"
+        },
+        "objective_value": {
+          "a": "1150",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          1,
+          2,
+          5
+        ],
+        "tableau": [
+          [
+            "-1/4",
+            "1",
+            "0",
+            "1/2",
+            "-1/4",
+            "0",
+            "100"
+          ],
+          [
+            "3/2",
+            "0",
+            "1",
+            "0",
+            "1/2",
+            "0",
+            "230"
+          ],
+          [
+            "2",
+            "0",
+            "0",
+            "-2",
+            "1",
+            "1",
+            "20"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "-4",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-1",
+            "b": "0"
+          },
+          {
+            "a": "-2",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≤ 0 en Max: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "1350",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": []
+  },
+  {
+    "case": "ejemplo_4",
+    "problem": {
+      "nombre": "Ejemplo 4",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "1",
+        "1"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "2"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "1",
+            "1"
+          ],
+          "signo": ">=",
+          "rhs": "5"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          2,
+          4
+        ],
+        "tableau": [
+          [
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "2"
+          ],
+          [
+            "1",
+            "1",
+            "0",
+            "-1",
+            "1",
+            "5"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "1",
+            "b": "1"
+          },
+          {
+            "a": "1",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "-1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "2",
+            "coefficient": "1",
+            "ratio": "2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "5",
+            "coefficient": "1",
+            "ratio": "5",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "-5"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          0,
+          4
+        ],
+        "tableau": [
+          [
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "2"
+          ],
+          [
+            "0",
+            "0",
+            "-1",
+            "-1",
+            "1",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-1",
+            "b": "-1"
+          },
+          {
+            "a": "0",
+            "b": "-1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "El problema no tiene solución factible: no hay mejora en la parte M y siguen positivas las artificiales a2.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "2",
+          "b": "-3"
+        },
+        "notes": []
+      }
+    ],
+    "status": "infactible",
+    "message": "El problema no tiene solución factible: no hay mejora en la parte M y siguen positivas las artificiales a2.",
+    "notes": []
+  },
+  {
+    "case": "ejemplo_5",
+    "problem": {
+      "nombre": "Ejemplo 5",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "1",
+        "1"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1",
+            "-1"
+          ],
+          "signo": "<=",
+          "rhs": "1"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "-1",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "2"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          2,
+          3
+        ],
+        "tableau": [
+          [
+            "1",
+            "-1",
+            "1",
+            "0",
+            "1"
+          ],
+          [
+            "-1",
+            "1",
+            "0",
+            "1",
+            "2"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "1",
+            "b": "0"
+          },
+          {
+            "a": "1",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "1",
+            "coefficient": "1",
+            "ratio": "1",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "2",
+            "coefficient": "-1",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          0,
+          3
+        ],
+        "tableau": [
+          [
+            "1",
+            "-1",
+            "1",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "1",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "2",
+            "b": "0"
+          },
+          {
+            "a": "-1",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "1",
+            "coefficient": "-1",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "3",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": null,
+        "leaving_reason": "El problema tiene solución no acotada: x2 puede crecer sin límite y mejorar Z; su columna no tiene coeficientes positivos. Z crece sin límite a lo largo de (x1, x2) = (1, 0) + t·(1, 1), t ≥ 0.",
+        "pivot": null,
+        "objective_value": {
+          "a": "1",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "no_acotado",
+    "message": "El problema tiene solución no acotada: x2 puede crecer sin límite y mejorar Z; su columna no tiene coeficientes positivos. Z crece sin límite a lo largo de (x1, x2) = (1, 0) + t·(1, 1), t ≥ 0.",
+    "notes": []
+  },
+  {
+    "case": "ejemplo_6",
+    "problem": {
+      "nombre": "Ejemplo 6",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "2",
+        "4"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1",
+            "2"
+          ],
+          "signo": "<=",
+          "rhs": "5"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "1",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "4"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          2,
+          3
+        ],
+        "tableau": [
+          [
+            "1",
+            "2",
+            "1",
+            "0",
+            "5"
+          ],
+          [
+            "1",
+            "1",
+            "0",
+            "1",
+            "4"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "2",
+            "b": "0"
+          },
+          {
+            "a": "4",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "5",
+            "coefficient": "2",
+            "ratio": "5/2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "4",
+            "coefficient": "1",
+            "ratio": "4",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 1,
+          "value": "2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          1,
+          3
+        ],
+        "tableau": [
+          [
+            "1/2",
+            "1",
+            "1/2",
+            "0",
+            "5/2"
+          ],
+          [
+            "1/2",
+            "0",
+            "-1/2",
+            "1",
+            "3/2"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-2",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≤ 0 en Max: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "10",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima. Z = 10 en todo el segmento entre (0, 5/2) y (3, 1).",
+    "notes": []
+  },
+  {
+    "case": "ejemplo_7",
+    "problem": {
+      "nombre": "Ejemplo 7",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "3",
+        "9"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1",
+            "4"
+          ],
+          "signo": "<=",
+          "rhs": "8"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "1",
+            "2"
+          ],
+          "signo": "<=",
+          "rhs": "4"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          2,
+          3
+        ],
+        "tableau": [
+          [
+            "1",
+            "4",
+            "1",
+            "0",
+            "8"
+          ],
+          [
+            "1",
+            "2",
+            "0",
+            "1",
+            "4"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "3",
+            "b": "0"
+          },
+          {
+            "a": "9",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "8",
+            "coefficient": "4",
+            "ratio": "2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "4",
+            "coefficient": "2",
+            "ratio": "2",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 1,
+          "value": "4"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          1,
+          3
+        ],
+        "tableau": [
+          [
+            "1/4",
+            "1",
+            "1/4",
+            "0",
+            "2"
+          ],
+          [
+            "1/2",
+            "0",
+            "-1/2",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "3/4",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-9/4",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x2",
+            "rhs": "2",
+            "coefficient": "1/4",
+            "ratio": "8",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 0,
+          "value": "1/2"
+        },
+        "objective_value": {
+          "a": "18",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          1,
+          0
+        ],
+        "tableau": [
+          [
+            "0",
+            "1",
+            "1/2",
+            "-1/2",
+            "2"
+          ],
+          [
+            "1",
+            "0",
+            "-1",
+            "2",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-3/2",
+            "b": "0"
+          },
+          {
+            "a": "-3/2",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≤ 0 en Max: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "18",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": [
+      "Degeneración: hubo empate en la razón mínima; se aplicó Bland para la salida.",
+      "Degeneración: variables básicas en 0: x1."
+    ]
+  },
+  {
+    "case": "extra_1",
+    "problem": {
+      "nombre": "Extra 1",
+      "sentido": "min",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "1",
+        "2"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1",
+            "1"
+          ],
+          "signo": ">=",
+          "rhs": "3"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "1",
+            "3"
+          ],
+          "signo": ">=",
+          "rhs": "5"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          4,
+          5
+        ],
+        "tableau": [
+          [
+            "1",
+            "1",
+            "-1",
+            "0",
+            "1",
+            "0",
+            "3"
+          ],
+          [
+            "1",
+            "3",
+            "0",
+            "-1",
+            "0",
+            "1",
+            "5"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "1",
+            "b": "-2"
+          },
+          {
+            "a": "2",
+            "b": "-4"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "a1",
+            "rhs": "3",
+            "coefficient": "1",
+            "ratio": "3",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "5",
+            "coefficient": "3",
+            "ratio": "5/3",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "a2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 1,
+          "value": "3"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "8"
+        },
+        "notes": [
+          "Canonización de la fila Z: se restó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          4,
+          1
+        ],
+        "tableau": [
+          [
+            "2/3",
+            "0",
+            "-1",
+            "1/3",
+            "1",
+            "-1/3",
+            "4/3"
+          ],
+          [
+            "1/3",
+            "1",
+            "0",
+            "-1/3",
+            "0",
+            "1/3",
+            "5/3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "1/3",
+            "b": "-2/3"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          },
+          {
+            "a": "2/3",
+            "b": "-1/3"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-2/3",
+            "b": "4/3"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "a1",
+            "rhs": "4/3",
+            "coefficient": "2/3",
+            "ratio": "2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "x2",
+            "rhs": "5/3",
+            "coefficient": "1/3",
+            "ratio": "5",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "a1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "2/3"
+        },
+        "objective_value": {
+          "a": "10/3",
+          "b": "4/3"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          0,
+          1
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "-3/2",
+            "1/2",
+            "3/2",
+            "-1/2",
+            "2"
+          ],
+          [
+            "0",
+            "1",
+            "1/2",
+            "-1/2",
+            "-1/2",
+            "1/2",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "1/2",
+            "b": "0"
+          },
+          {
+            "a": "1/2",
+            "b": "0"
+          },
+          {
+            "a": "-1/2",
+            "b": "1"
+          },
+          {
+            "a": "-1/2",
+            "b": "1"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≥ 0 en Min: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "4",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": []
+  },
+  {
+    "case": "extra_2",
+    "problem": {
+      "nombre": "Extra 2",
+      "sentido": "min",
+      "variables": [
+        "x1",
+        "x2",
+        "x3"
+      ],
+      "objetivo": [
+        "2",
+        "1",
+        "3"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1",
+            "1",
+            "0"
+          ],
+          "signo": "=",
+          "rhs": "3"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "0",
+            "1",
+            "1"
+          ],
+          "signo": "=",
+          "rhs": "2"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "1",
+            "0",
+            "1"
+          ],
+          "signo": "=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          3,
+          4,
+          5
+        ],
+        "tableau": [
+          [
+            "1",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "3"
+          ],
+          [
+            "0",
+            "1",
+            "1",
+            "0",
+            "1",
+            "0",
+            "2"
+          ],
+          [
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "1",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "2",
+            "b": "-2"
+          },
+          {
+            "a": "1",
+            "b": "-2"
+          },
+          {
+            "a": "3",
+            "b": "-2"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "a1",
+            "rhs": "3",
+            "coefficient": "1",
+            "ratio": "3",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "2",
+            "coefficient": "1",
+            "ratio": "2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "a3",
+            "rhs": "3",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": "a2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 1,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "8"
+        },
+        "notes": [
+          "Canonización de la fila Z: se restó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          3,
+          1,
+          5
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "-1",
+            "1",
+            "-1",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "1",
+            "1",
+            "0",
+            "1",
+            "0",
+            "2"
+          ],
+          [
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "1",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "2",
+            "b": "-2"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "2",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-1",
+            "b": "2"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "a1",
+            "rhs": "1",
+            "coefficient": "1",
+            "ratio": "1",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "x2",
+            "rhs": "2",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          },
+          {
+            "row": 2,
+            "basic_variable": "a3",
+            "rhs": "3",
+            "coefficient": "1",
+            "ratio": "3",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "a1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "2",
+          "b": "4"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          0,
+          1,
+          5
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "-1",
+            "1",
+            "-1",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "1",
+            "1",
+            "0",
+            "1",
+            "0",
+            "2"
+          ],
+          [
+            "0",
+            "0",
+            "2",
+            "-1",
+            "1",
+            "1",
+            "2"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "4",
+            "b": "-2"
+          },
+          {
+            "a": "-2",
+            "b": "2"
+          },
+          {
+            "a": "1",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x3",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "1",
+            "coefficient": "-1",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "x2",
+            "rhs": "2",
+            "coefficient": "1",
+            "ratio": "2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "a3",
+            "rhs": "2",
+            "coefficient": "2",
+            "ratio": "1",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "a3",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 2,
+          "column": 2,
+          "value": "2"
+        },
+        "objective_value": {
+          "a": "4",
+          "b": "2"
+        },
+        "notes": []
+      },
+      {
+        "number": 3,
+        "basis": [
+          0,
+          1,
+          2
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "0",
+            "1/2",
+            "-1/2",
+            "1/2",
+            "2"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "1/2",
+            "1/2",
+            "-1/2",
+            "1"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "-1/2",
+            "1/2",
+            "1/2",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          },
+          {
+            "a": "-1",
+            "b": "1"
+          },
+          {
+            "a": "-2",
+            "b": "1"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≥ 0 en Min: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "8",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": []
+  },
+  {
+    "case": "extra_3",
+    "problem": {
+      "nombre": "Extra 3",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "2",
+        "1"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "1"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "1",
+            "-1"
+          ],
+          "signo": ">=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          2,
+          4
+        ],
+        "tableau": [
+          [
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "1"
+          ],
+          [
+            "1",
+            "-1",
+            "0",
+            "-1",
+            "1",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "2",
+            "b": "1"
+          },
+          {
+            "a": "1",
+            "b": "-1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "-1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "1",
+            "coefficient": "1",
+            "ratio": "1",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "3",
+            "coefficient": "1",
+            "ratio": "3",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "-3"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          0,
+          4
+        ],
+        "tableau": [
+          [
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "-2",
+            "-1",
+            "-1",
+            "1",
+            "2"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-1",
+            "b": "-2"
+          },
+          {
+            "a": "-2",
+            "b": "-1"
+          },
+          {
+            "a": "0",
+            "b": "-1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "El problema no tiene solución factible: no hay mejora en la parte M y siguen positivas las artificiales a2.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "2",
+          "b": "-2"
+        },
+        "notes": []
+      }
+    ],
+    "status": "infactible",
+    "message": "El problema no tiene solución factible: no hay mejora en la parte M y siguen positivas las artificiales a2.",
+    "notes": []
+  },
+  {
+    "case": "extra_4",
+    "problem": {
+      "nombre": "Extra 4",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "objetivo": [
+        "3",
+        "2",
+        "1",
+        "-1"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1",
+            "1",
+            "1",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "10"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "1",
+            "0",
+            "1",
+            "0"
+          ],
+          "signo": ">=",
+          "rhs": "2"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "0",
+            "1",
+            "0",
+            "1"
+          ],
+          "signo": "=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          4,
+          6,
+          7
+        ],
+        "tableau": [
+          [
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "0",
+            "10"
+          ],
+          [
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "-1",
+            "1",
+            "0",
+            "2"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "3",
+            "b": "1"
+          },
+          {
+            "a": "2",
+            "b": "1"
+          },
+          {
+            "a": "1",
+            "b": "1"
+          },
+          {
+            "a": "-1",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "-1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "10",
+            "coefficient": "1",
+            "ratio": "10",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "2",
+            "coefficient": "1",
+            "ratio": "2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "a3",
+            "rhs": "3",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": "a2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 0,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "-5"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          4,
+          0,
+          7
+        ],
+        "tableau": [
+          [
+            "0",
+            "1",
+            "0",
+            "1",
+            "1",
+            "1",
+            "-1",
+            "0",
+            "8"
+          ],
+          [
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "-1",
+            "1",
+            "0",
+            "2"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "2",
+            "b": "1"
+          },
+          {
+            "a": "-2",
+            "b": "0"
+          },
+          {
+            "a": "-1",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "3",
+            "b": "0"
+          },
+          {
+            "a": "-3",
+            "b": "-1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "8",
+            "coefficient": "1",
+            "ratio": "8",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "x1",
+            "rhs": "2",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          },
+          {
+            "row": 2,
+            "basic_variable": "a3",
+            "rhs": "3",
+            "coefficient": "1",
+            "ratio": "3",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "a3",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 2,
+          "column": 1,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "6",
+          "b": "-3"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          4,
+          0,
+          1
+        ],
+        "tableau": [
+          [
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1",
+            "-1",
+            "-1",
+            "5"
+          ],
+          [
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "-1",
+            "1",
+            "0",
+            "2"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-2",
+            "b": "0"
+          },
+          {
+            "a": "-3",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "3",
+            "b": "0"
+          },
+          {
+            "a": "-3",
+            "b": "-1"
+          },
+          {
+            "a": "-2",
+            "b": "-1"
+          }
+        ],
+        "entering_variable": "e2",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "5",
+            "coefficient": "1",
+            "ratio": "5",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "x1",
+            "rhs": "2",
+            "coefficient": "-1",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 2,
+            "basic_variable": "x2",
+            "rhs": "3",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 5,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "12",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 3,
+        "basis": [
+          5,
+          0,
+          1
+        ],
+        "tableau": [
+          [
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1",
+            "-1",
+            "-1",
+            "5"
+          ],
+          [
+            "1",
+            "0",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "-1",
+            "7"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-2",
+            "b": "0"
+          },
+          {
+            "a": "-3",
+            "b": "0"
+          },
+          {
+            "a": "-3",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "-1"
+          },
+          {
+            "a": "1",
+            "b": "-1"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≤ 0 en Max: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "27",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": []
+  },
+  {
+    "case": "extra_5",
+    "problem": {
+      "nombre": "Extra 5",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "3",
+        "1"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "-1",
+            "-1"
+          ],
+          "signo": "<=",
+          "rhs": "-2"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "2",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "8"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "0",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "3"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          5,
+          3,
+          4
+        ],
+        "tableau": [
+          [
+            "1",
+            "1",
+            "-1",
+            "0",
+            "0",
+            "1",
+            "2"
+          ],
+          [
+            "2",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "8"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "0",
+            "1",
+            "0",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "3",
+            "b": "1"
+          },
+          {
+            "a": "1",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "-1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "a1",
+            "rhs": "2",
+            "coefficient": "1",
+            "ratio": "2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "8",
+            "coefficient": "2",
+            "ratio": "4",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "3",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": "a1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "-2"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          0,
+          3,
+          4
+        ],
+        "tableau": [
+          [
+            "1",
+            "1",
+            "-1",
+            "0",
+            "0",
+            "1",
+            "2"
+          ],
+          [
+            "0",
+            "-1",
+            "2",
+            "1",
+            "0",
+            "-2",
+            "4"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "0",
+            "1",
+            "0",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-2",
+            "b": "0"
+          },
+          {
+            "a": "3",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-3",
+            "b": "-1"
+          }
+        ],
+        "entering_variable": "e1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "2",
+            "coefficient": "-1",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "4",
+            "coefficient": "2",
+            "ratio": "2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "3",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": "s2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 2,
+          "value": "2"
+        },
+        "objective_value": {
+          "a": "6",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          0,
+          2,
+          4
+        ],
+        "tableau": [
+          [
+            "1",
+            "1/2",
+            "0",
+            "1/2",
+            "0",
+            "0",
+            "4"
+          ],
+          [
+            "0",
+            "-1/2",
+            "1",
+            "1/2",
+            "0",
+            "-1",
+            "2"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "0",
+            "1",
+            "0",
+            "3"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-1/2",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-3/2",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "-1"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≤ 0 en Max: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "12",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": []
+  },
+  {
+    "case": "extra_6",
+    "problem": {
+      "nombre": "Extra 6",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "3",
+        "2"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1",
+            "0"
+          ],
+          "signo": "<=",
+          "rhs": "2"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "0",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "2"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "1",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "2"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          2,
+          3,
+          4
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "2"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "1",
+            "0",
+            "2"
+          ],
+          [
+            "1",
+            "1",
+            "0",
+            "0",
+            "1",
+            "2"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "3",
+            "b": "0"
+          },
+          {
+            "a": "2",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "2",
+            "coefficient": "1",
+            "ratio": "2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "2",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "2",
+            "coefficient": "1",
+            "ratio": "2",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          0,
+          3,
+          4
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "2"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "1",
+            "0",
+            "2"
+          ],
+          [
+            "0",
+            "1",
+            "-1",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "2",
+            "b": "0"
+          },
+          {
+            "a": "-3",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "2",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "2",
+            "coefficient": "1",
+            "ratio": "2",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "0",
+            "coefficient": "1",
+            "ratio": "0",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s3",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 2,
+          "column": 1,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "6",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          0,
+          3,
+          1
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "2"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "1",
+            "-1",
+            "2"
+          ],
+          [
+            "0",
+            "1",
+            "-1",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-1",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-2",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≤ 0 en Max: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "6",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": [
+      "Degeneración: hubo empate en la razón mínima; se aplicó Bland para la salida.",
+      "Degeneración: variables básicas en 0: x2."
+    ]
+  },
+  {
+    "case": "extra_7",
+    "problem": {
+      "nombre": "Extra 7",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2",
+        "x3"
+      ],
+      "objetivo": [
+        "3",
+        "1",
+        "3"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "2",
+            "0",
+            "-3"
+          ],
+          "signo": "<=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "-3",
+            "-3",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "-1",
+            "-2",
+            "1"
+          ],
+          "signo": ">=",
+          "rhs": "-4"
+        },
+        {
+          "nombre": "R4",
+          "coeficientes": [
+            "3",
+            "-4",
+            "-4"
+          ],
+          "signo": "<=",
+          "rhs": "4"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "tableau": [
+          [
+            "2",
+            "0",
+            "-3",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "-3",
+            "-3",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "2",
+            "-1",
+            "0",
+            "0",
+            "1",
+            "0",
+            "4"
+          ],
+          [
+            "3",
+            "-4",
+            "-4",
+            "0",
+            "0",
+            "0",
+            "1",
+            "4"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "3",
+            "b": "0"
+          },
+          {
+            "a": "1",
+            "b": "0"
+          },
+          {
+            "a": "3",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "0",
+            "coefficient": "2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "0",
+            "coefficient": "-3",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "4",
+            "coefficient": "1",
+            "ratio": "4",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 3,
+            "basic_variable": "s4",
+            "rhs": "4",
+            "coefficient": "3",
+            "ratio": "4/3",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          0,
+          4,
+          5,
+          6
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "-3/2",
+            "1/2",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "-3",
+            "-7/2",
+            "3/2",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "2",
+            "1/2",
+            "-1/2",
+            "0",
+            "1",
+            "0",
+            "4"
+          ],
+          [
+            "0",
+            "-4",
+            "1/2",
+            "-3/2",
+            "0",
+            "0",
+            "1",
+            "4"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "1",
+            "b": "0"
+          },
+          {
+            "a": "15/2",
+            "b": "0"
+          },
+          {
+            "a": "-3/2",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x3",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "0",
+            "coefficient": "-3/2",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "0",
+            "coefficient": "-7/2",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "4",
+            "coefficient": "1/2",
+            "ratio": "8",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 3,
+            "basic_variable": "s4",
+            "rhs": "4",
+            "coefficient": "1/2",
+            "ratio": "8",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s3",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 2,
+          "column": 2,
+          "value": "1/2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          0,
+          4,
+          2,
+          6
+        ],
+        "tableau": [
+          [
+            "1",
+            "6",
+            "0",
+            "-1",
+            "0",
+            "3",
+            "0",
+            "12"
+          ],
+          [
+            "0",
+            "11",
+            "0",
+            "-2",
+            "1",
+            "7",
+            "0",
+            "28"
+          ],
+          [
+            "0",
+            "4",
+            "1",
+            "-1",
+            "0",
+            "2",
+            "0",
+            "8"
+          ],
+          [
+            "0",
+            "-6",
+            "0",
+            "-1",
+            "0",
+            "-1",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-29",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "6",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-15",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "s1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "12",
+            "coefficient": "-1",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "28",
+            "coefficient": "-2",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 2,
+            "basic_variable": "x3",
+            "rhs": "8",
+            "coefficient": "-1",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 3,
+            "basic_variable": "s4",
+            "rhs": "0",
+            "coefficient": "-1",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          }
+        ],
+        "leaving_variable": null,
+        "leaving_reason": "El problema tiene solución no acotada: s1 puede crecer sin límite y mejorar Z; su columna no tiene coeficientes positivos. Z crece sin límite a lo largo de (x1, x2, x3) = (12, 0, 8) + t·(1, 0, 1), t ≥ 0.",
+        "pivot": null,
+        "objective_value": {
+          "a": "60",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "no_acotado",
+    "message": "El problema tiene solución no acotada: s1 puede crecer sin límite y mejorar Z; su columna no tiene coeficientes positivos. Z crece sin límite a lo largo de (x1, x2, x3) = (12, 0, 8) + t·(1, 0, 1), t ≥ 0.",
+    "notes": [
+      "Degeneración: hubo empate en la razón mínima; se aplicó Bland para la salida."
+    ]
+  },
+  {
+    "case": "c1_zero_equalities",
+    "problem": {
+      "nombre": "Problema sin nombre",
+      "sentido": "min",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "1",
+        "0"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "-4",
+            "5"
+          ],
+          "signo": "=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "-1",
+            "1"
+          ],
+          "signo": "=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "4",
+            "-5"
+          ],
+          "signo": "=",
+          "rhs": "0"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          2,
+          3,
+          4
+        ],
+        "tableau": [
+          [
+            "-4",
+            "5",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "-1",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "-5",
+            "0",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "1",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "-1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "a1",
+            "rhs": "0",
+            "coefficient": "5",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "0",
+            "coefficient": "1",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "a3",
+            "rhs": "0",
+            "coefficient": "-5",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          }
+        ],
+        "leaving_variable": "a1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 1,
+          "value": "5"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se restó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          1,
+          3,
+          4
+        ],
+        "tableau": [
+          [
+            "-4/5",
+            "1",
+            "1/5",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "-1/5",
+            "0",
+            "-1/5",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "1",
+            "b": "1/5"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "1/5"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Columna no artificial con coeficiente no nulo para retirar una artificial en 0.",
+        "ratios": [],
+        "leaving_variable": "a2",
+        "leaving_reason": "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima.",
+        "pivot": {
+          "row": 1,
+          "column": 0,
+          "value": "-1/5"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima."
+        ]
+      },
+      {
+        "number": 2,
+        "basis": [
+          1,
+          0,
+          4
+        ],
+        "tableau": [
+          [
+            "0",
+            "1",
+            "1",
+            "-4",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "1",
+            "-5",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-1",
+            "b": "0"
+          },
+          {
+            "a": "5",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≥ 0 en Min: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Fila transformada 3 redundante: a3 queda básica en 0 porque no hay columna no artificial para retirarla. Se conserva para mantener B cuadrada; sensibilidad requiere tratar la redundancia."
+        ]
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": [
+      "Degeneración: hubo empate en la razón mínima; se aplicó Bland para la salida.",
+      "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima.",
+      "Fila transformada 3 redundante: a3 queda básica en 0 porque no hay columna no artificial para retirarla. Se conserva para mantener B cuadrada; sensibilidad requiere tratar la redundancia.",
+      "Degeneración: variables básicas en 0: x2, x1, a3."
+    ]
+  },
+  {
+    "case": "c1_mixed_zero",
+    "problem": {
+      "nombre": "Problema sin nombre",
+      "sentido": "min",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "2",
+        "4"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "-3",
+            "-2"
+          ],
+          "signo": ">=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "4",
+            "2"
+          ],
+          "signo": "=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "-5",
+            "-3"
+          ],
+          "signo": "=",
+          "rhs": "0"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          3,
+          4,
+          5
+        ],
+        "tableau": [
+          [
+            "-3",
+            "-2",
+            "-1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "-5",
+            "-3",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "2",
+            "b": "4"
+          },
+          {
+            "a": "4",
+            "b": "3"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Columna no artificial con coeficiente no nulo para retirar una artificial en 0.",
+        "ratios": [],
+        "leaving_variable": "a1",
+        "leaving_reason": "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "-3"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se restó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I.",
+          "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          0,
+          4,
+          5
+        ],
+        "tableau": [
+          [
+            "1",
+            "2/3",
+            "1/3",
+            "-1/3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "-2/3",
+            "-4/3",
+            "4/3",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "1/3",
+            "5/3",
+            "-5/3",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "8/3",
+            "b": "1/3"
+          },
+          {
+            "a": "-2/3",
+            "b": "-1/3"
+          },
+          {
+            "a": "2/3",
+            "b": "4/3"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "e1",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "0",
+            "coefficient": "1/3",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "0",
+            "coefficient": "-4/3",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 2,
+            "basic_variable": "a3",
+            "rhs": "0",
+            "coefficient": "5/3",
+            "ratio": "0",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "x1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 2,
+          "value": "1/3"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          2,
+          4,
+          5
+        ],
+        "tableau": [
+          [
+            "3",
+            "2",
+            "1",
+            "-1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "-5",
+            "-3",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "2",
+            "b": "1"
+          },
+          {
+            "a": "4",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Columna no artificial con coeficiente no nulo para retirar una artificial en 0.",
+        "ratios": [],
+        "leaving_variable": "a2",
+        "leaving_reason": "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima.",
+        "pivot": {
+          "row": 1,
+          "column": 0,
+          "value": "4"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima."
+        ]
+      },
+      {
+        "number": 3,
+        "basis": [
+          2,
+          0,
+          5
+        ],
+        "tableau": [
+          [
+            "0",
+            "1/2",
+            "1",
+            "-1",
+            "-3/4",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "1/2",
+            "0",
+            "0",
+            "1/4",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "-1/2",
+            "0",
+            "0",
+            "5/4",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "3",
+            "b": "1/2"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          },
+          {
+            "a": "-1/2",
+            "b": "-1/4"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Columna no artificial con coeficiente no nulo para retirar una artificial en 0.",
+        "ratios": [],
+        "leaving_variable": "a3",
+        "leaving_reason": "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima.",
+        "pivot": {
+          "row": 2,
+          "column": 1,
+          "value": "-1/2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima."
+        ]
+      },
+      {
+        "number": 4,
+        "basis": [
+          2,
+          0,
+          1
+        ],
+        "tableau": [
+          [
+            "0",
+            "0",
+            "1",
+            "-1",
+            "1/2",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "3/2",
+            "1",
+            "0"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "0",
+            "-5/2",
+            "-2",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          },
+          {
+            "a": "7",
+            "b": "1"
+          },
+          {
+            "a": "6",
+            "b": "1"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≥ 0 en Min: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": [
+      "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima.",
+      "Degeneración: hubo empate en la razón mínima; se aplicó Bland para la salida.",
+      "Degeneración: variables básicas en 0: e1, x1, x2."
+    ]
+  },
+  {
+    "case": "c1_five_equalities",
+    "problem": {
+      "nombre": "Problema sin nombre",
+      "sentido": "min",
+      "variables": [
+        "x1",
+        "x2",
+        "x3"
+      ],
+      "objetivo": [
+        "3",
+        "3",
+        "-2"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "-1",
+            "4",
+            "1"
+          ],
+          "signo": "=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "-1",
+            "4",
+            "1"
+          ],
+          "signo": "=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "5",
+            "4",
+            "1"
+          ],
+          "signo": "=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R4",
+          "coeficientes": [
+            "5",
+            "1",
+            "-2"
+          ],
+          "signo": "=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R5",
+          "coeficientes": [
+            "4",
+            "4",
+            "5"
+          ],
+          "signo": "=",
+          "rhs": "0"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "tableau": [
+          [
+            "-1",
+            "4",
+            "1",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "-1",
+            "4",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "4",
+            "1",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "1",
+            "-2",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "4",
+            "5",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "3",
+            "b": "-12"
+          },
+          {
+            "a": "3",
+            "b": "-17"
+          },
+          {
+            "a": "-2",
+            "b": "-6"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "a1",
+            "rhs": "0",
+            "coefficient": "4",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "0",
+            "coefficient": "4",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "a3",
+            "rhs": "0",
+            "coefficient": "4",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 3,
+            "basic_variable": "a4",
+            "rhs": "0",
+            "coefficient": "1",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 4,
+            "basic_variable": "a5",
+            "rhs": "0",
+            "coefficient": "4",
+            "ratio": "0",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "a1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 1,
+          "value": "4"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se restó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          1,
+          4,
+          5,
+          6,
+          7
+        ],
+        "tableau": [
+          [
+            "-1/4",
+            "1",
+            "1/4",
+            "1/4",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "-1",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "0",
+            "0",
+            "-1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "21/4",
+            "0",
+            "-9/4",
+            "-1/4",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "0",
+            "4",
+            "-1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "15/4",
+            "b": "-65/4"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-11/4",
+            "b": "-7/4"
+          },
+          {
+            "a": "-3/4",
+            "b": "17/4"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x2",
+            "rhs": "0",
+            "coefficient": "-1/4",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "0",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          },
+          {
+            "row": 2,
+            "basic_variable": "a3",
+            "rhs": "0",
+            "coefficient": "6",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 3,
+            "basic_variable": "a4",
+            "rhs": "0",
+            "coefficient": "21/4",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 4,
+            "basic_variable": "a5",
+            "rhs": "0",
+            "coefficient": "5",
+            "ratio": "0",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "a3",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 2,
+          "column": 0,
+          "value": "6"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          1,
+          4,
+          0,
+          6,
+          7
+        ],
+        "tableau": [
+          [
+            "0",
+            "1",
+            "1/4",
+            "5/24",
+            "0",
+            "1/24",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "-1",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "-1/6",
+            "0",
+            "1/6",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "-9/4",
+            "5/8",
+            "0",
+            "-7/8",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "4",
+            "-1/6",
+            "0",
+            "-5/6",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-11/4",
+            "b": "-7/4"
+          },
+          {
+            "a": "-1/8",
+            "b": "37/24"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-5/8",
+            "b": "65/24"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x3",
+        "entering_reason": "Menor costo reducido negativo en Min; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x2",
+            "rhs": "0",
+            "coefficient": "1/4",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "0",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          },
+          {
+            "row": 2,
+            "basic_variable": "x1",
+            "rhs": "0",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          },
+          {
+            "row": 3,
+            "basic_variable": "a4",
+            "rhs": "0",
+            "coefficient": "-9/4",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 4,
+            "basic_variable": "a5",
+            "rhs": "0",
+            "coefficient": "4",
+            "ratio": "0",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "x2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 2,
+          "value": "1/4"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 3,
+        "basis": [
+          2,
+          4,
+          0,
+          6,
+          7
+        ],
+        "tableau": [
+          [
+            "0",
+            "4",
+            "1",
+            "5/6",
+            "0",
+            "1/6",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "-1",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "-1/6",
+            "0",
+            "1/6",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "9",
+            "0",
+            "5/2",
+            "0",
+            "-1/2",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "-16",
+            "0",
+            "-7/2",
+            "0",
+            "-3/2",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "11",
+            "b": "7"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "13/6",
+            "b": "3"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-1/6",
+            "b": "3"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Columna no artificial con coeficiente no nulo para retirar una artificial en 0.",
+        "ratios": [],
+        "leaving_variable": "a4",
+        "leaving_reason": "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima.",
+        "pivot": {
+          "row": 3,
+          "column": 1,
+          "value": "9"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima."
+        ]
+      },
+      {
+        "number": 4,
+        "basis": [
+          2,
+          4,
+          0,
+          1,
+          7
+        ],
+        "tableau": [
+          [
+            "0",
+            "0",
+            "1",
+            "-5/18",
+            "0",
+            "7/18",
+            "-4/9",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "-1",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "-1/6",
+            "0",
+            "1/6",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "5/18",
+            "0",
+            "-1/18",
+            "1/9",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "17/18",
+            "0",
+            "-43/18",
+            "16/9",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-8/9",
+            "b": "19/18"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "4/9",
+            "b": "61/18"
+          },
+          {
+            "a": "-11/9",
+            "b": "-7/9"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≥ 0 en Min: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Fila transformada 2 redundante: a2 queda básica en 0 porque no hay columna no artificial para retirarla. Se conserva para mantener B cuadrada; sensibilidad requiere tratar la redundancia.",
+          "Fila transformada 5 redundante: a5 queda básica en 0 porque no hay columna no artificial para retirarla. Se conserva para mantener B cuadrada; sensibilidad requiere tratar la redundancia."
+        ]
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": [
+      "Degeneración: hubo empate en la razón mínima; se aplicó Bland para la salida.",
+      "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima.",
+      "Fila transformada 2 redundante: a2 queda básica en 0 porque no hay columna no artificial para retirarla. Se conserva para mantener B cuadrada; sensibilidad requiere tratar la redundancia.",
+      "Fila transformada 5 redundante: a5 queda básica en 0 porque no hay columna no artificial para retirarla. Se conserva para mantener B cuadrada; sensibilidad requiere tratar la redundancia.",
+      "Degeneración: variables básicas en 0: x3, a2, x1, x2, a5."
+    ]
+  },
+  {
+    "case": "c1_duplicate_positive",
+    "problem": {
+      "nombre": "Problema sin nombre",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "1",
+        "2"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1",
+            "1"
+          ],
+          "signo": "=",
+          "rhs": "4"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "1",
+            "1"
+          ],
+          "signo": "=",
+          "rhs": "4"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          2,
+          3
+        ],
+        "tableau": [
+          [
+            "1",
+            "1",
+            "1",
+            "0",
+            "4"
+          ],
+          [
+            "1",
+            "1",
+            "0",
+            "1",
+            "4"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "1",
+            "b": "2"
+          },
+          {
+            "a": "2",
+            "b": "2"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "a1",
+            "rhs": "4",
+            "coefficient": "1",
+            "ratio": "4",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "a2",
+            "rhs": "4",
+            "coefficient": "1",
+            "ratio": "4",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "a1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 1,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "-8"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          1,
+          3
+        ],
+        "tableau": [
+          [
+            "1",
+            "1",
+            "1",
+            "0",
+            "4"
+          ],
+          [
+            "0",
+            "0",
+            "-1",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "-1",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-2",
+            "b": "-2"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≤ 0 en Max: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "8",
+          "b": "0"
+        },
+        "notes": [
+          "Fila transformada 2 redundante: a2 queda básica en 0 porque no hay columna no artificial para retirarla. Se conserva para mantener B cuadrada; sensibilidad requiere tratar la redundancia."
+        ]
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": [
+      "Degeneración: hubo empate en la razón mínima; se aplicó Bland para la salida.",
+      "Fila transformada 2 redundante: a2 queda básica en 0 porque no hay columna no artificial para retirarla. Se conserva para mantener B cuadrada; sensibilidad requiere tratar la redundancia.",
+      "Degeneración: variables básicas en 0: a2."
+    ]
+  },
+  {
+    "case": "c1_alternative_permutations",
+    "problem": {
+      "nombre": "Problema sin nombre",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2"
+      ],
+      "objetivo": [
+        "0",
+        "0"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "0",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "0",
+            "-1"
+          ],
+          "signo": "<=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "0",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R4",
+          "coeficientes": [
+            "0",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R5",
+          "coeficientes": [
+            "0",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R6",
+          "coeficientes": [
+            "1",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "0"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "tableau": [
+          [
+            "0",
+            "1",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "-1",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≤ 0 en Max: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": [
+      "Degeneración: variables básicas en 0: s1, s2, s3, s4, s5, s6."
+    ]
+  },
+  {
+    "case": "cleanup_negative",
+    "problem": {
+      "nombre": "Problema sin nombre",
+      "sentido": "min",
+      "variables": [
+        "x1"
+      ],
+      "objetivo": [
+        "0"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "-1"
+          ],
+          "signo": "=",
+          "rhs": "0"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          1
+        ],
+        "tableau": [
+          [
+            "-1",
+            "1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "1"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Columna no artificial con coeficiente no nulo para retirar una artificial en 0.",
+        "ratios": [],
+        "leaving_variable": "a1",
+        "leaving_reason": "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "-1"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se restó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I.",
+          "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          0
+        ],
+        "tableau": [
+          [
+            "1",
+            "-1",
+            "0"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "1"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≥ 0 en Min: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": [
+      "Retiro de artificial básica en 0: pivote sin desplazamiento; no requiere razón mínima.",
+      "Degeneración: variables básicas en 0: x1."
+    ]
+  },
+  {
+    "case": "beale",
+    "problem": {
+      "nombre": "Problema sin nombre",
+      "sentido": "max",
+      "variables": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "objetivo": [
+        "10",
+        "-57",
+        "-9",
+        "-24"
+      ],
+      "restricciones": [
+        {
+          "nombre": "R1",
+          "coeficientes": [
+            "1/2",
+            "-11/2",
+            "-5/2",
+            "9"
+          ],
+          "signo": "<=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R2",
+          "coeficientes": [
+            "1/2",
+            "-3/2",
+            "-1/2",
+            "1"
+          ],
+          "signo": "<=",
+          "rhs": "0"
+        },
+        {
+          "nombre": "R3",
+          "coeficientes": [
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "signo": "<=",
+          "rhs": "1"
+        }
+      ]
+    },
+    "iterations": [
+      {
+        "number": 0,
+        "basis": [
+          4,
+          5,
+          6
+        ],
+        "tableau": [
+          [
+            "1/2",
+            "-11/2",
+            "-5/2",
+            "9",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1/2",
+            "-3/2",
+            "-1/2",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "10",
+            "b": "0"
+          },
+          {
+            "a": "-57",
+            "b": "0"
+          },
+          {
+            "a": "-9",
+            "b": "0"
+          },
+          {
+            "a": "-24",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "1",
+            "ratio": "1",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "1/2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Canonización de la fila Z: se sumó M veces cada fila con artificial básica a la fila de costos reducidos cⱼ − zⱼ. Las básicas tienen costo reducido cero; Z incluye su penalización.",
+          "Una artificial que sale de la base nunca vuelve a entrar: se descarta como candidata, igual que al retirar su columna al finalizar la fase I."
+        ]
+      },
+      {
+        "number": 1,
+        "basis": [
+          0,
+          5,
+          6
+        ],
+        "tableau": [
+          [
+            "1",
+            "-11",
+            "-5",
+            "18",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "4",
+            "2",
+            "-8",
+            "-1",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "11",
+            "5",
+            "-18",
+            "-2",
+            "0",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "53",
+            "b": "0"
+          },
+          {
+            "a": "41",
+            "b": "0"
+          },
+          {
+            "a": "-204",
+            "b": "0"
+          },
+          {
+            "a": "-20",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "0",
+            "coefficient": "-11",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "0",
+            "coefficient": "4",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "11",
+            "ratio": "1/11",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 1,
+          "value": "4"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 2,
+        "basis": [
+          0,
+          1,
+          6
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "1/2",
+            "-4",
+            "-3/4",
+            "11/4",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "1",
+            "1/2",
+            "-2",
+            "-1/4",
+            "1/4",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "-1/2",
+            "4",
+            "3/4",
+            "-11/4",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "29/2",
+            "b": "0"
+          },
+          {
+            "a": "-98",
+            "b": "0"
+          },
+          {
+            "a": "-27/4",
+            "b": "0"
+          },
+          {
+            "a": "-53/4",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x3",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "x2",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "-1/2",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          }
+        ],
+        "leaving_variable": "x1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 2,
+          "value": "1/2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 3,
+        "basis": [
+          2,
+          1,
+          6
+        ],
+        "tableau": [
+          [
+            "2",
+            "0",
+            "1",
+            "-8",
+            "-3/2",
+            "11/2",
+            "0",
+            "0"
+          ],
+          [
+            "-1",
+            "1",
+            "0",
+            "2",
+            "1/2",
+            "-5/2",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "-29",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "18",
+            "b": "0"
+          },
+          {
+            "a": "15",
+            "b": "0"
+          },
+          {
+            "a": "-93",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x4",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x3",
+            "rhs": "0",
+            "coefficient": "-8",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "x2",
+            "rhs": "0",
+            "coefficient": "2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": "x2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 3,
+          "value": "2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 4,
+        "basis": [
+          2,
+          3,
+          6
+        ],
+        "tableau": [
+          [
+            "-2",
+            "4",
+            "1",
+            "0",
+            "1/2",
+            "-9/2",
+            "0",
+            "0"
+          ],
+          [
+            "-1/2",
+            "1/2",
+            "0",
+            "1",
+            "1/4",
+            "-5/4",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "-20",
+            "b": "0"
+          },
+          {
+            "a": "-9",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "21/2",
+            "b": "0"
+          },
+          {
+            "a": "-141/2",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "s1",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x3",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "x4",
+            "rhs": "0",
+            "coefficient": "1/4",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": "x3",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 4,
+          "value": "1/2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 5,
+        "basis": [
+          4,
+          3,
+          6
+        ],
+        "tableau": [
+          [
+            "-4",
+            "8",
+            "2",
+            "0",
+            "1",
+            "-9",
+            "0",
+            "0"
+          ],
+          [
+            "1/2",
+            "-3/2",
+            "-1/2",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "22",
+            "b": "0"
+          },
+          {
+            "a": "-93",
+            "b": "0"
+          },
+          {
+            "a": "-21",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "24",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "s2",
+        "entering_reason": "Mayor costo reducido positivo en Max; en empate, menor índice.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "0",
+            "coefficient": "-9",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "x4",
+            "rhs": "0",
+            "coefficient": "1",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": "x4",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 5,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 6,
+        "basis": [
+          4,
+          5,
+          6
+        ],
+        "tableau": [
+          [
+            "1/2",
+            "-11/2",
+            "-5/2",
+            "9",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1/2",
+            "-3/2",
+            "-1/2",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "10",
+            "b": "0"
+          },
+          {
+            "a": "-57",
+            "b": "0"
+          },
+          {
+            "a": "-9",
+            "b": "0"
+          },
+          {
+            "a": "-24",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Regla de Bland: menor índice entre los costos reducidos favorables.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "1",
+            "ratio": "1",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 0,
+          "value": "1/2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": [
+          "Se repitió una base: se activa la regla de Bland hasta terminar para evitar ciclos."
+        ]
+      },
+      {
+        "number": 7,
+        "basis": [
+          0,
+          5,
+          6
+        ],
+        "tableau": [
+          [
+            "1",
+            "-11",
+            "-5",
+            "18",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "4",
+            "2",
+            "-8",
+            "-1",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "11",
+            "5",
+            "-18",
+            "-2",
+            "0",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "53",
+            "b": "0"
+          },
+          {
+            "a": "41",
+            "b": "0"
+          },
+          {
+            "a": "-204",
+            "b": "0"
+          },
+          {
+            "a": "-20",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x2",
+        "entering_reason": "Regla de Bland: menor índice entre los costos reducidos favorables.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "0",
+            "coefficient": "-11",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "s2",
+            "rhs": "0",
+            "coefficient": "4",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "11",
+            "ratio": "1/11",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 1,
+          "value": "4"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 8,
+        "basis": [
+          0,
+          1,
+          6
+        ],
+        "tableau": [
+          [
+            "1",
+            "0",
+            "1/2",
+            "-4",
+            "-3/4",
+            "11/4",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "1",
+            "1/2",
+            "-2",
+            "-1/4",
+            "1/4",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "-1/2",
+            "4",
+            "3/4",
+            "-11/4",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "29/2",
+            "b": "0"
+          },
+          {
+            "a": "-98",
+            "b": "0"
+          },
+          {
+            "a": "-27/4",
+            "b": "0"
+          },
+          {
+            "a": "-53/4",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x3",
+        "entering_reason": "Regla de Bland: menor índice entre los costos reducidos favorables.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x1",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "x2",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "-1/2",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          }
+        ],
+        "leaving_variable": "x1",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 2,
+          "value": "1/2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 9,
+        "basis": [
+          2,
+          1,
+          6
+        ],
+        "tableau": [
+          [
+            "2",
+            "0",
+            "1",
+            "-8",
+            "-3/2",
+            "11/2",
+            "0",
+            "0"
+          ],
+          [
+            "-1",
+            "1",
+            "0",
+            "2",
+            "1/2",
+            "-5/2",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "-29",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "18",
+            "b": "0"
+          },
+          {
+            "a": "15",
+            "b": "0"
+          },
+          {
+            "a": "-93",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x4",
+        "entering_reason": "Regla de Bland: menor índice entre los costos reducidos favorables.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x3",
+            "rhs": "0",
+            "coefficient": "-8",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "x2",
+            "rhs": "0",
+            "coefficient": "2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": "x2",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 3,
+          "value": "2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 10,
+        "basis": [
+          2,
+          3,
+          6
+        ],
+        "tableau": [
+          [
+            "-2",
+            "4",
+            "1",
+            "0",
+            "1/2",
+            "-9/2",
+            "0",
+            "0"
+          ],
+          [
+            "-1/2",
+            "1/2",
+            "0",
+            "1",
+            "1/4",
+            "-5/4",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "-20",
+            "b": "0"
+          },
+          {
+            "a": "-9",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "21/2",
+            "b": "0"
+          },
+          {
+            "a": "-141/2",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "s1",
+        "entering_reason": "Regla de Bland: menor índice entre los costos reducidos favorables.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "x3",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 1,
+            "basic_variable": "x4",
+            "rhs": "0",
+            "coefficient": "1/4",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "0",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente cero; la básica no disminuye."
+          }
+        ],
+        "leaving_variable": "x3",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo. Empate: sale la básica de menor índice (Bland); se detectó degeneración.",
+        "pivot": {
+          "row": 0,
+          "column": 4,
+          "value": "1/2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 11,
+        "basis": [
+          4,
+          3,
+          6
+        ],
+        "tableau": [
+          [
+            "-4",
+            "8",
+            "2",
+            "0",
+            "1",
+            "-9",
+            "0",
+            "0"
+          ],
+          [
+            "1/2",
+            "-3/2",
+            "-1/2",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "22",
+            "b": "0"
+          },
+          {
+            "a": "-93",
+            "b": "0"
+          },
+          {
+            "a": "-21",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "24",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x1",
+        "entering_reason": "Regla de Bland: menor índice entre los costos reducidos favorables.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "0",
+            "coefficient": "-4",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "x4",
+            "rhs": "0",
+            "coefficient": "1/2",
+            "ratio": "0",
+            "exclusion_reason": ""
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "1",
+            "ratio": "1",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "x4",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 1,
+          "column": 0,
+          "value": "1/2"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 12,
+        "basis": [
+          4,
+          0,
+          6
+        ],
+        "tableau": [
+          [
+            "0",
+            "-4",
+            "-2",
+            "8",
+            "1",
+            "-1",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "-3",
+            "-1",
+            "2",
+            "0",
+            "2",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "3",
+            "1",
+            "-2",
+            "0",
+            "-2",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-27",
+            "b": "0"
+          },
+          {
+            "a": "1",
+            "b": "0"
+          },
+          {
+            "a": "-44",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-20",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          }
+        ],
+        "entering_variable": "x3",
+        "entering_reason": "Regla de Bland: menor índice entre los costos reducidos favorables.",
+        "ratios": [
+          {
+            "row": 0,
+            "basic_variable": "s1",
+            "rhs": "0",
+            "coefficient": "-2",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 1,
+            "basic_variable": "x1",
+            "rhs": "0",
+            "coefficient": "-1",
+            "ratio": null,
+            "exclusion_reason": "Excluida: coeficiente negativo; la básica aumenta."
+          },
+          {
+            "row": 2,
+            "basic_variable": "s3",
+            "rhs": "1",
+            "coefficient": "1",
+            "ratio": "1",
+            "exclusion_reason": ""
+          }
+        ],
+        "leaving_variable": "s3",
+        "leaving_reason": "Menor razón no negativa entre filas con coeficiente positivo.",
+        "pivot": {
+          "row": 2,
+          "column": 2,
+          "value": "1"
+        },
+        "objective_value": {
+          "a": "0",
+          "b": "0"
+        },
+        "notes": []
+      },
+      {
+        "number": 13,
+        "basis": [
+          4,
+          0,
+          2
+        ],
+        "tableau": [
+          [
+            "0",
+            "2",
+            "0",
+            "4",
+            "1",
+            "-5",
+            "2",
+            "2"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ],
+          [
+            "0",
+            "3",
+            "1",
+            "-2",
+            "0",
+            "-2",
+            "1",
+            "1"
+          ]
+        ],
+        "b_inverse": null,
+        "reduced_costs": [
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-30",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-42",
+            "b": "0"
+          },
+          {
+            "a": "0",
+            "b": "0"
+          },
+          {
+            "a": "-18",
+            "b": "0"
+          },
+          {
+            "a": "-1",
+            "b": "0"
+          }
+        ],
+        "entering_variable": null,
+        "entering_reason": "Los cⱼ − zⱼ de columnas no artificiales cumplen ≤ 0 en Max: la solución actual es óptima.",
+        "ratios": [],
+        "leaving_variable": null,
+        "leaving_reason": "",
+        "pivot": null,
+        "objective_value": {
+          "a": "1",
+          "b": "0"
+        },
+        "notes": []
+      }
+    ],
+    "status": "optimo",
+    "message": "Se encontró una solución óptima.",
+    "notes": [
+      "Degeneración: hubo empate en la razón mínima; se aplicó Bland para la salida.",
+      "Se repitió una base: se activa la regla de Bland hasta terminar para evitar ciclos."
+    ]
+  }
+]

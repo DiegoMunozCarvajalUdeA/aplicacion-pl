@@ -400,3 +400,31 @@ Preguntas para practicar:
 
 Ejercicio: duplicar R1 como igualdad y comprobar que aparece la segunda fila
 sin rango, con una sola interpretación debajo de la tabla.
+
+## P6, paso 1: reglas compartidas de simplex
+
+`simplex_rules.py` recibe costos reducidos, base, tipos de columna, x_B y d.
+No calcula esas entradas desde un almacenamiento particular. Gran M conserva
+su tablero en `big_m.py`; la razón mínima, la elección por costo o Bland y el
+certificado de infactibilidad se deciden en funciones compartidas. Solo el
+posproceso de retiro y alternativas necesita filas transformadas completas.
+
+El armado final verifica Z contra el objetivo original, calcula holguras,
+certifica puntos o rayos alternos y conserva B⁻¹. Se mantiene la artificial
+nula de una redundante y el límite de 1000 bases alternativas.
+`tests/fixtures/big_m_traces.json` se guardó antes de modificar el solver:
+21 casos, incluidos los 14 fixtures, C1, retiro negativo y Beale. Se comparan
+todos los estados, tableros, razones, costos, decisiones, Z y notas, además
+del estado y mensaje finales. No se regeneran al cambiar el código.
+
+Preguntas para practicar:
+
+1. ¿Por qué compartir decisiones? Con los mismos x_B, r y d, ambos métodos
+   deben elegir la misma base siguiente; su almacenamiento no cambia la regla.
+2. ¿Por qué comparar notas además de Z? El paso a paso es parte observable
+   del contrato; un refactor también debe preservar sus explicaciones.
+3. ¿Puede una columna artificial de costo favorable entrar? No: se excluye
+   antes de elegir entrante y antes de comprobar mejora en la parte M.
+
+Ejercicio: usar Bland desde el inicio en `choose_entering`; identificar qué
+trazas congeladas fallan y explicar por qué la prueba detecta un cambio real.
