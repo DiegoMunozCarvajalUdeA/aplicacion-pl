@@ -1,0 +1,50 @@
+{
+  "nombre": "Ejemplo 2",
+  "caso": "Min, igualdad, >= y lado derecho negativo",
+  "sentido": "min",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "4",
+    "1"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "3",
+        "1"
+      ],
+      "signo": "=",
+      "rhs": "3"
+    },
+    {
+      "coeficientes": [
+        "4",
+        "3"
+      ],
+      "signo": ">=",
+      "rhs": "6"
+    },
+    {
+      "coeficientes": [
+        "-1",
+        "-2"
+      ],
+      "signo": ">=",
+      "rhs": "-4"
+    }
+  ],
+  "esperado": {
+    "estado": "optimo",
+    "x": {
+      "x1": "2/5",
+      "x2": "9/5"
+    },
+    "z": "17/5",
+    "multiples": false,
+    "degenerado": false,
+    "fuente": "enunciado"
+  }
+}

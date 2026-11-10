@@ -1,0 +1,38 @@
+{
+  "nombre": "Ejemplo 5",
+  "caso": "No acotado",
+  "sentido": "max",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "1",
+    "1"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "-1"
+      ],
+      "signo": "<=",
+      "rhs": "1"
+    },
+    {
+      "coeficientes": [
+        "-1",
+        "1"
+      ],
+      "signo": "<=",
+      "rhs": "2"
+    }
+  ],
+  "esperado": {
+    "estado": "no_acotado",
+    "mensaje": "no acotada",
+    "multiples": false,
+    "degenerado": false,
+    "fuente": "enunciado"
+  }
+}

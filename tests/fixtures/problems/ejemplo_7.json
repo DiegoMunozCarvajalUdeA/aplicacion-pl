@@ -1,0 +1,42 @@
+{
+  "nombre": "Ejemplo 7",
+  "caso": "Degeneración",
+  "sentido": "max",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "3",
+    "9"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "4"
+      ],
+      "signo": "<=",
+      "rhs": "8"
+    },
+    {
+      "coeficientes": [
+        "1",
+        "2"
+      ],
+      "signo": "<=",
+      "rhs": "4"
+    }
+  ],
+  "esperado": {
+    "estado": "optimo",
+    "x": {
+      "x1": "0",
+      "x2": "2"
+    },
+    "z": "18",
+    "multiples": false,
+    "degenerado": true,
+    "fuente": "enunciado"
+  }
+}

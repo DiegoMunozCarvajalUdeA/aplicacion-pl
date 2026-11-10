@@ -1,0 +1,50 @@
+{
+  "nombre": "Extra 1",
+  "caso": "Min con solo >=; región no acotada, óptimo finito",
+  "sentido": "min",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "1",
+    "2"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "1"
+      ],
+      "signo": ">=",
+      "rhs": "3"
+    },
+    {
+      "coeficientes": [
+        "1",
+        "3"
+      ],
+      "signo": ">=",
+      "rhs": "5"
+    }
+  ],
+  "esperado": {
+    "estado": "optimo",
+    "multiples": false,
+    "degenerado": false,
+    "fuente": "scipy",
+    "x": {
+      "x1": "2",
+      "x2": "1"
+    },
+    "z": "4",
+    "holguras": {
+      "R1": "0",
+      "R2": "0"
+    },
+    "precios_sombra": {
+      "R1": "1/2",
+      "R2": "1/2"
+    }
+  }
+}

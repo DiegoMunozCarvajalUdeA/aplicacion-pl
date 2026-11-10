@@ -1,0 +1,56 @@
+{
+  "nombre": "Ejemplo 3",
+  "caso": "Tres variables; gráfico no aplica",
+  "sentido": "max",
+  "variables": [
+    "x1",
+    "x2",
+    "x3"
+  ],
+  "objetivo": [
+    "3",
+    "2",
+    "5"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "2",
+        "1"
+      ],
+      "signo": "<=",
+      "rhs": "430"
+    },
+    {
+      "coeficientes": [
+        "3",
+        "0",
+        "2"
+      ],
+      "signo": "<=",
+      "rhs": "460"
+    },
+    {
+      "coeficientes": [
+        "1",
+        "4",
+        "0"
+      ],
+      "signo": "<=",
+      "rhs": "420"
+    }
+  ],
+  "esperado": {
+    "estado": "optimo",
+    "x": {
+      "x1": "0",
+      "x2": "100",
+      "x3": "230"
+    },
+    "z": "1350",
+    "multiples": false,
+    "degenerado": false,
+    "fuente": "enunciado"
+  }
+}

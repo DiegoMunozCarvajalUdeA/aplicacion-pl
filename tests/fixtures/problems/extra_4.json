@@ -1,0 +1,72 @@
+{
+  "nombre": "Extra 4",
+  "caso": "Cuatro variables y tres restricciones mixtas",
+  "sentido": "max",
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4"
+  ],
+  "objetivo": [
+    "3",
+    "2",
+    "1",
+    "-1"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "signo": "<=",
+      "rhs": "10"
+    },
+    {
+      "coeficientes": [
+        "1",
+        "0",
+        "1",
+        "0"
+      ],
+      "signo": ">=",
+      "rhs": "2"
+    },
+    {
+      "coeficientes": [
+        "0",
+        "1",
+        "0",
+        "1"
+      ],
+      "signo": "=",
+      "rhs": "3"
+    }
+  ],
+  "esperado": {
+    "estado": "optimo",
+    "multiples": false,
+    "degenerado": false,
+    "fuente": "scipy",
+    "x": {
+      "x1": "7",
+      "x2": "3",
+      "x3": "0",
+      "x4": "0"
+    },
+    "z": "27",
+    "holguras": {
+      "R1": "0",
+      "R2": "5",
+      "R3": "0"
+    },
+    "precios_sombra": {
+      "R1": "3",
+      "R2": "0",
+      "R3": "-1"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "nombre": "Ejemplo 6",
+  "caso": "Óptimos múltiples",
+  "sentido": "max",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "2",
+    "4"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "2"
+      ],
+      "signo": "<=",
+      "rhs": "5"
+    },
+    {
+      "coeficientes": [
+        "1",
+        "1"
+      ],
+      "signo": "<=",
+      "rhs": "4"
+    }
+  ],
+  "esperado": {
+    "estado": "optimo",
+    "x": {
+      "x1": "0",
+      "x2": "5/2"
+    },
+    "z": "10",
+    "multiples": true,
+    "degenerado": false,
+    "segmento": [
+      [
+        "0",
+        "5/2"
+      ],
+      [
+        "3",
+        "1"
+      ]
+    ],
+    "fuente": "enunciado"
+  }
+}

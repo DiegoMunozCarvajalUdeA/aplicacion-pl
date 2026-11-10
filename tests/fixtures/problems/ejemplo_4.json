@@ -1,0 +1,38 @@
+{
+  "nombre": "Ejemplo 4",
+  "caso": "Infactible",
+  "sentido": "max",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "1",
+    "1"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "1"
+      ],
+      "signo": "<=",
+      "rhs": "2"
+    },
+    {
+      "coeficientes": [
+        "1",
+        "1"
+      ],
+      "signo": ">=",
+      "rhs": "5"
+    }
+  ],
+  "esperado": {
+    "estado": "infactible",
+    "mensaje": "no tiene solución factible",
+    "multiples": false,
+    "degenerado": false,
+    "fuente": "enunciado"
+  }
+}

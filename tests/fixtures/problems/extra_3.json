@@ -1,0 +1,38 @@
+{
+  "nombre": "Extra 3",
+  "caso": "Región gráfica vacía",
+  "sentido": "max",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "2",
+    "1"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "1"
+      ],
+      "signo": "<=",
+      "rhs": "1"
+    },
+    {
+      "coeficientes": [
+        "1",
+        "-1"
+      ],
+      "signo": ">=",
+      "rhs": "3"
+    }
+  ],
+  "esperado": {
+    "estado": "infactible",
+    "multiples": false,
+    "degenerado": false,
+    "fuente": "scipy",
+    "mensaje": "no tiene solución factible"
+  }
+}

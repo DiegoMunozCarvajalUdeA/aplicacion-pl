@@ -1,0 +1,50 @@
+{
+  "nombre": "Ejemplo 1",
+  "caso": "Forma estándar, redundancia y gráfico",
+  "sentido": "max",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "50",
+    "80"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "2",
+        "1"
+      ],
+      "signo": "<=",
+      "rhs": "100"
+    },
+    {
+      "coeficientes": [
+        "1",
+        "3"
+      ],
+      "signo": "<=",
+      "rhs": "90"
+    },
+    {
+      "coeficientes": [
+        "0",
+        "1"
+      ],
+      "signo": "<=",
+      "rhs": "40"
+    }
+  ],
+  "esperado": {
+    "estado": "optimo",
+    "x": {
+      "x1": "42",
+      "x2": "16"
+    },
+    "z": "3380",
+    "multiples": false,
+    "degenerado": false,
+    "fuente": "enunciado"
+  }
+}

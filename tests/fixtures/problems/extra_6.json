@@ -1,0 +1,60 @@
+{
+  "nombre": "Extra 6",
+  "caso": "Degeneración y empate en la razón mínima",
+  "sentido": "max",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "3",
+    "2"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "0"
+      ],
+      "signo": "<=",
+      "rhs": "2"
+    },
+    {
+      "coeficientes": [
+        "0",
+        "1"
+      ],
+      "signo": "<=",
+      "rhs": "2"
+    },
+    {
+      "coeficientes": [
+        "1",
+        "1"
+      ],
+      "signo": "<=",
+      "rhs": "2"
+    }
+  ],
+  "esperado": {
+    "estado": "optimo",
+    "multiples": false,
+    "degenerado": true,
+    "fuente": "scipy",
+    "x": {
+      "x1": "2",
+      "x2": "0"
+    },
+    "z": "6",
+    "holguras": {
+      "R1": "0",
+      "R2": "2",
+      "R3": "0"
+    },
+    "precios_sombra": {
+      "R1": "1",
+      "R2": "0",
+      "R3": "2"
+    }
+  }
+}
