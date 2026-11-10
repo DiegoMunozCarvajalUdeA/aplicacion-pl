@@ -5,12 +5,12 @@ from fractions import Fraction
 
 import numpy as np
 import pytest
-from hypothesis import assume, given, settings
+from hypothesis import assume, example, given, settings
 from hypothesis import strategies as st
 from scipy.optimize import linprog
 
 from plapp.big_m import solve_big_m
-from plapp.io_json import problem_to_dict
+from plapp.io_json import load_problem, problem_to_dict
 from plapp.model import Constraint, LPProblem, validate
 from plapp.revised_simplex import solve_revised
 from plapp.sensitivity import sensitivity_analysis
@@ -20,6 +20,7 @@ from scripts.verify import (
     scipy_inputs,
     verify_with_scipy,
 )
+from tests.conftest import PROBLEMS
 
 
 def conclusive_oracle(problem):
@@ -182,23 +183,25 @@ def test_own_solver_against_scipy(solver, problem):
     assert not compare_solution(problem, own, oracle)
 
 
-@pytest.mark.parametrize("solver", [solve_big_m, solve_revised])
-@pytest.mark.xfail(
-    raises=NotImplementedError, strict=False, reason="Sensibilidad pendiente del equipo"
+@pytest.mark.parametrize(
+    "solver",
+    [
+        solve_big_m,
+        pytest.param(
+            solve_revised,
+            marks=pytest.mark.xfail(
+                raises=NotImplementedError, strict=False, reason="Simplex revisado pendiente"
+            ),
+        ),
+    ],
 )
 @settings(max_examples=30, deadline=None)
 @given(problem=small_problems())
+@example(problem=load_problem(PROBLEMS / "ejemplo_1.json"))
+@example(problem=load_problem(PROBLEMS / "ejemplo_2.json"))
 def test_shadow_prices_against_scipy(solver, problem):
     oracle = conclusive_oracle(problem)
     own = solver(problem)
-    if solver is solve_big_m:
-        # Garantizar que la aceptación de sensibilidad se ejerza incluso si
-        # este lote aleatorio no contiene óptimos únicos no degenerados.
-        from plapp.io_json import load_problem
-        from tests.conftest import PROBLEMS
-
-        reference = load_problem(PROBLEMS / "ejemplo_1.json")
-        sensitivity_analysis(reference, solver(reference))
     if unique_nondegenerate(problem, oracle):
         report = sensitivity_analysis(problem, own)
         assert {key: float(value) for key, value in report.shadow_prices.items()} == pytest.approx(

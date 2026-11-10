@@ -112,6 +112,7 @@ class SensitivityReport:
     objective_ranges: dict[str, Bounds]
     rhs_ranges: dict[str, Bounds]
     interpretations: dict[str, str]
+    warnings: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
