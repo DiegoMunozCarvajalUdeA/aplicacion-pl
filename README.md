@@ -4,8 +4,8 @@ Entorno de desarrollo para el proyecto de Optimización de Ingeniería de Sistem
 Universidad de Antioquia. El enunciado oficial está en `taller-optimi.pdf`.
 
 La aplicación resuelve problemas con Gran M simbólica y Fraction, en modo directo
-o paso a paso. P1–P3 están implementados; gráfico, sensibilidad, simplex revisado
-y PDF siguen pendientes según `docs/plan.md`. SciPy se usa únicamente como
+o paso a paso. P1–P5 y las correcciones de redundancia están implementados; simplex
+revisado y PDF siguen pendientes según `docs/plan.md`. SciPy se usa únicamente como
 oráculo de pruebas, nunca en la aplicación.
 
 ## Requisitos e instalación
@@ -28,7 +28,7 @@ Abrir `http://localhost:8501`. Detener con Ctrl-C. También están disponibles
 ## Uso
 
 La app permite editar Max/Min, agregar o quitar variables y restricciones sin
-perder las celdas restantes, cargar los 13 ejemplos y cargar/descargar JSON.
+perder las celdas restantes, cargar los 14 ejemplos y cargar/descargar JSON.
 Admite números como `-3`, `2.5`, `2,5` y `2/5`; todas las variables cumplen x ≥ 0.
 Al pulsar Resolver, los errores indican la celda afectada. El resumen del modelo
 validado funciona; cada algoritmo pendiente muestra un aviso en su sección.
@@ -39,6 +39,14 @@ iteraciones: base con nombres, tablero rotulado, costos reducidos, Z, pivote
 resaltado, razones y justificaciones. Fracciones y decimales cambian únicamente
 la presentación; los cálculos permanecen exactos. Se informan infactibilidad,
 no acotación, segmentos o rayos óptimos y variables básicas nulas.
+
+El método gráfico resuelve de forma independiente los problemas de dos variables:
+región sombreada, rectas rotuladas, vértices con Z, isoutilidad, segmentos y
+rayos óptimos. Informa regiones vacías y objetivos no acotados; la caja sirve
+solo para dibujar. La sensibilidad presenta precios sombra originales, costos
+reducidos y rangos de un dato a la vez, con interpretación y advertencias de
+degeneración o redundancia. Una fila redundante recibe un representante dual
+cero y no se ofrece un rango para su RHS.
 
 Los contratos compartidos están en `src/plapp/result.py`. Los índices internos
 empiezan en cero; la interfaz muestra filas desde uno y columnas por nombre.
@@ -86,12 +94,27 @@ para ≥. Una igualdad conserva su signo. SciPy calcula en coma flotante; las
 fracciones del informe son reconstrucciones legibles, no aritmética exacta.
 Los precios pueden no ser únicos con degeneración o soluciones múltiples.
 
-Los siete ejemplos conservan los resultados del enunciado. Los seis extras
+Los siete ejemplos conservan los resultados del enunciado. Los primeros seis extras
 tienen `fuente: "scipy"` y cubren región no acotada con óptimo finito,
 igualdades, región vacía, cuatro variables, RHS negativo y empate degenerado.
 El oráculo contrasta todos los fixtures sin xfail. Hypothesis genera problemas
-de 2–4 variables y 1–4 restricciones; la comparación de precios sombra se limita
+de 2–4 variables y 1–6 restricciones, incluidas copias y filas escaladas; la comparación de precios sombra se limita
 a óptimos únicos no degenerados mediante una guardia conservadora.
+
+El extra 7 cubre una no acotación que presolve clasifica como infactible; su
+fuente es «scipy sin presolve y Gran M». El oráculo repite sin presolve los
+estados 2, 3 y 4 y exige confirmación si cambia el estado. Si no concluye,
+las pruebas generativas descartan ese caso y el estrés lo cuenta por separado.
+
+```bash
+uv run python scripts/stress.py --seed 20261110 --count 3000
+```
+
+La última corrida terminó con 3000 verificados, 0 errores, 0 diferencias y
+0 inconcluyentes. La suite tarda unos 18 segundos en este equipo. El informe
+`docs/desarrollo-c-p4-p5.md` conserva el conteo previo de 72 errores, la prueba
+de regresión temporal y las verificaciones por paquete. No se agregaron
+dependencias; Playwright y las capturas del manual quedan para P8.
 
 ## Despliegue en Streamlit Community Cloud
 
@@ -113,7 +136,7 @@ disponible para la sustentación sin conexión a un servicio de despliegue.
 src/plapp/       Modelo, Gran M, álgebra exacta, contratos y módulos pendientes
 app/            Interfaz Streamlit y presentación Plotly
 scripts/        Verificador externo con SciPy
-tests/          Infraestructura, contratos, AppTest y 13 fixtures JSON
+tests/          Infraestructura, contratos, AppTest y 14 fixtures JSON
 docs/           Propuesta, plan, teoría, manual y verificación del entorno
 .github/        CI de Ruff y pytest
 .streamlit/     Configuración local y manejo de errores

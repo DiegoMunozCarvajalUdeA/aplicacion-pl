@@ -6,12 +6,13 @@
 |---|---|---|
 | P1: núcleo exacto | Implementado | MValue, linalg y forma estándar; 165 pruebas pasan, 36 xfail pendientes, sin XPASS |
 | P2: Gran M | Implementado | 204 pruebas pasan, 22 xfail pendientes, sin XPASS; 13 fixtures coinciden con SciPy |
+| C: correcciones | Implementado | 3000 casos: 0 errores y diferencias; 14 fixtures coinciden con SciPy |
 | P3: paso a paso | Implementado | 237 pruebas pasan, 22 xfail pendientes, sin XPASS; 42 pruebas de interfaz |
 | P4: gráfico | Implementado | 285 pruebas pasan, 19 xfail; 250 casos exactos contra Gran M |
-| P5: sensibilidad | Pendiente | Stub |
+| P5: sensibilidad | Implementado | Precios y rangos exactos; perturbaciones de ejemplos 1–2 y 150 casos generados |
 | P6: revisado | Pendiente | Stub |
 | P7: PDF | Pendiente | Stub |
-| P8: entregables | Pendiente | Guía de sustentación de P1–P3 escrita; manual, capturas y video pendientes |
+| P8: entregables | Pendiente | Guía de sustentación de P1–P5 escrita; manual, capturas y video pendientes |
 
 P1: `make lint` y `make test` correctos. Los 13 fixtures pasan por el oráculo;
 los solvers aún informan que están pendientes. AppTest muestra las formas
@@ -31,7 +32,7 @@ alternativas, degeneración y ausencia de excepciones. Los 13 fixtures siguen
 coincidiendo con SciPy. El arranque real respondió `ok`; se inspeccionaron los
 datos de los ejemplos 1, 2 y 6 mediante AppTest y se detuvo el servidor.
 Guía de P3 e informe de sesión en `docs/sustentacion.md` y
-`docs/desarrollo-p1-p3.md`. Siguiente paquete recomendado: P4 (gráfico).
+`docs/desarrollo-p1-p3.md`. En ese hito se recomendó continuar con P4 (gráfico).
 
 ## Rúbrica de la aplicación
 
@@ -41,8 +42,8 @@ Guía de P3 e informe de sesión en `docs/sustentacion.md` y
 | Método propio | 15 % | mvalue, standard_form, big_m | test_contracts, test_examples, test_oracle_scipy | [Integrante] | Gran M implementada |
 | Paso a paso | 25 % | result, formatting, standard_form, big_m, revised_simplex, UI | test_contracts, test_examples, test_app | [Integrante] | Gran M completa; revisado pendiente |
 | Método gráfico | 20 % | graphical, presentación Plotly | test_graphical, test_app | [Integrante] | Geometría exacta y presentación implementadas |
-| Sensibilidad | 15 % | sensitivity, base final del solver | test_sensitivity, test_oracle_scipy | [Integrante] | Stub |
-| Interfaz y usabilidad | 15 % | streamlit_app | test_app | [Integrante] | Entrada y Gran M en ambos modos y formatos |
+| Sensibilidad | 15 % | sensitivity, base final del solver | test_sensitivity, test_oracle_scipy | [Integrante] | Precios originales, rangos e interpretación implementados |
+| Interfaz y usabilidad | 15 % | streamlit_app | test_app | [Integrante] | Gran M, gráfico y sensibilidad en ambos modos y formatos |
 
 Los porcentajes son de la rúbrica, no porcentajes ya obtenidos. Una base
 navegable no satisface por sí sola la resolución y visualización requeridas.
@@ -99,3 +100,10 @@ P4: `make lint` y `make test` correctos; 14 fixtures coinciden con SciPy.
 AppTest comprueba rótulos, vacío, flecha, segmento e isoutilidad; el servidor
 respondió `ok` y se detuvo. El cálculo usa Cramer, recesión y recorte exactos,
 sin llamar a Gran M. La guía P4 está en `docs/sustentacion.md`.
+
+P5: rangos y precios derivados de A y la base, sin consultar el tablero.
+Se deshacen signos originales; las redundantes reciben precio dual cero sin
+rango propio y las demás filas conservan las dependencias originales.
+Próxima sesión: P6, con refactor de reglas puras en commit separado, y P7.
+P8 permanece para la sesión final; `docs/desarrollo-c-p4-p5.md` registra
+comandos, resultados y decisiones de C, P4 y P5.
