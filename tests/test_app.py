@@ -347,6 +347,12 @@ def test_unbounded_graph_notice(app, filename):
             t.get("line", {}).get("color") == "gray" and t["line"].get("dash") == "dot"
             for t in chart["data"]
         )
+    if filename == "extra_1.json":
+        # La isoutilidad se aleja del vértice óptimo y conserva una guía hacia su recta.
+        label = next(
+            a for a in chart["layout"]["annotations"] if a["text"].startswith("Isoutilidad")
+        )
+        assert label.get("showarrow") and label["ay"] < 0
     assert not app.exception and not app.error
 
 

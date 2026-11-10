@@ -433,7 +433,7 @@ def space_graph_labels(figure: go.Figure, result: GraphicalResult) -> None:
                 for other in occupied
             )
             if not collision and 0 <= bottom <= height - 18:
-                if shift != (label.yshift or 0):
+                if shift != (label.yshift or 0) or abs(shift) > 20:
                     # Un rótulo desplazado conserva una guía hacia su punto o recta.
                     label.update(
                         showarrow=True,
@@ -542,7 +542,11 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
                 text=label,
                 showarrow=False,
                 yanchor="middle",
-                yshift=-18 if objective or position[1] > bounds[1] * 5 / 6 else 14,
+                yshift=140
+                if objective and result.bounded is False
+                else -18
+                if objective or position[1] > bounds[1] * 5 / 6
+                else 14,
                 xanchor="left"
                 if position[0] < bounds[0] / 6
                 else "right"
