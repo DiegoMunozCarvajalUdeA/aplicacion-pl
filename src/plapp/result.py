@@ -37,6 +37,7 @@ class StandardForm:
     c: tuple[MValue, ...]
     basis: tuple[int, ...]
     transformations: tuple[str, ...]
+    row_signs: tuple[int, ...] = ()
 
 
 @dataclass(frozen=True)

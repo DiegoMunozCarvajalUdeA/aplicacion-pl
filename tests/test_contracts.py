@@ -20,14 +20,12 @@ from tests.conftest import PROBLEMS
         (sub, (2, -5)),
     ],
 )
-@pytest.mark.xfail(raises=NotImplementedError, strict=False, reason="MValue pendiente")
 def test_mvalue_binary(operation, expected):
     result = operation(MValue(Fraction(3), Fraction(-2)), MValue(Fraction(1), Fraction(3)))
     assert (result.a, result.b) == tuple(map(Fraction, expected))
 
 
 @pytest.mark.parametrize(("operation", "expected"), [(mul, (6, -4)), (truediv, ("3/2", -1))])
-@pytest.mark.xfail(raises=NotImplementedError, strict=False, reason="MValue pendiente")
 def test_mvalue_scalar(operation, expected):
     result = operation(MValue(Fraction(3), Fraction(-2)), Fraction(2))
     assert (result.a, result.b) == tuple(map(Fraction, expected))
@@ -43,7 +41,6 @@ def test_mvalue_scalar(operation, expected):
         (eq, False),
     ],
 )
-@pytest.mark.xfail(raises=NotImplementedError, strict=False, reason="MValue pendiente")
 def test_mvalue_lexicographic(operation, expected):
     assert (
         operation(MValue(Fraction(10**30), Fraction(-1)), MValue(Fraction(-(10**30)), Fraction(1)))
@@ -51,20 +48,17 @@ def test_mvalue_lexicographic(operation, expected):
     )
 
 
-@pytest.mark.xfail(raises=NotImplementedError, strict=False, reason="MValue pendiente")
 def test_mvalue_tie_and_string():
     assert MValue(Fraction(2), Fraction(3)) < MValue(Fraction(4), Fraction(3))
     assert MValue(Fraction(2), Fraction(3)) == MValue(Fraction(2), Fraction(3))
     assert str(MValue(Fraction(3), Fraction(-2))) == "3 - 2M"
 
 
-@pytest.mark.xfail(raises=NotImplementedError, strict=False, reason="MValue pendiente")
 def test_mvalue_division_by_zero():
     with pytest.raises(ZeroDivisionError):
         MValue(Fraction(1)) / Fraction(0)
 
 
-@pytest.mark.xfail(raises=NotImplementedError, strict=False, reason="Forma estándar pendiente")
 def test_standard_form(example_one):
     result = to_standard_form(example_one)
     assert result.column_names[:2] == ("x1", "x2")
@@ -74,7 +68,6 @@ def test_standard_form(example_one):
     assert all(isinstance(value, Fraction) for row in result.a for value in row)
 
 
-@pytest.mark.xfail(raises=NotImplementedError, strict=False, reason="Forma estándar pendiente")
 def test_standard_form_mixed_min():
     result = to_standard_form(load_problem(PROBLEMS / "ejemplo_2.json"))
     assert all(value >= 0 for value in result.b)

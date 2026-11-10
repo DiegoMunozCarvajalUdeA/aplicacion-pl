@@ -1,6 +1,6 @@
 # Reglas del proyecto
 
-El objetivo de esta preparación es dejar infraestructura verificable. El enunciado
+El objetivo es desarrollar una aplicación verificable y explicable. El enunciado
 `taller-optimi.pdf` tiene prioridad sobre `PROMPT-entorno.md`. No mover, renombrar ni
 borrar ninguno de esos archivos.
 
@@ -8,11 +8,10 @@ borrar ninguno de esos archivos.
    OR-Tools, CVXPY, Pyomo ni equivalentes. SciPy pertenece solo al grupo `dev`
    y se usa únicamente en `tests/` y `scripts/` como verificación independiente.
    Conservar la prueba de imports con AST.
-2. En tareas de preparación del entorno, no implementar conversión a forma
-   estándar, operaciones de MValue, Gran M, simplex revisado, geometría,
-   sensibilidad ni exportación PDF. Conservar firmas tipadas, docstrings en
-   español con pasos y `raise NotImplementedError`. El equipo implementará
-   estos módulos en tareas posteriores explícitas y deberá poder explicarlos.
+2. La fase de preparación terminó. Implementar los algoritmos por paquetes según
+   `PROMPT-desarrollo.md`, con firmas tipadas, código explicable y docstrings en
+   español. Mantener `docs/sustentacion.md` al día; conservar como stubs los
+   módulos fuera del alcance de la sesión.
 3. Sí implementar modelo de datos, lectura y validación, JSON, formato,
    interfaz base, pruebas, oráculo externo, CI y documentación.
 4. Interfaz, mensajes, comentarios y docstrings en español; identificadores en inglés.
@@ -25,8 +24,9 @@ borrar ninguno de esos archivos.
    modelo y los algoritmos y M simbólica `a + b·M`; no usar Python del sistema.
 8. Mantener `uv.lock` y exportar `requirements.txt` sin dependencias dev mediante
    `make requirements`. Ejecutar `make lint` y `make test` antes de finalizar.
-9. Las pruebas de algoritmos usan `xfail(raises=NotImplementedError, strict=False)`.
-   No ocultar errores de aserción ni marcar infraestructura como xfail.
+9. Solo las pruebas de algoritmos pendientes usan
+   `xfail(raises=NotImplementedError, strict=False)`. Quitar la marca al implementar
+   el módulo. No ocultar errores de aserción ni marcar infraestructura como xfail.
 10. Preservar cambios ajenos. Hacer commits locales pequeños con Conventional
     Commits, asunto menor de 50 caracteres. No crear remotos ni hacer push.
     No versionar `.venv`, cachés, `.env` ni secretos.

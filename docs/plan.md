@@ -1,5 +1,25 @@
 # Plan de implementación y verificación
 
+## Estado por paquete de desarrollo
+
+| Paquete | Estado | Evidencia |
+|---|---|---|
+| P1: núcleo exacto | Implementado | MValue, linalg y forma estándar; 165 pruebas pasan, 36 xfail pendientes, sin XPASS |
+| P2: Gran M | Pendiente | Stub y contratos existentes |
+| P3: paso a paso | Pendiente | Presentación base |
+| P4: gráfico | Pendiente | Stub |
+| P5: sensibilidad | Pendiente | Stub |
+| P6: revisado | Pendiente | Stub |
+| P7: PDF | Pendiente | Stub |
+| P8: entregables | Pendiente | Guía de sustentación de P1 escrita |
+
+P1: `make lint` y `make test` correctos. Los 13 fixtures pasan por el oráculo;
+los solvers aún informan que están pendientes. AppTest muestra las formas
+estándar de los ejemplos 1 y 2 sin excepciones, contrastadas con la traza manual
+de `docs/sustentacion.md`.
+El arranque real mediante `make run` en modo headless respondió `ok` en
+`/_stcore/health`; el servidor se detuvo después de la comprobación.
+
 ## Rúbrica de la aplicación
 
 | Criterio | Peso | Módulos | Pruebas | Responsable | Estado inicial |
