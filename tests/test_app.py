@@ -348,6 +348,13 @@ def test_unbounded_graph_notice(app, filename):
             t.get("line", {}).get("color") == "gray" and t["line"].get("dash") == "dot"
             for t in chart["data"]
         )
+        # Solo los lados lejanos son del recuadro; el eje x1 = 0 es una frontera real.
+        width = chart["layout"]["xaxis"]["range"][1]
+        height = chart["layout"]["yaxis"]["range"][1]
+        for trace in chart["data"]:
+            if trace.get("name") == "Borde del recorte":
+                assert trace["x"] == [width, width] or trace["y"] == [height, height]
+        assert any(t.get("name") == "Frontera factible" and t["x"] == [0, 0] for t in chart["data"])
     if filename == "extra_1.json":
         # La isoutilidad se aleja del vértice óptimo y conserva una guía hacia su recta.
         label = next(
@@ -355,6 +362,17 @@ def test_unbounded_graph_notice(app, filename):
         )
         assert label.get("showarrow") and label["ay"] < 0
     assert not app.exception and not app.error
+
+
+@pytest.mark.parametrize("filename", ["ensayo_3.json", "extra_1.json", "ejemplo_5.json"])
+def test_displaced_labels_keep_guide(app, filename):
+    """Un rótulo de recta alejado de su posición siempre encontró hueco y tiene guía."""
+    selectbox(app, "Ejemplo").select(filename).run()
+    button(app, "Cargar ejemplo").click().run()
+    chart = json.loads(app.get("plotly_chart")[0].proto.spec)
+    for label in chart["layout"]["annotations"]:
+        if label["text"].startswith(("R", "Isoutilidad")):
+            assert label.get("showarrow") or abs(label.get("yshift") or 0) <= 20, label["text"]
 
 
 def test_asymmetric_graph_notice(app):

@@ -399,7 +399,18 @@ def render_steps(problem: LPProblem, solution: Solution | None, step_mode: bool)
 
 
 def space_graph_labels(figure: go.Figure, result: GraphicalResult) -> None:
-    """Separar rótulos en píxeles aproximados sin mover puntos ni cambiar la escala."""
+    """Separar rótulos que se tapan, sin mover puntos ni cambiar la escala.
+
+    Plotly no evita choques entre anotaciones. Se estima un rectángulo por
+    rótulo en píxeles aproximados del área de dibujo (870 × 395, ajustada si los
+    ejes tienen la misma escala): 6,5 px por carácter y 18 px de alto. Primero se
+    colocan las coordenadas de los vértices y después los rótulos de las rectas.
+    Si un rótulo choca con otro ya colocado, se prueban desplazamientos
+    verticales (hacia arriba de 20 en 20 px desde 28 px hasta el borde, y luego
+    hasta 68 px hacia abajo), y el rótulo movido recibe una línea gris hacia su
+    punto. Es solo presentación: si la estimación falla, dos rótulos pueden
+    tocarse, pero ningún resultado cambia.
+    """
     bounds = tuple(map(float, result.drawing_bounds))
     width, height = 870, 395
     ratio = bounds[0] / bounds[1]
@@ -415,14 +426,14 @@ def space_graph_labels(figure: go.Figure, result: GraphicalResult) -> None:
         x = float(label.x) / bounds[0] * width + (label.xshift or 0)
         y = float(label.y) / bounds[1] * height
         text_width = len(label.text) * 6.5
-        left = (
-            x
-            if label.xanchor == "left"
-            else x - text_width
-            if label.xanchor == "right"
-            else x - text_width / 2
-        )
-        for shift in (label.yshift or 0, 28, 48, 68, 88, -28, -48, -68):
+        if label.xanchor == "left":
+            left = x
+        elif label.xanchor == "right":
+            left = x - text_width
+        else:
+            left = x - text_width / 2
+        # Subir de 20 en 20 px hasta el borde superior y, si no cabe, bajar un poco.
+        for shift in (label.yshift or 0, *range(28, int(height), 20), -28, -48, -68):
             bottom = y + shift - (0 if label.yanchor == "bottom" else 9)
             box = (left, bottom, left + text_width, bottom + 18)
             collision = any(
@@ -477,10 +488,8 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
         )
         if result.bounded is False:
             for first, last in zip(closed, closed[1:], strict=False):
-                on_box = any(
-                    first[i] == last[i] and first[i] in (0, result.drawing_bounds[i])
-                    for i in (0, 1)
-                )
+                # Solo los lados lejanos son del recuadro; los ejes son x ≥ 0, restricciones reales.
+                on_box = any(first[i] == last[i] == result.drawing_bounds[i] for i in (0, 1))
                 figure.add_trace(
                     go.Scatter(
                         x=[float(first[0]), float(last[0])],
@@ -536,22 +545,28 @@ def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
                 ),
             )
             label_positions.append(position)
+            # Desplazamiento vertical en píxeles: arriba de la recta salvo cerca del borde.
+            if objective and result.bounded is False:
+                yshift = 140  # Lejos del vértice óptimo; space_graph_labels deja una guía.
+            elif objective or position[1] > bounds[1] * 5 / 6:
+                yshift = -18
+            else:
+                yshift = 14
+            # Anclar a la izquierda o derecha cerca de los bordes para no salir del gráfico.
+            if position[0] < bounds[0] / 6:
+                xanchor = "left"
+            elif position[0] > bounds[0] * 5 / 6:
+                xanchor = "right"
+            else:
+                xanchor = "center"
             figure.add_annotation(
                 x=position[0],
                 y=position[1],
                 text=label,
                 showarrow=False,
                 yanchor="middle",
-                yshift=140
-                if objective and result.bounded is False
-                else -18
-                if objective or position[1] > bounds[1] * 5 / 6
-                else 14,
-                xanchor="left"
-                if position[0] < bounds[0] / 6
-                else "right"
-                if position[0] > bounds[0] * 5 / 6
-                else "center",
+                yshift=yshift,
+                xanchor=xanchor,
                 font={"color": "#172554", "size": 12},
                 bgcolor="rgba(255,255,255,0.8)",
             )

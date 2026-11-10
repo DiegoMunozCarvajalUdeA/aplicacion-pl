@@ -66,9 +66,17 @@ def test_unbounded_objective():
     assert result.status == Status.UNBOUNDED and result.objective_value is None
     assert not result.optimal_points and result.objective_line is None
     assert result.improving_direction == tuple(own.unbounded_direction.values()) == (1, 1)
-    assert result.drawing_bounds == (Fraction(6), Fraction(36, 5))
+    assert result.drawing_bounds == (Fraction(18, 5), Fraction(24, 5))
     assert len(result.improvement_segment) == 2
     assert any(result.improvement_segment[-1][i] == result.drawing_bounds[i] for i in (0, 1))
+
+
+def test_unbounded_box_follows_axis_rays():
+    """La caja avanza s = 5 desde cada vértice por (0, 1) y (1, 0), con margen 6/5."""
+    result = graphical_method(load_problem(PROBLEMS / "extra_1.json"))
+    assert result.bounded is False
+    assert set(result.recession_directions) == {(0, 1), (1, 0)}
+    assert result.drawing_bounds == (Fraction(12), Fraction(48, 5))
 
 
 def test_degenerate_vertex():

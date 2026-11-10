@@ -119,10 +119,10 @@ def graphical_method(problem: LPProblem) -> GraphicalResult:
     }
     directions = _recession(problem.constraints) if vertices else ()
     if directions:
-        # Extender cada vértice en los rayos exactos hace visible la continuación.
+        # Avanzar desde cada vértice una vez el tamaño s del grupo de vértices.
         scale = max(Fraction(1), *(coordinate for point in reference for coordinate in point))
         reference.update(
-            (v[0] + 2 * scale * d[0], v[1] + 2 * scale * d[1]) for v in vertices for d in directions
+            (v[0] + scale * d[0], v[1] + scale * d[1]) for v in vertices for d in directions
         )
     bounds = tuple(max([Fraction(1), *(p[i] for p in reference)]) * Fraction(6, 5) for i in (0, 1))
     symbols = {"<=": "≤", ">=": "≥", "=": "="}

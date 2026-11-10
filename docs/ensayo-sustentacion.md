@@ -274,8 +274,8 @@ actual. Entre paréntesis, el número de pruebas que fallan sobre 546.
 - **Resultado real (2 fallan):** `test_example_one_vertices` y
   `test_unbounded_objective` de `tests/test_graphical.py`, que fijan la caja
   exacta de los ejemplos 1 y 5. Vértices, Z y certificados no cambian.
-- **Qué ajustar:** las cajas esperadas, por ejemplo (6, 36/5) del ejemplo 5
-  pasa a (15/2, 9).
+- **Qué ajustar:** las cajas esperadas, por ejemplo (18/5, 24/5) del ejemplo 5
+  pasa a (9/2, 6).
 
 ### Mod. 5: agregar un mensaje con el número de pivotes
 
