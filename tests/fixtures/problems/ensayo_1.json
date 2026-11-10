@@ -1,0 +1,38 @@
+{
+  "nombre": "Ensayo 1",
+  "caso": "Infactible: Min con <= y >= incompatibles",
+  "sentido": "min",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "3",
+    "2"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "2"
+      ],
+      "signo": "<=",
+      "rhs": "4"
+    },
+    {
+      "coeficientes": [
+        "3",
+        "1"
+      ],
+      "signo": ">=",
+      "rhs": "15"
+    }
+  ],
+  "esperado": {
+    "estado": "infactible",
+    "mensaje": "no tiene solución factible",
+    "multiples": false,
+    "degenerado": false,
+    "fuente": "scipy"
+  }
+}

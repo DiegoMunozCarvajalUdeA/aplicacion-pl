@@ -9,6 +9,17 @@ from plapp.result import Status
 from plapp.revised_simplex import solve_revised
 
 
+def on_segment(point, segment):
+    """Aceptar cualquier óptimo alterno: debe ser combinación convexa de los extremos."""
+    start, end = ([Fraction(value) for value in vertex] for vertex in segment)
+    direction = [b - a for a, b in zip(start, end, strict=True)]
+    index = next(i for i, value in enumerate(direction) if value)
+    t = (point[index] - start[index]) / direction[index]
+    return 0 <= t <= 1 and all(
+        a + t * d == x for a, d, x in zip(start, direction, point, strict=True)
+    )
+
+
 @pytest.mark.parametrize(
     "solver",
     [
@@ -42,8 +53,7 @@ def test_examples(fixture_problem, solver):
         assert solution.slacks[row.name] == slack
     if expected["multiples"]:
         assert solution.multiple_optima
-        x1, x2 = values
-        assert 0 <= x1 <= 3 and x1 + 2 * x2 == 5
+        assert on_segment(values, expected["segmento"])
     else:
         assert solution.values == {name: Fraction(value) for name, value in expected["x"].items()}
         assert not solution.multiple_optima

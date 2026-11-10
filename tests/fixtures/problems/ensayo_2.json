@@ -1,0 +1,38 @@
+{
+  "nombre": "Ensayo 2",
+  "caso": "No acotado: Min con >= y dirección de mejora",
+  "sentido": "min",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "1",
+    "-2"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "1"
+      ],
+      "signo": ">=",
+      "rhs": "2"
+    },
+    {
+      "coeficientes": [
+        "-1",
+        "1"
+      ],
+      "signo": "<=",
+      "rhs": "3"
+    }
+  ],
+  "esperado": {
+    "estado": "no_acotado",
+    "mensaje": "solución no acotada",
+    "multiples": false,
+    "degenerado": false,
+    "fuente": "scipy"
+  }
+}

@@ -156,8 +156,20 @@ def check_no_errors(page: Page) -> None:
 
 
 def capture_graphs(page: Page, output: Path) -> None:
-    """Guardar los seis casos exigidos, incluidos vacío y mejora ilimitada."""
-    for name in ("ejemplo_1", "ejemplo_5", "ejemplo_6", "ejemplo_7", "extra_1", "extra_3"):
+    """Guardar los seis casos exigidos y los tres ensayos de dos variables."""
+    # Los ensayos (infactible, no acotado y óptimos múltiples) se contrastan con el
+    # gráfico en docs/ensayo-sustentacion.md.
+    for name in (
+        "ejemplo_1",
+        "ejemplo_5",
+        "ejemplo_6",
+        "ejemplo_7",
+        "extra_1",
+        "extra_3",
+        "ensayo_1",
+        "ensayo_2",
+        "ensayo_3",
+    ):
         load_example(page, name + ".json")
         page.get_by_role("tab", name="Método gráfico", exact=True).click()
         chart = page.locator('[data-testid="stPlotlyChart"]')

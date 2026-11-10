@@ -43,7 +43,13 @@ def test_fixtures_match_scipy(fixture_problem):
             {name: float(Fraction(value)) for name, value in expected["x"].items()}
         )
     else:
-        assert oracle.values["x1"] + 2 * oracle.values["x2"] == pytest.approx(5)
+        # HiGHS puede devolver cualquier punto del segmento óptimo esperado.
+        start, end = ([float(Fraction(v)) for v in vertex] for vertex in expected["segmento"])
+        x = [oracle.values[name] for name in problem.variable_names]
+        index = max(range(len(x)), key=lambda i: abs(end[i] - start[i]))
+        t = (x[index] - start[index]) / (end[index] - start[index])
+        assert -1e-9 <= t <= 1 + 1e-9
+        assert x == pytest.approx([a + t * (b - a) for a, b in zip(start, end, strict=True)])
     for field, values in (("holguras", oracle.slacks), ("precios_sombra", oracle.shadow_prices)):
         if field in expected:
             assert values == pytest.approx(

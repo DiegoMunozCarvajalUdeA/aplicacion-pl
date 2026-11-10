@@ -14,6 +14,7 @@ from plapp.formatting import format_number
 from plapp.io_json import problem_to_dict
 from plapp.model import Constraint, LPProblem
 from plapp.revised_simplex import solve_revised
+from tests.conftest import PROBLEMS
 
 APP = Path(__file__).resolve().parents[1] / "app/streamlit_app.py"
 
@@ -492,3 +493,39 @@ def test_pdf_requires_solution_and_reports_failure(app, monkeypatch):
     assert not app.exception
     assert any("No se pudo generar el PDF" in item.value for item in app.error)
     assert all("Detalle interno" not in item.value for item in app.error)
+
+
+@pytest.mark.parametrize("filename", sorted(p.name for p in PROBLEMS.glob("ensayo_*.json")))
+@pytest.mark.parametrize("number_format", ["Fracciones", "Decimales"])
+def test_rehearsal_problems_in_app(app, filename, number_format):
+    """Los problemas del ensayo se resuelven en la UI con ambos métodos y su PDF."""
+    data = json.loads((PROBLEMS / filename).read_text(encoding="utf-8"))
+    expected = data["esperado"]
+    selectbox(app, "Ejemplo").select(filename).run()
+    button(app, "Cargar ejemplo").click().run()
+    selectbox(app, "Método").select("Comparar ambos").run()
+    app.radio[0].set_value("Paso a paso").run()
+    selectbox(app, "Formato numérico").select(number_format).run()
+    button(app, "Resolver").click().run()
+    assert not app.exception and not app.error and not app.session_state["notices"]
+    solutions = app.session_state["solutions"].values()
+    assert {solution.status.value for solution in solutions} == {expected["estado"]}
+    comparison = next(t.value for t in app.table if "Base coincide" in t.value.columns)
+    assert set(comparison["Base coincide"]) == {"Sí"}
+    downloads = [item.proto for item in app.get("download_button") if "PDF" in item.proto.label]
+    assert len(downloads) == 3 and all(item.url and not item.disabled for item in downloads)
+    assert bool(app.get("plotly_chart")) == (len(data["variables"]) == 2)
+    text = "\n".join(item.value for item in [*app.markdown, *app.info])
+    mode = "fraction" if number_format == "Fracciones" else "decimal"
+    if expected["estado"] == "optimo":
+        assert "Z = " + format_number(Fraction(expected["z"]), mode) in text
+    else:
+        assert expected["mensaje"] in text
+    if "segmento" in expected:
+        start, end = (
+            "(" + ", ".join(format_number(Fraction(value), mode) for value in vertex) + ")"
+            for vertex in expected["segmento"]
+        )
+        assert f"segmento entre {start} y {end}" in text
+    if expected["degenerado"]:
+        assert "degeneración" in text.lower()

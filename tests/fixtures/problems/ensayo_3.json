@@ -1,0 +1,70 @@
+{
+  "nombre": "Ensayo 3",
+  "caso": "Óptimos múltiples en Min con región no acotada",
+  "sentido": "min",
+  "variables": [
+    "x1",
+    "x2"
+  ],
+  "objetivo": [
+    "2",
+    "2"
+  ],
+  "restricciones": [
+    {
+      "coeficientes": [
+        "1",
+        "1"
+      ],
+      "signo": ">=",
+      "rhs": "4"
+    },
+    {
+      "coeficientes": [
+        "1",
+        "3"
+      ],
+      "signo": ">=",
+      "rhs": "6"
+    },
+    {
+      "coeficientes": [
+        "3",
+        "1"
+      ],
+      "signo": ">=",
+      "rhs": "6"
+    }
+  ],
+  "esperado": {
+    "estado": "optimo",
+    "multiples": true,
+    "degenerado": false,
+    "fuente": "scipy",
+    "x": {
+      "x1": "1",
+      "x2": "3"
+    },
+    "z": "8",
+    "holguras": {
+      "R1": "0",
+      "R2": "4",
+      "R3": "0"
+    },
+    "precios_sombra": {
+      "R1": "2",
+      "R2": "0",
+      "R3": "0"
+    },
+    "segmento": [
+      [
+        "1",
+        "3"
+      ],
+      [
+        "3",
+        "1"
+      ]
+    ]
+  }
+}
