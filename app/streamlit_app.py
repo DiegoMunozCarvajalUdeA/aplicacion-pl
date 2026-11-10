@@ -697,7 +697,7 @@ def render_results(problem: LPProblem, step_mode: bool) -> None:
                 report = sensitivity_analysis(problem, solution)
                 mode = "fraction" if st.session_state["format"] == "Fracciones" else "decimal"
                 interpretations = sensitivity_interpretations(
-                    problem, report, mode, st.session_state["decimals"]
+                    problem, report, solution, mode, st.session_state["decimals"]
                 )
                 for warning in report.warnings:
                     st.warning(warning)

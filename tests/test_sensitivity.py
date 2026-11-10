@@ -17,6 +17,31 @@ from tests.test_big_m import problem
 from tests.test_oracle_scipy import small_problems
 
 
+def test_reduced_cost_interpretations():
+    """Distinguir pertenencia a la base, penalización y alternativas certificadas."""
+    original = problem((2, 1), [((1, 1), "<=", 3)])
+    report = sensitivity_analysis(original, solve_big_m(original))
+    assert report.interpretations["r:x1"] == (
+        "x1 es básica: su costo reducido es 0. Su coeficiente puede variar "
+        "dentro del rango indicado sin cambiar la base."
+    )
+    assert "no es básica (vale 0)" in report.interpretations["r:x2"]
+    assert "cambiaría Z en -1, en contra del objetivo" in report.interpretations["r:x2"]
+    original = problem((1, 1), [((1, 1), "<=", 3)])
+    report = sensitivity_analysis(original, solve_big_m(original))
+    assert "Existe un óptimo alterno" in report.interpretations["r:x2"]
+    assert "mensaje de óptimos múltiples" in report.interpretations["r:x2"]
+
+
+def test_zero_reduced_cost_without_distinct_optimum():
+    """El punto aislado degenerado no permite prometer una solución distinta."""
+    original = problem((0, 0), [((1, 0), "<=", 0), ((0, 1), "<=", 0)])
+    solution = solve_big_m(original)
+    assert not solution.multiple_optima
+    report = sensitivity_analysis(original, solution)
+    assert "no se certificó un punto óptimo distinto" in report.interpretations["r:x1"]
+
+
 def test_example_one_sensitivity(example_one):
     f = Fraction
     standard = StandardForm(

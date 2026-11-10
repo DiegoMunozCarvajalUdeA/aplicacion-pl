@@ -329,7 +329,7 @@ def _sensitivity(report: _Report, problem: LPProblem, solution: Solution) -> Non
     """Derivar sensibilidad de la base ya resuelta, sin volver a llamar a un método."""
     sensitivity = sensitivity_analysis(problem, solution)
     interpretations = sensitivity_interpretations(
-        problem, sensitivity, report.mode, report.decimals
+        problem, sensitivity, solution, report.mode, report.decimals
     )
     report.text("Análisis de sensibilidad", heading=True)
     for warning in sensitivity.warnings:

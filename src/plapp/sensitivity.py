@@ -34,6 +34,7 @@ def _translate(bounds: Bounds, current: Fraction) -> Bounds:
 def sensitivity_interpretations(
     problem: LPProblem,
     report: SensitivityReport,
+    solution: Solution,
     mode: NumberFormat = "fraction",
     decimals: int = 4,
 ) -> dict[str, str]:
@@ -75,18 +76,32 @@ def sensitivity_interpretations(
                 " El intervalo se reduce al valor actual: no admite una perturbación "
                 "aislada no nula; el precio es un representante dual."
             )
+    standard = solution.standard_form
+    basic_names = {standard.column_names[j] for j in solution.final_basis} if standard else set()
     for name in problem.variable_names:
         descriptions[f"c:{name}"] = (
             f"El coeficiente de {name} puede variar {interval(report.objective_ranges[name])} "
             "manteniendo los demás datos y esta base óptima. "
             "Los extremos pueden admitir otro óptimo."
         )
-        condition = "≤ 0" if problem.sense == "max" else "≥ 0"
-        descriptions[f"r:{name}"] = (
-            f"{name}: costo reducido {number(report.reduced_costs[name])}, con r = c − yA; "
-            f"la optimalidad exige r {condition}. Mide el cambio marginal de Z "
-            "al introducir una variable no básica."
-        )
+        reduced = report.reduced_costs[name]
+        if name in basic_names:
+            description = (
+                f"{name} es básica: su costo reducido es 0. Su coeficiente puede variar "
+                "dentro del rango indicado sin cambiar la base."
+            )
+        elif reduced != 0:
+            description = (
+                f"{name} no es básica (vale 0). Introducir una unidad cambiaría Z en "
+                f"{number(reduced)}, en contra del objetivo; por eso no conviene."
+            )
+        else:
+            description = f"{name} no es básica (vale 0) y su costo reducido es 0. " + (
+                "Existe un óptimo alterno; consulte el mensaje de óptimos múltiples."
+                if solution.multiple_optima
+                else "Puede haber pivotes de paso cero; no se certificó un punto óptimo distinto."
+            )
+        descriptions[f"r:{name}"] = description
     return descriptions
 
 
@@ -187,4 +202,4 @@ def sensitivity_analysis(problem: LPProblem, solution: Solution) -> SensitivityR
         interpretations={},
         warnings=tuple(warnings),
     )
-    return replace(report, interpretations=sensitivity_interpretations(problem, report))
+    return replace(report, interpretations=sensitivity_interpretations(problem, report, solution))
