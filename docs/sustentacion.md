@@ -288,3 +288,89 @@ sigue no acotada, pero el origen pasa a ser óptimo con Z = 0.
 APIs consultadas: [Plotly, rellenos](https://plotly.com/python/shapes/),
 [Plotly, anotaciones](https://plotly.com/python/text-and-annotations/) y
 [Streamlit, Plotly](https://docs.streamlit.io/develop/api-reference/charts/st.plotly_chart).
+
+## P5: sensibilidad de la base óptima
+
+`sensitivity_analysis` reconstruye B con `standard_form.a` y `final_basis` e
+invierte con Gauss-Jordan de `linalg`. No consulta el tablero, las iteraciones
+ni `final_b_inverse`: sirve también para el futuro simplex revisado. Calcula
+x_B = B⁻¹b, y = c_B B⁻¹ y r = c − yA con fracciones. Los costos de artificiales
+no intervienen en el problema original. Cada precio se multiplica por
+`row_signs[i]` para reportar el modelo original, sin cambiar el sentido de Z.
+
+Los rangos preservan esta base variando un único dato. Para RHS se exige
+x_B + Δ·signo_fila·B⁻¹e_i ≥ 0. Para un costo no básico solo cambia su r_j;
+para uno básico en posición k cambian todos los r_N por −Δ·(B⁻¹A)_kN.
+Se intersectan desigualdades lineales manteniendo r_N ≤ 0 en Max o ≥ 0 en Min;
+las columnas artificiales retiradas se excluyen. Se trasladan los límites de
+Δ al valor original; `None` significa infinito. Los extremos pueden tener
+otra base óptima; degeneración puede dejar un extremo en el valor actual.
+
+### Derivación exacta del ejemplo 2
+
+Base final (x1, x2, e2), con b normalizado (3, 6, 4):
+
+```text
+B     = [(3, 1,  0), (4, 3, -1), (1, 2, 0)]
+B⁻¹   = [(2/5, 0, -1/5), (-1/5, 0, 3/5), (1, -1, 1)]
+x_B   = (2/5, 9/5, 1)
+c_B   = (4, 1, 0)
+y_std = (7/5, 0, -1/5)
+y     = (7/5, 0, 1/5)
+```
+
+R3 se negó al estandarizar: el precio original es +1/5. Solo queda s3 no
+básica no artificial, con r_s3 = 1/5. Variar c1 en Δ exige (1+Δ)/5 ≥ 0;
+variar c2 exige (1−3Δ)/5 ≥ 0. Para RHS, las tres fórmulas son
+x1 = (2b1−b3)/5, x2 = (−b1+3b3)/5 y e2 = b1−b2+b3.
+
+| Dato | Rango que conserva la base |
+|---|---|
+| c1 | [3, +∞) |
+| c2 | (−∞, 4/3] |
+| b1 original | [2, 12] |
+| b2 original | (−∞, 7] |
+| b3 original | [−6, −3] |
+
+Z* = 17/5. Si b3 sube de −4 a −7/2, Δ = 1/2 y Z* sube 1/10, hasta 7/2;
+el punto pasa a (1/2, 3/2). Las pruebas escriben la derivación en un comentario,
+contrastan los precios con SciPy y perturban dentro y fuera de cada rango de
+los ejemplos 1 y 2. Dentro se conserva la predicción lineal; fuera de un
+extremo finito cambia la predicción o desaparece la factibilidad.
+
+### Redundancia y degeneración
+
+Una artificial básica en cero que no pudo retirarse identifica una fila
+redundante. Su columna es el vector unitario de su fila original; esa fila
+puede ocupar otra posición en el tablero. Se elimina la fila original y la
+artificial para invertir una base reducida, y se extiende el dual poniendo
+su precio en cero. Se avisa «precio sombra no único: fila redundante» y se
+omite su rango de RHS. No se interpreta ese representante como una derivada
+para perturbaciones aisladas que destruyen las dependencias.
+
+Las filas conservadas siguen sujetas a las igualdades omitidas: en la base
+completa sus artificiales deben permanecer exactamente en cero. Por eso una
+perturbación de una fila conservada puede tener intervalo [b_i, b_i]. Con
+x1+x2=4 repetida, Max Z=x1+2x2, se reporta y=(2,0), no hay rango para R2 y
+el de R1 es [4,4]. Cambiar solo R1 a 5 vuelve el sistema infactible; reportar
+un intervalo amplio después de omitir R2 sería incorrecto.
+
+`SensitivityReport.warnings` contiene advertencias de redundancia y
+degeneración. Las interpretaciones usan claves `b:nombre`, `c:nombre` y
+`r:nombre`, evitando colisiones si una variable se llama como una restricción.
+`sensitivity_interpretations` aplica el formato elegido sin cambiar fracciones.
+La pestaña muestra precios, costos reducidos y ambos rangos, con encabezados,
+interpretación debajo de cada tabla y advertencias visibles.
+
+Preguntas para practicar:
+
+1. ¿Por qué el precio de R3 del ejemplo 2 es positivo si y_std es negativo?
+2. ¿Por qué un rango de una básica usa todos los costos no básicos?
+3. ¿Por qué los rangos son de una base y de un dato a la vez?
+4. ¿Por qué y_i=0 en una redundante es una elección dual y no una promesa de
+   factibilidad al mover solo ese RHS?
+5. ¿Cómo demostrar que sensibilidad no depende del tablero de Gran M?
+
+Ejercicio: quitar `final_b_inverse` y las iteraciones de una solución óptima;
+la sensibilidad debe permanecer idéntica. Después perturbar b3 del ejemplo 2
+hasta −3: e2 llega a cero y se alcanza un extremo degenerado del rango.

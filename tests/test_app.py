@@ -313,3 +313,40 @@ def test_graph_presentation(app, example):
         if example == 6:
             optimum = next(t for t in traces if t["name"] == "Óptimo")
             assert optimum["mode"] == "lines+markers" and len(optimum["x"]) == 2
+
+
+@pytest.mark.parametrize("number_format", ["Fracciones", "Decimales"])
+def test_sensitivity_presentation(app, number_format):
+    selectbox(app, "Ejemplo").select("ejemplo_2.json").run()
+    button(app, "Cargar ejemplo").click().run()
+    selectbox(app, "Formato numérico").select(number_format).run()
+    button(app, "Resolver").click().run()
+    assert not app.exception and not app.error
+    prices = next(t.value for t in app.table if "Precio sombra ∂Z*/∂b" in t.value.columns)
+    expected = ["7/5", "0", "1/5"] if number_format == "Fracciones" else ["1.4", "0", "0.2"]
+    assert list(prices["Precio sombra ∂Z*/∂b"]) == expected
+    text = "\n".join(item.value for item in app.markdown)
+    assert f"Cada unidad adicional de R3 aumenta Z en {expected[2]}" in text
+    assert "El coeficiente de x1 puede variar entre 3 y +∞" in text
+    assert any("cⱼ − zⱼ" in t.value.columns for t in app.table)
+
+
+def test_sensitivity_redundant_warning_and_omitted_range(app):
+    original = LPProblem(
+        (Fraction(1), Fraction(2)),
+        (Constraint((Fraction(1), Fraction(1)), "=", Fraction(4)),) * 2,
+    )
+    app.session_state["raw"] = problem_to_dict(original)
+    app.session_state["revision"] += 1
+    app.run()
+    button(app, "Resolver").click().run()
+    assert not app.exception and not app.error
+    assert any("R2: precio sombra no único: fila redundante" in w.value for w in app.warning)
+    assert any("Degeneración" in w.value for w in app.warning)
+    ranges = next(
+        t.value
+        for t in app.table
+        if "Restricción" in t.value.columns and "Inferior" in t.value.columns
+    )
+    assert list(ranges["Restricción"]) == ["R1"]
+    assert list(ranges["Inferior"]) == list(ranges["Superior"]) == ["4"]

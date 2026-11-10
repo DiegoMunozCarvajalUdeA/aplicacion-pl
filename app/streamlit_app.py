@@ -13,7 +13,7 @@ from plapp.io_json import load_problem, problem_to_dict, save_problem
 from plapp.model import LPProblem, validate
 from plapp.result import GraphicalResult, Iteration, Solution, StandardForm, Status
 from plapp.revised_simplex import solve_revised
-from plapp.sensitivity import sensitivity_analysis
+from plapp.sensitivity import sensitivity_analysis, sensitivity_interpretations
 from plapp.standard_form import to_standard_form
 
 FIXTURES = Path(__file__).resolve().parents[1] / "tests/fixtures/problems"
@@ -495,37 +495,56 @@ def render_results(problem: LPProblem, step_mode: bool) -> None:
                 st.error("No se pudo mostrar el gráfico. Revise el módulo y vuelva a intentar.")
     with tabs[3]:
         if solution is None:
-            st.info("Pendiente de implementar: sensibilidad; requiere una solución óptima.")
+            st.info(
+                "Resuelva el problema para analizar sensibilidad; requiere una solución óptima."
+            )
         elif solution.status != Status.OPTIMAL:
             st.info("El análisis de sensibilidad requiere una solución óptima.")
         else:
             try:
                 report = sensitivity_analysis(problem, solution)
-                for label, values in (
-                    ("Precios sombra", report.shadow_prices),
-                    ("Costos reducidos", report.reduced_costs),
+                mode = "fraction" if st.session_state["format"] == "Fracciones" else "decimal"
+                interpretations = sensitivity_interpretations(
+                    problem, report, mode, st.session_state["decimals"]
+                )
+                for warning in report.warnings:
+                    st.warning(warning)
+                for label, key_label, value_label, values, prefix in (
+                    (
+                        "Precios sombra",
+                        "Restricción",
+                        "Precio sombra ∂Z*/∂b",
+                        report.shadow_prices,
+                        "b",
+                    ),
+                    ("Costos reducidos", "Variable", "cⱼ − zⱼ", report.reduced_costs, "r"),
                 ):
                     st.write(label)
                     st.table(
-                        [{"Nombre": name, "Valor": number(value)} for name, value in values.items()]
+                        [
+                            {key_label: name, value_label: number(value)}
+                            for name, value in values.items()
+                        ]
                     )
-                for label, ranges in (
-                    ("Rangos de coeficientes", report.objective_ranges),
-                    ("Rangos de lados derechos", report.rhs_ranges),
+                    for name in values:
+                        st.write(interpretations[f"{prefix}:{name}"])
+                for label, key_label, ranges, prefix in (
+                    ("Rangos de coeficientes", "Variable", report.objective_ranges, "c"),
+                    ("Rangos de lados derechos", "Restricción", report.rhs_ranges, "b"),
                 ):
                     st.write(label)
                     st.table(
                         [
                             {
-                                "Nombre": name,
+                                key_label: name,
                                 "Inferior": number(low) if low is not None else "−∞",
                                 "Superior": number(high) if high is not None else "+∞",
                             }
                             for name, (low, high) in ranges.items()
                         ]
                     )
-                for name, interpretation in report.interpretations.items():
-                    st.write(f"{name}: {interpretation}")
+                    for name in ranges:
+                        st.write(interpretations[f"{prefix}:{name}"])
             except NotImplementedError:
                 st.info("Pendiente de implementar: sensibilidad")
             except Exception:
