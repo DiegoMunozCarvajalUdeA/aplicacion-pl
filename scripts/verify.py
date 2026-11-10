@@ -20,6 +20,10 @@ from plapp.result import Solution, Status
 from plapp.revised_simplex import solve_revised
 
 
+class OracleInconclusiveError(ValueError):
+    """El cálculo numérico no permite emitir una referencia confiable."""
+
+
 @dataclass(frozen=True)
 class OracleResult:
     """Resultados aproximados de HiGHS expresados en el modelo original."""
@@ -58,12 +62,23 @@ def verify_with_scipy(problem: LPProblem) -> OracleResult:
     """Resolver para verificar; rechazar resultados numéricos no concluyentes."""
     inputs = scipy_inputs(problem)
     result = linprog(**inputs, method="highs")
-    if result.status in (3, 4):
+    if result.status in (2, 3, 4):
         # Sin presolve se distingue infactibilidad de no acotación ambigua.
+        previous_status = result.status
         result = linprog(**inputs, method="highs", options={"presolve": False})
+        if result.status != previous_status:
+            # Una discrepancia de presolve se acepta solo si dos corridas sin
+            # presolve concuerdan; nunca se consulta el método propio para decidir.
+            confirmation = linprog(**inputs, method="highs", options={"presolve": False})
+            if confirmation.status != result.status:
+                raise OracleInconclusiveError(
+                    "Oráculo no concluyente: las corridas sin presolve no coinciden."
+                )
     statuses = {0: "optimo", 2: "infactible", 3: "no_acotado"}
     if result.status not in statuses:
-        raise ValueError(f"SciPy no obtuvo un resultado verificable (estado {result.status}).")
+        raise OracleInconclusiveError(
+            f"Oráculo no concluyente: SciPy terminó en estado {result.status}."
+        )
     status = statuses[result.status]
     if status != "optimo":
         return OracleResult(status, {}, None, {}, {}, {})

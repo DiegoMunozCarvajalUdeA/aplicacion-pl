@@ -3,10 +3,43 @@
 import json
 from dataclasses import replace
 from fractions import Fraction
+from types import SimpleNamespace
 
+import pytest
+
+from plapp.big_m import solve_big_m
+from plapp.io_json import load_problem
 from plapp.result import Solution, Status
 from scripts import verify
 from tests.conftest import PROBLEMS
+
+
+def test_presolve_infeasible_but_unbounded():
+    problem = load_problem(PROBLEMS / "extra_7.json")
+    oracle = verify.verify_with_scipy(problem)
+    assert oracle.status == "no_acotado"
+    assert not verify.compare_solution(problem, solve_big_m(problem), oracle)
+
+
+@pytest.mark.parametrize("statuses", [(2, 3, 2), (4, 4)])
+def test_inconclusive_oracle(example_one, monkeypatch, statuses):
+    results = iter(SimpleNamespace(status=status) for status in statuses)
+    monkeypatch.setattr(verify, "linprog", lambda **kwargs: next(results))
+    with pytest.raises(verify.OracleInconclusiveError, match="Oráculo no concluyente"):
+        verify.verify_with_scipy(example_one)
+
+
+def test_retry_status_two_without_presolve(example_one, monkeypatch):
+    calls = []
+    statuses = iter((2, 3, 3))
+
+    def run(**kwargs):
+        calls.append(kwargs)
+        return SimpleNamespace(status=next(statuses))
+
+    monkeypatch.setattr(verify, "linprog", run)
+    assert verify.verify_with_scipy(example_one).status == "no_acotado"
+    assert all(call["options"] == {"presolve": False} for call in calls[1:])
 
 
 def test_compare_solution(example_one):
