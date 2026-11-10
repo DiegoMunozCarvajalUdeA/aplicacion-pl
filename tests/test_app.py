@@ -1,5 +1,6 @@
 """Pruebas de navegación, estado y mensajes usando AppTest de Streamlit."""
 
+import json
 from copy import deepcopy
 from dataclasses import replace
 from fractions import Fraction
@@ -48,7 +49,8 @@ def test_navigation_and_pending_modules(app):
     assert not app.exception and not app.error
     assert any("Z = 3380" in item.value for item in app.markdown)
     assert button(app, "Exportar paso a paso a PDF").disabled
-    assert any("Pendiente de implementar: método gráfico" in item.value for item in app.info)
+    assert app.get("plotly_chart")
+    assert any("Óptimo gráfico: Z = 3380" in item.value for item in app.markdown)
 
 
 def test_resize_preserves_cells(app):
@@ -285,3 +287,29 @@ def test_decimal_transformation_and_fractional_result(app):
     text = "\n".join(item.value for item in app.markdown)
     assert "lado derecho negativo (-0.5)" in text
     assert "Z = 0.1667" in text and "(-1/2)" not in text
+
+
+@pytest.mark.parametrize("example", [1, 4, 5, 6, 7])
+def test_graph_presentation(app, example):
+    selectbox(app, "Ejemplo").select(f"ejemplo_{example}.json").run()
+    button(app, "Cargar ejemplo").click().run()
+    assert not app.exception and not app.error
+    chart = json.loads(app.get("plotly_chart")[0].proto.spec)
+    traces = chart["data"]
+    layout = chart["layout"]
+    assert "scaleanchor" not in layout["yaxis"]
+    assert layout["xaxis"]["range"][0] == layout["yaxis"]["range"][0] == 0
+    assert all(any(a["text"].startswith(f"R{i}:") for a in layout["annotations"]) for i in (1, 2))
+    if example == 4:
+        assert all(t["name"] != "Región factible" for t in traces)
+        assert any("región está vacía" in item.value for item in app.info)
+    elif example == 5:
+        assert any(
+            a.get("showarrow") and "Mejora ilimitada" in a["text"] for a in layout["annotations"]
+        )
+        assert not any(t["name"] == "Óptimo" for t in traces)
+    else:
+        assert any(t.get("line", {}).get("dash") == "dot" for t in traces)
+        if example == 6:
+            optimum = next(t for t in traces if t["name"] == "Óptimo")
+            assert optimum["mode"] == "lines+markers" and len(optimum["x"]) == 2

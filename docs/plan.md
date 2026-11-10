@@ -7,7 +7,7 @@
 | P1: núcleo exacto | Implementado | MValue, linalg y forma estándar; 165 pruebas pasan, 36 xfail pendientes, sin XPASS |
 | P2: Gran M | Implementado | 204 pruebas pasan, 22 xfail pendientes, sin XPASS; 13 fixtures coinciden con SciPy |
 | P3: paso a paso | Implementado | 237 pruebas pasan, 22 xfail pendientes, sin XPASS; 42 pruebas de interfaz |
-| P4: gráfico | Pendiente | Stub |
+| P4: gráfico | Implementado | 285 pruebas pasan, 19 xfail; 250 casos exactos contra Gran M |
 | P5: sensibilidad | Pendiente | Stub |
 | P6: revisado | Pendiente | Stub |
 | P7: PDF | Pendiente | Stub |
@@ -40,7 +40,7 @@ Guía de P3 e informe de sesión en `docs/sustentacion.md` y
 | Entrada y validación | 10 % | model, io_json | test_model, test_io_json | [Integrante] | Infraestructura implementada |
 | Método propio | 15 % | mvalue, standard_form, big_m | test_contracts, test_examples, test_oracle_scipy | [Integrante] | Gran M implementada |
 | Paso a paso | 25 % | result, formatting, standard_form, big_m, revised_simplex, UI | test_contracts, test_examples, test_app | [Integrante] | Gran M completa; revisado pendiente |
-| Método gráfico | 20 % | graphical, presentación Plotly | test_graphical, test_app | [Integrante] | Cálculo pendiente |
+| Método gráfico | 20 % | graphical, presentación Plotly | test_graphical, test_app | [Integrante] | Geometría exacta y presentación implementadas |
 | Sensibilidad | 15 % | sensitivity, base final del solver | test_sensitivity, test_oracle_scipy | [Integrante] | Stub |
 | Interfaz y usabilidad | 15 % | streamlit_app | test_app | [Integrante] | Entrada y Gran M en ambos modos y formatos |
 
@@ -94,3 +94,8 @@ dos problemas realmente resueltos, video de máximo 5 minutos y ensayo de
 sustentación de 15 minutos con un problema nuevo. Los bonos suman máximo +0.5:
 dos métodos +0.2, fracciones exactas +0.1, PDF +0.1 y JSON/CSV +0.1, únicamente
 cuando todos los requisitos obligatorios funcionen.
+
+P4: `make lint` y `make test` correctos; 14 fixtures coinciden con SciPy.
+AppTest comprueba rótulos, vacío, flecha, segmento e isoutilidad; el servidor
+respondió `ok` y se detuvo. El cálculo usa Cramer, recesión y recorte exactos,
+sin llamar a Gran M. La guía P4 está en `docs/sustentacion.md`.

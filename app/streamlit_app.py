@@ -345,32 +345,62 @@ def render_steps(problem: LPProblem, solution: Solution | None, step_mode: bool)
         st.error("No se pudieron mostrar las iteraciones. Revise el módulo y vuelva a intentar.")
 
 
-def render_graph(result: GraphicalResult, names: tuple[str, ...]) -> None:
-    """Dibujar geometría ya calculada por graphical_method con Plotly."""
-    if not result.applicable or result.empty:
-        st.info(result.reason or "La región factible está vacía.")
+def render_graph(result: GraphicalResult, problem: LPProblem) -> None:
+    """Dibujar el recorte calculado, conservando rectas incluso con región vacía."""
+    if not result.applicable:
+        st.info(result.reason)
         return
+    names = problem.variable_names
+    st.info(result.reason)
+    if result.objective_value is not None:
+        st.write(f"Óptimo gráfico: Z = {number(result.objective_value)}")
     figure = go.Figure()
-    if result.feasible_polygon:
+    polygon = result.feasible_polygon
+    if polygon:
+        closed = (*polygon, polygon[0]) if len(polygon) > 2 else polygon
         figure.add_trace(
             go.Scatter(
-                x=[float(p[0]) for p in result.feasible_polygon],
-                y=[float(p[1]) for p in result.feasible_polygon],
-                fill="toself",
-                mode="lines",
+                x=[float(p[0]) for p in closed],
+                y=[float(p[1]) for p in closed],
+                fill="toself" if len(polygon) > 2 else None,
+                mode="lines+markers" if len(polygon) < 3 else "lines",
                 name="Región factible",
+                line={"width": 5 if len(polygon) < 3 else 2},
             )
         )
     lines = result.lines + ((result.objective_line,) if result.objective_line else ())
-    for line in lines:
+    for index, line in enumerate(lines):
+        objective = line is result.objective_line
+        label = line.label
+        if objective:
+            label = f"Isoutilidad: Z = {number(line.rhs)}"
+        else:
+            mode = "fraction" if st.session_state["format"] == "Fracciones" else "decimal"
+            expression = format_expression(
+                line.coefficients, names, mode, st.session_state["decimals"]
+            )
+            row = problem.constraints[index]
+            relation = {"<=": "≤", ">=": "≥", "=": "="}[row.relation]
+            label = f"{row.name}: {expression} {relation} {number(line.rhs)}"
         figure.add_trace(
             go.Scatter(
                 x=[float(p[0]) for p in line.points],
                 y=[float(p[1]) for p in line.points],
-                mode="lines",
-                name=line.label,
+                mode="lines+markers" if len(line.points) == 1 else "lines",
+                name=label,
+                line={"dash": "dot" if objective else "solid"},
             )
         )
+        if line.points:
+            first, last = line.points[0], line.points[-1]
+            figure.add_annotation(
+                x=float((first[0] + last[0]) / 2),
+                y=float((first[1] + last[1]) / 2),
+                text=label,
+                showarrow=False,
+                yshift=12,
+                bgcolor="rgba(255,255,255,0.8)",
+            )
     if result.vertices:
         figure.add_trace(
             go.Scatter(
@@ -390,13 +420,41 @@ def render_graph(result: GraphicalResult, names: tuple[str, ...]) -> None:
             go.Scatter(
                 x=[float(p[0]) for p in result.optimal_points],
                 y=[float(p[1]) for p in result.optimal_points],
-                mode="markers",
+                mode="lines+markers",
                 marker={"size": 12},
+                line={"width": 6},
                 name="Óptimo",
             )
         )
+    for points in result.optimal_ray_segments:
+        figure.add_trace(
+            go.Scatter(
+                x=[float(p[0]) for p in points],
+                y=[float(p[1]) for p in points],
+                mode="lines",
+                line={"width": 6},
+                name="Rayo óptimo (recorte)",
+            )
+        )
+    if result.improvement_segment:
+        first, last = result.improvement_segment
+        direction = result.improving_direction
+        figure.add_annotation(
+            x=float(last[0]),
+            y=float(last[1]),
+            ax=float(first[0]),
+            ay=float(first[1]),
+            xref="x",
+            yref="y",
+            axref="x",
+            ayref="y",
+            showarrow=True,
+            arrowhead=2,
+            text=f"Mejora ilimitada: ({number(direction[0])}, {number(direction[1])})",
+        )
     figure.update_layout(xaxis_title=names[0], yaxis_title=names[1])
-    figure.update_yaxes(scaleanchor="x", scaleratio=1)
+    figure.update_xaxes(range=[0, float(result.drawing_bounds[0])])
+    figure.update_yaxes(range=[0, float(result.drawing_bounds[1])])
     st.plotly_chart(figure, width="stretch")
     if result.bounded is False:
         st.info("Región no acotada; se muestra un recorte para visualizarla.")
@@ -430,7 +488,7 @@ def render_results(problem: LPProblem, step_mode: bool) -> None:
             st.info("El método gráfico no aplica: requiere exactamente dos variables.")
         else:
             try:
-                render_graph(graphical_method(problem), problem.variable_names)
+                render_graph(graphical_method(problem), problem)
             except NotImplementedError:
                 st.info("Pendiente de implementar: método gráfico")
             except Exception:

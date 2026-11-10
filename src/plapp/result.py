@@ -145,3 +145,11 @@ class GraphicalResult:
     empty: bool | None = None
     optimal_points: tuple[Point, ...] = ()
     objective_line: GraphLine | None = None
+    status: Status | None = None
+    objective_value: Fraction | None = None
+    recession_directions: tuple[Point, ...] = ()
+    optimal_rays: tuple[Point, ...] = ()
+    improving_direction: Point | None = None
+    drawing_bounds: Point = (Fraction(1), Fraction(1))
+    improvement_segment: tuple[Point, ...] = ()
+    optimal_ray_segments: tuple[tuple[Point, ...], ...] = ()

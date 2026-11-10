@@ -235,3 +235,56 @@ agotaban las 1000 bases de búsqueda de alternativas. Se deduplican por conjunto
 de columnas básicas: representan el mismo punto y los mismos vecinos, con
 independencia del orden del tablero. Se mantiene el límite de 1000 bases
 realmente distintas y una regresión con seis filas activas redundantes.
+
+## P4: método gráfico exacto e independiente
+
+`graphical_method` no llama a Gran M, forma estándar ni SciPy. Interseca las
+rectas originales y los ejes con Cramer. Un determinante cero indica paralelas
+o coincidentes: no hay punto aislado que agregar. Filtra todas las
+intersecciones con las restricciones originales y x ≥ 0, deduplica fracciones
+y ordena el contorno mediante productos cruzados exactos. Las igualdades pueden
+dejar un segmento o un punto. En el cuadrante no negativo toda región no vacía
+contiene un vértice; por eso la ausencia de intersecciones factibles prueba vacío.
+
+Para certificar recesión se prueban (1, 0), (0, 1) y ambas perpendiculares a
+cada restricción. Se exige d ≥ 0, d ≠ 0 y a·d ≤ 0, ≥ 0 o = 0 según la fila.
+Se normaliza cada dirección por su componente máxima. Si no hay direcciones,
+la región es acotada. Si alguna mejora c·d en el sentido de Z, el objetivo es
+no acotado. De lo contrario se evalúa Z en los vértices; dos empates certifican
+un segmento y una dirección con c·d = 0 certifica un rayo óptimo.
+
+La caja tiene límites separados por eje: máximo entre 1, coordenadas de
+vértices e interceptos no negativos, con 20 % de margen. Se interseca la región
+con esa caja solo para sombrear; sus esquinas nunca se agregan a los vértices
+reales. También se recortan rectas verticales, isoutilidad y rayos. Los ejes
+participan en la geometría; `lines` contiene las restricciones rotuladas.
+Una región vacía conserva rectas para que la interfaz pueda explicarla.
+
+Ejemplo 1: vértices (0, 0), (50, 0), (42, 16), (0, 30), con Z = 0, 2500,
+3380, 2400. R3: x2 ≤ 40 se dibuja sin crear un vértice. Ejemplo 5: d = (1, 1)
+es factible y c·d = 2; la flecha termina en el borde del recorte, sin afirmar
+que allí acaba la región. Ejemplo 6: Z = 10 en el segmento (0, 5/2)–(3, 1).
+Ejemplo 7: un único vértice óptimo (0, 2), aunque la base sea degenerada.
+El extra 1 tiene región no acotada y mínimo finito Z = 4 en (2, 1).
+
+`GraphicalResult` agrega estado, Z, direcciones de recesión, direcciones
+óptimas y de mejora, límites de dibujo y segmentos de rayos ya recortados.
+Todos tienen valores por defecto. La UI solo dibuja esos datos: rótulos sobre
+rectas, coordenadas y Z, segmento óptimo, isoutilidad punteada y flecha de
+mejora; los ejes no fuerzan escala 1:1. `render_graph` recibe el problema para
+rotular nombres, sentidos y números con el formato escogido sin analizar texto.
+
+Preguntas para practicar:
+
+1. ¿Por qué una esquina de la caja no demuestra un óptimo?
+2. ¿Cómo distinguir región no acotada de Z no acotada?
+3. ¿Qué pasa si dos rectas coinciden o son verticales?
+4. ¿Qué demuestra c·d = 0 en una dirección de recesión?
+5. ¿Por qué el gráfico sirve como segundo oráculo exacto de Gran M?
+
+Ejercicio: cambiar el objetivo del ejemplo 5 a Min Z = x1 + x2. La región
+sigue no acotada, pero el origen pasa a ser óptimo con Z = 0.
+
+APIs consultadas: [Plotly, rellenos](https://plotly.com/python/shapes/),
+[Plotly, anotaciones](https://plotly.com/python/text-and-annotations/) y
+[Streamlit, Plotly](https://docs.streamlit.io/develop/api-reference/charts/st.plotly_chart).
