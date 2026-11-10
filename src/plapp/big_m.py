@@ -277,10 +277,10 @@ def _optimality_step(state: Iteration, standard: StandardForm, sense: str) -> It
                 "Se conserva para mantener B cuadrada; "
                 "sensibilidad requiere tratar la redundancia."
             )
+    condition = "≤ 0 en Max" if sense == "max" else "≥ 0 en Min"
     reason = (
-        "Todos los cⱼ − zⱼ ≤ 0 en Max: la solución actual es óptima."
-        if sense == "max"
-        else "Todos los cⱼ − zⱼ ≥ 0 en Min: la solución actual es óptima."
+        f"Los cⱼ − zⱼ de columnas no artificiales cumplen {condition}: "
+        "la solución actual es óptima."
     )
     return replace(state, entering_reason=reason, notes=tuple(dict.fromkeys(notes)))
 

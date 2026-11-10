@@ -42,6 +42,7 @@ def test_example_one_manual_trace(example_one):
     assert second.reduced_costs == (Fraction(70, 3), 0, 0, Fraction(-80, 3), 0)
     assert last.reduced_costs == (0, 0, -14, -22, 0)
     assert last.pivot is None and "óptima" in last.entering_reason
+    assert "columnas no artificiales" in last.entering_reason
     assert first.basis == (2, 3, 4) and second.basis == (2, 1, 4)
 
 

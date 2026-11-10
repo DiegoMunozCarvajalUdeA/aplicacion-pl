@@ -194,7 +194,7 @@ Documentación de presentación consultada para esta implementación:
 
 ## C: correcciones de redundancia y terminación
 
-Una artificial que sale de la base nunca vuelve a entrar. Las candidatas
+Una artificial que sale de la base nunca vuelve a entrar. La terminación también se refiere solo a columnas no artificiales. Las candidatas
 no básicas excluyen siempre las columnas artificiales, tanto para la mejora
 en M como para la mejora real. Equivale a descartar su columna en fase I.
 La limpieza de una artificial nula puede usar un pivote negativo con paso cero;
