@@ -1,5 +1,8 @@
 # Verificación del entorno
 
+Este informe conserva el estado histórico de la preparación. El desarrollo de
+P1–P3 y su verificación posterior se documentan en `docs/desarrollo-p1-p3.md`.
+
 Fecha: 2026-11-10. Equipo: macOS Apple Silicon. Python gestionado por uv:
 3.12.13; `.python-version`: `3.12`. Se leyó completo `taller-optimi.pdf` antes
 de implementar. El PDF y `PROMPT-entorno.md` se conservaron sin cambios.

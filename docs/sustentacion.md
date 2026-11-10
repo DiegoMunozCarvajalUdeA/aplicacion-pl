@@ -16,7 +16,9 @@ la igualdad y el hash coinciden con los del escalar a.
 
 ### Álgebra lineal
 
-`src/plapp/linalg.py:16` contiene identidad; `:30`, `:40` y `:51`, productos;
+`src/plapp/linalg.py:16` contiene identidad; `matvec` en
+`src/plapp/linalg.py:30`, `vecmat` en `src/plapp/linalg.py:40` y `matmul` en
+`src/plapp/linalg.py:51`, productos;
 `src/plapp/linalg.py:65`, inversa por Gauss-Jordan.
 Para invertir se reduce [B | I]; si el pivote es cero, se intercambian filas.
 Si toda la columna restante es cero, B es singular. Las pruebas verifican
@@ -58,8 +60,10 @@ holgura; después cambiar una restricción ≥ con b negativo y explicar su base
 ## P2: método de la Gran M
 
 `src/plapp/big_m.py:17` canoniza cⱼ − zⱼ con los costos de la base actual;
-`:28` guarda el estado anterior al pivote y Z = c_B·b. `:44` hace el pivote
-con Fraction, `:64` calcula las razones y explica exclusiones, y `:89` decide
+`src/plapp/big_m.py:28` guarda el estado anterior al pivote y Z = c_B·b.
+`src/plapp/big_m.py:44` hace el pivote con Fraction,
+`src/plapp/big_m.py:64` calcula las razones y explica exclusiones, y
+`src/plapp/big_m.py:89` decide
 la salida. La entrada usa el mayor costo positivo en Max o el menor negativo
 en Min, con desempate por índice. El ciclo principal guarda bases visitadas:
 al repetir una, cambia permanentemente a Bland, incluida la entrada.
@@ -132,3 +136,57 @@ Preguntas para practicar:
 
 Ejercicio: cambiar la selección de entrada para usar Bland siempre. Explicar
 qué secuencias de pivotes cambian y por qué se conservan Z y factibilidad.
+
+## P3: presentación de resultados y paso a paso
+
+`app/streamlit_app.py:116` centraliza el formato numérico elegido. El estado
+de sesión conserva el modelo exacto y sus soluciones: cambiar a decimales no
+vuelve a resolver ni cambia Fraction por float. La función de formato está en
+`src/plapp/formatting.py:12` y usa Decimal solo para presentar.
+
+`app/streamlit_app.py:158` muestra variables, Z, y por restricción su tipo
+original: holgura, exceso o igualdad. Aunque R3 se normalice a ≤ en el ejemplo 2,
+en el resultado sigue siendo un exceso de la restricción original ≥.
+`app/streamlit_app.py:134` presenta una solución alterna y el segmento o rayo
+certificado; construye las coordenadas con el formato elegido. Las notas del
+solver identifican las variables básicas nulas.
+
+`app/streamlit_app.py:281` devuelve inmediatamente en modo Directo; Paso a paso
+presenta forma estándar, costos simbólicos, transformaciones y base inicial.
+`app/streamlit_app.py:243` presenta cada estado y sus razones y justificaciones.
+`app/streamlit_app.py:187` construye el tablero rotulado por variables básicas,
+con fila cⱼ − zⱼ y Z. Pandas Styler resalta solo la celda cuya posición ya
+calculó el solver. El visor no decide entradas, salidas ni pivotes.
+
+Para simplex revisado, el mismo visor recibe B⁻¹, rotula sus filas por básicas
+y columnas por restricciones originales, y muestra costos reducidos y Z.
+La prueba simula ese contrato con una base calculada por Gran M; no implementa
+ni reemplaza el solver revisado en la aplicación.
+
+Al cargar el ejemplo 2, escoger Paso a paso y Resolver, comprobar las cuatro
+bases de la tabla de P2. En el estado 1, la fila x1 tiene lado derecho 1 y la
+fila a2, 2; la celda de entrada x2/salida a2 vale 5/3 y está resaltada. En el
+estado final se muestran x1 = 2/5, x2 = 9/5, exceso de R2 = 1 y Z = 17/5.
+Con cuatro decimales deben verse 0.4000, 1.8000, 1.0000 y 3.4000.
+
+Preguntas para practicar:
+
+1. ¿Dónde se decide qué celda resaltar? En `Iteration.pivot`; el visor solo
+   aplica el estilo a esa fila y columna, con índices internos desde cero.
+2. ¿Por qué el resultado de R3 se llama exceso? Se reporta la restricción
+   original; la holgura s3 pertenece únicamente a su forma normalizada.
+3. ¿Qué ocurre al cambiar el formato? Se reutilizan las mismas fracciones y
+   se redondea únicamente el texto presentado.
+4. ¿Qué ocurre al editar el problema? `invalidate` descarta resultados para
+   evitar mostrar una solución de datos anteriores.
+5. ¿Cómo se verifican los casos especiales sin navegador? AppTest carga y
+   resuelve los ejemplos en ambos modos y formatos; comprueba mensajes,
+   encabezados, base, Z y el estilo enviado para el pivote.
+
+Ejercicio: cambiar el número de decimales y demostrar que `Solution.values`
+sigue conteniendo Fraction; después comparar el segmento óptimo del ejemplo 6.
+
+Documentación de presentación consultada para esta implementación:
+[Streamlit, st.table](https://docs.streamlit.io/develop/api-reference/data/st.table),
+[Streamlit, AppTest](https://docs.streamlit.io/develop/concepts/app-testing/cheat-sheet),
+[pandas, Styler.apply](https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.apply.html).

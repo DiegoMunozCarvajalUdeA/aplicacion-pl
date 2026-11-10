@@ -3,9 +3,10 @@
 Entorno de desarrollo para el proyecto de Optimización de Ingeniería de Sistemas,
 Universidad de Antioquia. El enunciado oficial está en `taller-optimi.pdf`.
 
-La infraestructura funciona. El equipo implementará los algoritmos indicados en
-`docs/plan.md`; la aplicación todavía no resuelve problemas. SciPy se usa únicamente
-como oráculo de pruebas, nunca en la aplicación.
+La aplicación resuelve problemas con Gran M simbólica y Fraction, en modo directo
+o paso a paso. P1–P3 están implementados; gráfico, sensibilidad, simplex revisado
+y PDF siguen pendientes según `docs/plan.md`. SciPy se usa únicamente como
+oráculo de pruebas, nunca en la aplicación.
 
 ## Requisitos e instalación
 
@@ -24,7 +25,7 @@ uv run streamlit run app/streamlit_app.py
 Abrir `http://localhost:8501`. Detener con Ctrl-C. También están disponibles
 `make setup` y `make run`. El entorno se instala en `.venv/`, excluido de Git.
 
-## Uso de la base
+## Uso
 
 La app permite editar Max/Min, agregar o quitar variables y restricciones sin
 perder las celdas restantes, cargar los 13 ejemplos y cargar/descargar JSON.
@@ -32,15 +33,19 @@ Admite números como `-3`, `2.5`, `2,5` y `2/5`; todas las variables cumplen x �
 Al pulsar Resolver, los errores indican la celda afectada. El resumen del modelo
 validado funciona; cada algoritmo pendiente muestra un aviso en su sección.
 
-La forma estándar todavía es un stub. La sección que la presentará ya está
-conectada y muestra el aviso correspondiente. No se presenta una conversión
-inventada ni se usa SciPy para suplir el método del equipo.
+Seleccione Gran M y pulse Resolver. Directo muestra variables, Z y holguras o
+excesos originales. Paso a paso añade normalización, forma estándar y todas las
+iteraciones: base con nombres, tablero rotulado, costos reducidos, Z, pivote
+resaltado, razones y justificaciones. Fracciones y decimales cambian únicamente
+la presentación; los cálculos permanecen exactos. Se informan infactibilidad,
+no acotación, segmentos o rayos óptimos y variables básicas nulas.
 
 Los contratos compartidos están en `src/plapp/result.py`. Los índices internos
-empiezan en cero; la interfaz muestra filas y columnas desde uno. Los dos métodos
-devuelven `Solution` y conservan el sentido original de Z. Los costos reducidos
-usan r = c − c_B B⁻¹ A. Los números del modelo son Fraction; MValue almacena las
-partes racional y simbólica, pero sus operaciones siguen pendientes.
+empiezan en cero; la interfaz muestra filas desde uno y columnas por nombre.
+Ambos métodos comparten el contrato `Solution` en el sentido original de Z,
+aunque el revisado continúa pendiente. Los costos reducidos usan
+r = c − c_B B⁻¹ A. MValue opera con las partes racional y simbólica exactas.
+La guía `docs/sustentacion.md` explica los módulos y la traza del ejemplo 2.
 
 ## Pruebas y calidad
 
@@ -55,9 +60,9 @@ make requirements
 `make fmt` aplica formato y correcciones automáticas de Ruff. La configuración
 usa 100 columnas y reglas E, F, I, UP, B. CI ejecuta sincronización bloqueada,
 Ruff y pytest. Las pruebas de infraestructura deben pasar; las de algoritmos
-aparecen como `xfail` mientras lancen NotImplementedError. Al implementarlos
-pasarán como `XPASS`; una aserción fallida sigue siendo un fallo real. Quitar
-las marcas cuando el equipo termine cada módulo.
+pendientes aparecen como `xfail` mientras lancen NotImplementedError. Las marcas
+se retiran al implementar cada módulo; MValue, forma estándar y Gran M ya se
+prueban sin xfail. Una aserción fallida sigue siendo un fallo real.
 
 ## Oráculo SciPy
 
@@ -105,7 +110,7 @@ disponible para la sustentación sin conexión a un servicio de despliegue.
 ## Estructura
 
 ```text
-src/plapp/       Modelo, persistencia, formato, contratos y stubs
+src/plapp/       Modelo, Gran M, álgebra exacta, contratos y módulos pendientes
 app/            Interfaz Streamlit y presentación Plotly
 scripts/        Verificador externo con SciPy
 tests/          Infraestructura, contratos, AppTest y 13 fixtures JSON
@@ -140,6 +145,8 @@ Ver `docs/plan.md` para el orden de implementación y el reparto sugerido.
   de los siete primeros problemas.
 - [Streamlit: tablas editables y estado](https://docs.streamlit.io/develop/concepts/design/dataframes).
 - [Streamlit: AppTest](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest).
+- [Streamlit: tablas y Styler](https://docs.streamlit.io/develop/api-reference/data/st.table).
+- [pandas: Styler.apply](https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.apply.html).
 - [Streamlit: dependencias de despliegue](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies).
 - [Plotly: gráficos de líneas](https://plotly.com/python/line-charts/).
 - [fpdf2: documentación y Unicode](https://py-pdf.github.io/fpdf2/Unicode.html).

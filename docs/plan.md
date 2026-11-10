@@ -6,12 +6,12 @@
 |---|---|---|
 | P1: núcleo exacto | Implementado | MValue, linalg y forma estándar; 165 pruebas pasan, 36 xfail pendientes, sin XPASS |
 | P2: Gran M | Implementado | 204 pruebas pasan, 22 xfail pendientes, sin XPASS; 13 fixtures coinciden con SciPy |
-| P3: paso a paso | Pendiente | Presentación base |
+| P3: paso a paso | Implementado | 237 pruebas pasan, 22 xfail pendientes, sin XPASS; 42 pruebas de interfaz |
 | P4: gráfico | Pendiente | Stub |
 | P5: sensibilidad | Pendiente | Stub |
 | P6: revisado | Pendiente | Stub |
 | P7: PDF | Pendiente | Stub |
-| P8: entregables | Pendiente | Guía de sustentación de P1 y P2 escrita |
+| P8: entregables | Pendiente | Guía de sustentación de P1–P3 escrita; manual, capturas y video pendientes |
 
 P1: `make lint` y `make test` correctos. Los 13 fixtures pasan por el oráculo;
 los solvers aún informan que están pendientes. AppTest muestra las formas
@@ -25,16 +25,24 @@ traza manual del ejemplo 1, 40 problemas generados contra SciPy, redundancia,
 rayos óptimos y Beale (14 estados, activa Bland al repetir base). Se repitió
 el arranque y parada real; AppTest resolvió el ejemplo 2 con Z = 17/5.
 
+P3: `make lint` y `make test` correctos. Los ejemplos 1–7 pasan en ambos modos
+y formatos; AppTest comprueba encabezados, base, Z, estilo del pivote, razones,
+alternativas, degeneración y ausencia de excepciones. Los 13 fixtures siguen
+coincidiendo con SciPy. El arranque real respondió `ok`; se inspeccionaron los
+datos de los ejemplos 1, 2 y 6 mediante AppTest y se detuvo el servidor.
+Guía de P3 e informe de sesión en `docs/sustentacion.md` y
+`docs/desarrollo-p1-p3.md`. Siguiente paquete recomendado: P4 (gráfico).
+
 ## Rúbrica de la aplicación
 
-| Criterio | Peso | Módulos | Pruebas | Responsable | Estado inicial |
+| Criterio | Peso | Módulos | Pruebas | Responsable | Estado actual |
 |---|---:|---|---|---|---|
 | Entrada y validación | 10 % | model, io_json | test_model, test_io_json | [Integrante] | Infraestructura implementada |
-| Método propio | 15 % | mvalue, standard_form, big_m | test_contracts, test_examples, test_oracle_scipy | [Integrante] | Stubs |
-| Paso a paso | 25 % | result, formatting, standard_form, big_m, revised_simplex, UI | test_contracts, test_examples, test_app | [Integrante] | Contratos y presentación base; cálculo pendiente |
+| Método propio | 15 % | mvalue, standard_form, big_m | test_contracts, test_examples, test_oracle_scipy | [Integrante] | Gran M implementada |
+| Paso a paso | 25 % | result, formatting, standard_form, big_m, revised_simplex, UI | test_contracts, test_examples, test_app | [Integrante] | Gran M completa; revisado pendiente |
 | Método gráfico | 20 % | graphical, presentación Plotly | test_graphical, test_app | [Integrante] | Cálculo pendiente |
 | Sensibilidad | 15 % | sensitivity, base final del solver | test_sensitivity, test_oracle_scipy | [Integrante] | Stub |
-| Interfaz y usabilidad | 15 % | streamlit_app | test_app | [Integrante] | Navegación, edición y avisos implementados |
+| Interfaz y usabilidad | 15 % | streamlit_app | test_app | [Integrante] | Entrada y Gran M en ambos modos y formatos |
 
 Los porcentajes son de la rúbrica, no porcentajes ya obtenidos. Una base
 navegable no satisface por sí sola la resolución y visualización requeridas.

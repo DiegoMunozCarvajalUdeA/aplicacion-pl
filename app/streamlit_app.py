@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
@@ -10,7 +11,7 @@ from plapp.formatting import format_expression, format_number
 from plapp.graphical import graphical_method
 from plapp.io_json import load_problem, problem_to_dict, save_problem
 from plapp.model import LPProblem, validate
-from plapp.result import GraphicalResult, Solution, Status
+from plapp.result import GraphicalResult, Iteration, Solution, StandardForm, Status
 from plapp.revised_simplex import solve_revised
 from plapp.sensitivity import sensitivity_analysis
 from plapp.standard_form import to_standard_form
@@ -130,29 +131,158 @@ def render_summary(problem: LPProblem) -> None:
     st.write(", ".join(problem.variable_names) + " ≥ 0")
 
 
-def render_solution(solution: Solution) -> None:
-    """Presentar únicamente resultados calculados por el método propio."""
-    st.write(solution.message)
+def render_alternatives(solution: Solution) -> None:
+    """Presentar los puntos y rayos certificados con el formato elegido."""
+    st.info("Hay soluciones óptimas múltiples.")
+    names = tuple(solution.values)
+    point = "(" + ", ".join(number(solution.values[name]) for name in names) + ")"
+    for index, alternative in enumerate(solution.alternative_solutions, 1):
+        st.write(f"Solución alterna {index}")
+        st.table([{"Variable": name, "Valor": number(alternative[name])} for name in names])
+    if solution.alternative_rays:
+        for ray in solution.alternative_rays:
+            direction = "(" + ", ".join(number(ray[name]) for name in names) + ")"
+            st.write(
+                f"Z = {number(solution.objective_value)} en todo el rayo desde {point}, "
+                f"con dirección {direction}; el parámetro es no negativo."
+            )
+    else:
+        for alternative in solution.alternative_solutions:
+            other = "(" + ", ".join(number(alternative[name]) for name in names) + ")"
+            st.write(
+                f"Z = {number(solution.objective_value)} en todo el segmento "
+                f"entre {point} y {other}."
+            )
+
+
+def render_solution(problem: LPProblem, solution: Solution) -> None:
+    """Presentar resultados originales, alternativas y notas del método propio."""
+    # El mensaje de multiplicidad se reconstruye con datos exactos para respetar decimales.
+    st.write("Se encontró una solución óptima." if solution.multiple_optima else solution.message)
     if solution.status == Status.OPTIMAL:
         st.table(
             [{"Variable": name, "Valor": number(value)} for name, value in solution.values.items()]
         )
         if solution.objective_value is not None:
             st.write(f"Z = {number(solution.objective_value)}")
+        kinds = {"<=": "Holgura", ">=": "Exceso", "=": "Igualdad"}
         st.table(
             [
-                {"Restricción": name, "Holgura/exceso": number(value)}
-                for name, value in solution.slacks.items()
+                {
+                    "Restricción": row.name,
+                    "Tipo": kinds[row.relation],
+                    "Valor": number(solution.slacks[row.name]),
+                }
+                for row in problem.constraints
             ]
         )
         if solution.multiple_optima:
-            st.info("Hay soluciones óptimas múltiples.")
+            render_alternatives(solution)
         if solution.degenerate:
             st.info("Se detectó degeneración.")
+    for note in solution.notes:
+        st.write(note)
+
+
+def render_iteration_tables(
+    problem: LPProblem, standard: StandardForm, iteration: Iteration
+) -> None:
+    """Rotular tableros y B⁻¹; el resaltado usa coordenadas del pivote registrado."""
+    basic_names = [standard.column_names[j] for j in iteration.basis]
+    if iteration.tableau:
+        rows = [[number(value) for value in row] for row in iteration.tableau]
+        labels = basic_names.copy()
+        if iteration.reduced_costs:
+            rows.append(
+                [number(value) for value in iteration.reduced_costs]
+                + [
+                    number(iteration.objective_value)
+                    if iteration.objective_value is not None
+                    else "—"
+                ]
+            )
+            labels.append("cⱼ − zⱼ")
+        frame = pd.DataFrame(rows, index=labels, columns=[*standard.column_names, "Lado derecho"])
+        frame.index.name = "Variable básica"
+        st.write("Tablero")
+        if iteration.pivot:
+
+            def highlight(data):
+                """Colorear solo la celda pivote, sin tocar los valores del tablero."""
+                styles = pd.DataFrame("", index=data.index, columns=data.columns)
+                styles.iloc[iteration.pivot.row, iteration.pivot.column] = (
+                    "background-color: #fef08a; color: #111827; font-weight: bold"
+                )
+                return styles
+
+            st.table(frame.style.apply(highlight, axis=None))
+        else:
+            st.table(frame)
+    if iteration.b_inverse:
+        st.write("B⁻¹")
+        st.table(
+            pd.DataFrame(
+                [[number(value) for value in row] for row in iteration.b_inverse],
+                index=basic_names,
+                columns=[row.name for row in problem.constraints],
+            )
+        )
+    if iteration.reduced_costs and iteration.tableau is None:
+        st.write("Costos reducidos")
+        st.table(
+            pd.DataFrame(
+                [[number(value) for value in iteration.reduced_costs]],
+                index=["cⱼ − zⱼ"],
+                columns=standard.column_names,
+            )
+        )
+    if iteration.objective_value is not None:
+        st.write(f"Z = {number(iteration.objective_value)}")
+
+
+def render_iteration(problem: LPProblem, standard: StandardForm, iteration: Iteration) -> None:
+    """Mostrar decisiones y pruebas que permiten reproducir el pivote."""
+    with st.expander(f"Iteración {iteration.number}", expanded=True):
+        st.write("Base: " + ", ".join(standard.column_names[j] for j in iteration.basis))
+        for note in iteration.notes:
+            st.write(note)
+        render_iteration_tables(problem, standard, iteration)
+        if iteration.entering_variable is None:
+            st.write("Terminación: " + iteration.entering_reason)
+        else:
+            st.write(f"Entrante: {iteration.entering_variable}. {iteration.entering_reason}")
+        if iteration.ratios:
+            st.write("Prueba de la razón mínima")
+            st.table(
+                [
+                    {
+                        "Fila": row.row + 1,
+                        "Básica": row.basic_variable,
+                        "Lado derecho": number(row.rhs),
+                        "Coeficiente": number(row.coefficient),
+                        "Razón": number(row.ratio) if row.ratio is not None else "—",
+                        "Exclusión": row.exclusion_reason,
+                    }
+                    for row in iteration.ratios
+                ]
+            )
+        if iteration.leaving_variable is not None:
+            st.write(f"Saliente: {iteration.leaving_variable}. {iteration.leaving_reason}")
+        elif iteration.leaving_reason:
+            st.write(iteration.leaving_reason)
+        if iteration.pivot:
+            pivot = iteration.pivot
+            st.write(
+                f"Pivote: fila {pivot.row + 1}, columna {standard.column_names[pivot.column]}, "
+                f"valor {number(pivot.value)} (celda resaltada)."
+            )
 
 
 def render_steps(problem: LPProblem, solution: Solution | None, step_mode: bool) -> None:
-    """Preparar la vista de forma estándar y, en modo paso a paso, las iteraciones."""
+    """Reservar forma estándar e iteraciones para el modo paso a paso."""
+    if not step_mode:
+        st.info("Seleccione Paso a paso para ver la forma estándar y las iteraciones.")
+        return
     st.subheader("Forma estándar")
     try:
         standard = solution.standard_form if solution else None
@@ -166,63 +296,37 @@ def render_steps(problem: LPProblem, solution: Solution | None, step_mode: bool)
             ]
         )
         for message in standard.transformations:
+            for row in problem.constraints:
+                if row.rhs < 0:
+                    message = message.replace(
+                        f"({row.rhs}): se multiplicó", f"({number(row.rhs)}): se multiplicó"
+                    )
             st.write(message)
         st.table(
-            [
-                {
-                    **{
-                        name: number(value)
-                        for name, value in zip(standard.column_names, row, strict=True)
-                    },
-                    "Lado derecho": number(rhs),
-                }
-                for row, rhs in zip(standard.a, standard.b, strict=True)
-            ]
+            pd.DataFrame(
+                [
+                    [number(value) for value in row] + [number(rhs)]
+                    for row, rhs in zip(standard.a, standard.b, strict=True)
+                ],
+                index=[row.name for row in problem.constraints],
+                columns=[*standard.column_names, "Lado derecho"],
+            )
         )
-        st.write("Base inicial:", [standard.column_names[index] for index in standard.basis])
+        st.write("Base inicial: " + ", ".join(standard.column_names[j] for j in standard.basis))
     except NotImplementedError:
         st.info("Pendiente de implementar: forma estándar")
+        return
     except Exception:
         st.error("No se pudo mostrar la forma estándar. Revise el módulo y vuelva a intentar.")
-    if not step_mode:
-        st.info(
-            "Seleccione Paso a paso para ver las iteraciones cuando el método esté implementado."
-        )
         return
     if solution is None:
-        st.info("Pendiente de implementar: iteraciones del método")
+        st.info("Las iteraciones estarán disponibles al resolver con un método implementado.")
         return
-    for iteration in solution.iterations:
-        with st.expander(f"Iteración {iteration.number}", expanded=True):
-            st.write("Base (índices desde cero):", iteration.basis)
-            st.write("Entrante:", iteration.entering_variable, iteration.entering_reason)
-            st.table(
-                [
-                    {
-                        "Fila": row.row + 1,
-                        "Básica": row.basic_variable,
-                        "Lado derecho": number(row.rhs),
-                        "Coeficiente": number(row.coefficient),
-                        "Razón": number(row.ratio)
-                        if row.ratio is not None
-                        else row.exclusion_reason,
-                    }
-                    for row in iteration.ratios
-                ]
-            )
-            st.write("Saliente:", iteration.leaving_variable, iteration.leaving_reason)
-            if iteration.pivot:
-                pivot = iteration.pivot
-                st.write(
-                    f"Pivote: fila {pivot.row + 1}, columna {pivot.column + 1}, "
-                    f"{number(pivot.value)}"
-                )
-            for label, matrix in (("Tablero", iteration.tableau), ("B⁻¹", iteration.b_inverse)):
-                if matrix:
-                    st.write(label)
-                    st.table([[number(value) for value in row] for row in matrix])
-            if iteration.reduced_costs:
-                st.write("Costos reducidos:", [number(value) for value in iteration.reduced_costs])
+    try:
+        for iteration in solution.iterations:
+            render_iteration(problem, standard, iteration)
+    except Exception:
+        st.error("No se pudieron mostrar las iteraciones. Revise el módulo y vuelva a intentar.")
 
 
 def render_graph(result: GraphicalResult, names: tuple[str, ...]) -> None:
@@ -294,7 +398,7 @@ def render_results(problem: LPProblem, step_mode: bool) -> None:
             st.info(f"{label}: {message}")
         for label, item in solutions.items():
             st.subheader(label)
-            render_solution(item)
+            render_solution(problem, item)
         if not solutions and not st.session_state["notices"]:
             st.info("Pulse Resolver para ejecutar el método seleccionado.")
     with tabs[1]:
@@ -373,7 +477,7 @@ def render_results(problem: LPProblem, step_mode: bool) -> None:
             )
             for label, item in solutions.items():
                 st.subheader(label)
-                render_steps(problem, item, True)
+                render_steps(problem, item, step_mode)
 
 
 def main() -> None:
@@ -473,6 +577,8 @@ def main() -> None:
                     st.session_state["solutions"][label] = solver(problem)
                 except NotImplementedError:
                     st.session_state["notices"][label] = f"Pendiente de implementar: {label}"
+                except ValueError as error:
+                    st.session_state["notices"][label] = str(error)
                 except Exception:
                     st.session_state["notices"][label] = (
                         "No se pudo resolver. Revise el método y vuelva a intentar."
