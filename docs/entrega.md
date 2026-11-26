@@ -89,9 +89,8 @@ herramientas de IA».
 
 No reescribir el historial: nada de `git commit --amend` ni `git rebase` sobre
 commits ya subidos, y nada de `git push --force` en `main`. No usar `--author`
-con el nombre de otra persona ni atribuirse trabajo ajeno. Varios commits
-existentes llevan la línea `Co-Authored-By` de un asistente de IA; declarar en
-«Uso de herramientas de IA» cómo se usaron estas herramientas.
+con el nombre de otra persona ni atribuirse trabajo ajeno. Declarar en «Uso de
+herramientas de IA» cómo se usaron estas herramientas.
 
 ## 4. Desplegar en Streamlit Community Cloud
 

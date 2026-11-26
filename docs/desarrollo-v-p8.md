@@ -13,7 +13,7 @@ fuera del control de versiones.
 
 ## Verificación final
 
-Ejecutada sobre `80067ba`. Después solo cambió documentación: este informe y
+Ejecutada sobre `01f01db`. Después solo cambió documentación: este informe y
 el conteo de trazas de la Mod. 1 en `docs/ensayo-sustentacion.md`, que se
 corrigió al repetir esa modificación.
 
@@ -115,7 +115,7 @@ trazas. Las 21 trazas congeladas y el estrés lo confirman.
 
 ## Ensayo de despliegue
 
-Cada ensayo usó `git clone` de `80067ba` en un directorio temporal, que se
+Cada ensayo usó `git clone` de `01f01db` en un directorio temporal, que se
 borró al terminar. Los pasos y su lectura para el equipo están en
 `docs/entrega.md`.
 
@@ -243,20 +243,20 @@ V:
 - `cd2e757` — `fix: explain basic reduced costs`.
 - `fc611fb` — `fix: move font note to PDF end`.
 - `669ad8f` — `feat: start server from UI check`.
-- `0651381` — `fix: separate unbounded isoutility label`.
+- `3517e11` — `fix: separate unbounded isoutility label`.
 
 P8:
 
-- `87b904a` — `docs: add user manual`.
-- `fc5b8d7` — `docs: add video script`.
-- `6e61b2f` — `test: add rehearsal problems`.
-- `8b238b9` — `docs: add rehearsal guide`.
-- `c70ac3c` — `docs: index sustentacion by module`.
-- `557f276` — `test: drop stale PDF report count`.
-- `7e0aeba` — `docs: finalize readme and plan`.
-- `0952cbd` — `test: allow filled manual placeholders`.
-- `80067ba` — `docs: add delivery guide`.
-- `b5bc696` — `docs: correct Mod. 1 trace count`.
+- `1b3c770` — `docs: add user manual`.
+- `a4d4941` — `docs: add video script`.
+- `7984681` — `test: add rehearsal problems`.
+- `1c98235` — `docs: add rehearsal guide`.
+- `a132753` — `docs: index sustentacion by module`.
+- `64a2df7` — `test: drop stale PDF report count`.
+- `525619a` — `docs: finalize readme and plan`.
+- `9cea42a` — `test: allow filled manual placeholders`.
+- `01f01db` — `docs: add delivery guide`.
+- `4f071db` — `docs: correct Mod. 1 trace count`.
 - Este informe — `docs: record V P8 verification`.
 
 ## Revisión posterior (2026-11-10)
