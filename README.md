@@ -219,7 +219,7 @@ Ver `docs/plan.md` para el estado por paquete y la rúbrica.
 | Jhordy Calle Henao | [Documento/código] | [Área] | [JCH4444](https://github.com/JCH4444) |
 | Julio César Buitrago Yépez | [Documento/código] | [Área] | [Usuario] |
 
-- Repositorio remoto: **[URL por completar]**.
+- Repositorio remoto: <https://github.com/DiegoMunozCarvajalUdeA/aplicacion-pl> (privado).
 - Despliegue: **[URL por completar]**.
 - Manual: [`docs/manual/manual.pdf`](docs/manual/manual.pdf), 5 páginas.
 - Video: máximo 5 minutos; **[URL por completar]**. Guion en `docs/video.md`.

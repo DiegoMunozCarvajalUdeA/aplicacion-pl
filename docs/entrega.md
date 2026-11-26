@@ -2,8 +2,9 @@
 
 Pasos para que el equipo publique el repositorio, despliegue la app, grabe el
 video y llegue a la sustentación con un plan B. Ninguno de estos pasos se ha
-ejecutado todavía: no hay remoto, despliegue ni video. Los nombres ya están;
-faltan documentos, cuentas Git y responsables. Lo que sí se ensayó localmente está en «Ensayos locales hechos» y en
+ejecutado todavía: no hay despliegue ni video. El remoto privado existe desde el
+2026-11-26 (https://github.com/DiegoMunozCarvajalUdeA/aplicacion-pl). Los nombres ya están; faltan documentos, cuentas Git y
+responsables. Lo que sí se ensayó localmente está en «Ensayos locales hechos» y en
 `docs/desarrollo-v-p8.md`.
 
 Documentación oficial consultada el 2026-11-10:

@@ -143,6 +143,6 @@ la base, la entrante, la saliente y Z de cada método, y si las bases coinciden.
   si algo falla, muestra un aviso en español y conserva el problema escrito.
 - Si la aplicación deja de responder, recargue la página del navegador y vuelva
   a cargar el problema con **Cargar JSON** o **Cargar ejemplo**.
-- Repositorio: [por completar]. Video de demostración: [por completar].
+- Repositorio: <https://github.com/DiegoMunozCarvajalUdeA/aplicacion-pl>. Video de demostración: [por completar].
   Contacto del equipo: [por completar].
 - La guía técnica para explicar el código está en `docs/sustentacion.md`.
