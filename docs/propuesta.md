@@ -38,10 +38,9 @@ guía para preparar y presentar esta propuesta está en `docs/sprint-1.md`.
 
 | Nombre | Documento | Cuenta Git | Parte que explica en la sustentación |
 |---|---|---|---|
-| [Integrante 1] | [Documento] | [Cuenta] | [Por acordar] |
-| [Integrante 2] | [Documento] | [Cuenta] | [Por acordar] |
-| [Integrante 3] | [Documento] | [Cuenta] | [Por acordar] |
-| [Integrante 4, si aplica] | [Documento] | [Cuenta] | [Por acordar] |
+| Diego Armando Muñoz Carvajal | [Documento] | [Cuenta] | [Por acordar] |
+| Jhordy Calle Henao | [Documento] | [JCH4444](https://github.com/JCH4444) | [Por acordar] |
+| Julio César Buitrago Yépez | [Documento] | [Cuenta] | [Por acordar] |
 
 El docente elige qué parte explica cada integrante, así que todos deben poder
 explicar y modificar cualquier módulo. El reparto solo indica quién lidera cada
@@ -73,7 +72,7 @@ pantalla real correspondiente está en `docs/manual/capturas/entrada.png`.
 
 | Sprint | Qué se muestra | Estado al 2026-11-10 |
 |---|---|---|
-| Semana 1: propuesta | Este documento y la app en ejecución | Falta completar integrantes y reparto |
+| Semana 1: propuesta | Este documento y la app en ejecución | Falta completar documentos, cuentas Git y reparto |
 | Semana 3: avance | Entrada del problema y método resolviendo los ejemplos 1 y 3 | Implementado: ejemplo 1 da x = (42, 16), Z = 3380; ejemplo 3 da x = (0, 100, 230), Z = 1350 |
 | Semana 5: entrega final | App, manual, video, repositorio y sustentación | App, manual y guion listos; faltan remoto, despliegue, video y nombres (`docs/entrega.md`) |
 

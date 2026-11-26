@@ -215,10 +215,9 @@ Ver `docs/plan.md` para el estado por paquete y la rúbrica.
 
 | Integrante | Identificador | Área | Cuenta Git |
 |---|---|---|---|
-| [Nombre 1] | [Documento/código] | [Área] | [Usuario] |
-| [Nombre 2] | [Documento/código] | [Área] | [Usuario] |
-| [Nombre 3] | [Documento/código] | [Área] | [Usuario] |
-| [Nombre 4, si aplica] | [Documento/código] | [Área] | [Usuario] |
+| Diego Armando Muñoz Carvajal | [Documento/código] | [Área] | [Usuario] |
+| Jhordy Calle Henao | [Documento/código] | [Área] | [JCH4444](https://github.com/JCH4444) |
+| Julio César Buitrago Yépez | [Documento/código] | [Área] | [Usuario] |
 
 - Repositorio remoto: **[URL por completar]**.
 - Despliegue: **[URL por completar]**.

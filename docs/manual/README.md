@@ -1,6 +1,7 @@
 # Manual de usuario: Aplicación de Programación Lineal
 
-Universidad de Antioquia, Optimización. Equipo: [por completar].
+Universidad de Antioquia, Optimización. Equipo: Diego Armando Muñoz Carvajal,
+Jhordy Calle Henao y Julio César Buitrago Yépez.
 La versión impresa de este manual es `docs/manual/manual.pdf` y se genera con
 `make manual`. Todas las capturas provienen de la aplicación en ejecución y se
 toman con `make manual-captures`.
